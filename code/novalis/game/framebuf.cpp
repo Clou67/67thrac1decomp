@@ -27,7 +27,17 @@ void PutDrawBufferLarge(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", ClearDrawBufferLarge);
+void ClearDrawBufferLarge(int black)
+{
+    if (vu1_bufPtr != 0) {
+        VU1_CHAIN_WORD(0) = DMA_TAG_REF | AA_CLEAR_REGS_QWC;
+        VU1_CHAIN_WORD(4) = (unsigned int)aaClearRegs;
+        VU1_CHAIN_WORD(8) = 0;
+        VU1_CHAIN_WORD(12) = VIF_DIRECT | AA_CLEAR_REGS_QWC;
+
+        vu1_bufPtr += 16;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", PutDrawBufferSmall);
 
