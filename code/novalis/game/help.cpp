@@ -479,7 +479,27 @@ void Help_Update(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_DrawIconBox);
+void Help_DrawIconBox(void)
+{
+    int alpha;
+
+    Help.frame_half_width = HELP_ICON_HALF_SIZE;
+    Help.frame_half_height = HELP_ICON_HALF_SIZE;
+
+    DrawTextShadow(Help.center_y - HELP_ICON_HALF_SIZE, Help.center_y + HELP_ICON_HALF_SIZE, Help.center_x - HELP_ICON_HALF_SIZE, Help.center_x + HELP_ICON_HALF_SIZE, HELP_FRAME_ALPHA);
+
+    if (Help.state == HELP_STATE_BOX_OPENING || Help.state == HELP_STATE_BOX_CLOSING) {
+        alpha = Help.counter * HELP_ICON_FADE_STEP;
+    } else {
+        alpha = HELP_ICON_ALPHA;
+    }
+
+    if (alpha > HELP_ALPHA_OPAQUE) {
+        alpha = HELP_ALPHA_OPAQUE;
+    }
+
+    DrawSprite(Help.center_x - HELP_ICON_HALF_SIZE, Help.center_y - HELP_ICON_HALF_SIZE, HELP_ICON_SIZE, HELP_ICON_SIZE, 0, 0, HELP_ICON_SIZE, HELP_ICON_SIZE, (alpha << 24) | HELP_SPRITE_RGB, FontSet(HELP_ICON_FONT));
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Draw);
 
