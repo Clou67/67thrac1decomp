@@ -624,4 +624,4 @@ camPolarRot2 = 0x001252B8;
 pauseSpriteListFlag = 0x0013D4C2;
 pauseSpriteTagByte = 0x001413F4;
 sceGsPutDispEnv = 0x00121E40;
-auxTex0 = 0x0015EED0; // size:0x8
+AuxBufferTex0 = 0x0015EED0; // size:0x8

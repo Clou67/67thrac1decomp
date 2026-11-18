@@ -18,7 +18,7 @@ extern volatile int VifChainFlags;
 #define VU1_SYNC_TIMEOUT 100000
 
 // Most chain bytes used in one frame.
-extern int vu1_bufMaxUsed;
+extern int vu1_maxUse;
 
 // D1_CHCR bits 16-31 hold the upper half of the DMA tag just read.
 #define D_CHCR_TAG_MASK 0x03FF0000

@@ -58,8 +58,8 @@ void VU1_sendChain(void)
     VifChainFlags |= VIF_CHAIN_ALL_STAGES;
     used = vu1_bufPtr - vu1_DmaBuffers[vu1_bufId];
 
-    if (used > vu1_bufMaxUsed) {
-        vu1_bufMaxUsed = used;
+    if (used > vu1_maxUse) {
+        vu1_maxUse = used;
 
         if (used > vu1_bufSize) {
             printf_stub("vu1 chain overflow\n");
