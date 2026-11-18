@@ -1049,7 +1049,12 @@ void memcard_MakeWholeSave(char *addr)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Init);
+void memcard_Init(void)
+{
+    if (sceMcInit() != 0) {
+        printf_stub("ERROR: could not init memcard lib\n");
+    }
+}
 
 int memcard_GetDataSize(mc_data *mcd)
 {

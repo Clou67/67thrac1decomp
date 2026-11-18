@@ -84,6 +84,8 @@ segments:
     align: 4
     subsegments:
     - [0x8580, data]
+    - [0xabde0, .rodata, game/memcard]
+    - [0xabfa0, data]
     - [0xac690, .rodata, game/vuchain]
     - [0xac718, data]
 
