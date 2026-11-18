@@ -132,7 +132,7 @@ segments:
     - [0xc2f20, asm, game/fastfunc]
     - [0xc45f8, cpp, game/framebuf]
     - [0xc5730, cpp, game/freeze]
-    - [0xc7368, cpp, game/help]
+    - [0xc7890, cpp, game/help]
     - [0xc8c70, cpp, game/hero]
     - [0xec630, cpp, game/hud]
     - [0xf3d30, cpp, game/initlevel]
