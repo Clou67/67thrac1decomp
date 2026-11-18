@@ -147,7 +147,25 @@ int Help_QueueMessage(int id, int flag)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Kill);
+void Help_Kill(void)
+{
+    if (Help.state != HELP_STATE_IDLE) {
+        int vag = HelpMsgs[Help.message_index].vag;
+
+        if (vag != HELP_NO_VAG) {
+            if (vag == musicTransition.speechId - MUSIC_SPEECH_ID_BASE) {
+                if ((unsigned short)(musicTransition.state - MUSIC_STATE_FINISHING) >= 2) {
+                    musicTransition.state = MUSIC_STATE_STOPPING;
+                }
+            }
+        }
+
+        Help.state = HELP_STATE_IDLE;
+        Help.message_id = HELP_NO_MESSAGE;
+        Help.message_index = HELP_NO_MESSAGE;
+        Help.counter = 0;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_ClearUsedSinceDeath);
 
