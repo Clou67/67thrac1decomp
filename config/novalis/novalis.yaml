@@ -1,0 +1,292 @@
+name: Ratchet & Clank (USA) - Novalis overlay (level 1)
+sha1: 1e937db0ca46a36720ef4c7d542e2cc0fef69f42
+
+# Level overlay for Novalis, as unpacked by Wrench:
+#   rac_scus_971_99/levels/1_novalis/overlay.elf  ->  assets/levels/1_novalis/overlay.elf
+# It is loaded over the boot ELF's level region (0x15EF00..), so vram = file offset + 0x15DF00
+# for every section. The resident core (0x100080..0x15EEDF) is not part of this file; its
+# symbols come from config/novalis/core_symbols.txt.
+#
+# File split: one subsegment per original source file, in link order. Boundaries come from
+# the labeled Ghidra project (namespace = source file). The moby/camera/sound update code at
+# the end is one file per class (game/update/moby<oClass>, camera<N>, sound<N>); helper
+# functions before an UpdateMoby_<N> belong to that file.
+
+options:
+  basename: novalis
+  target_path: assets/levels/1_novalis/overlay.elf
+  elf_path: build/novalis/overlay.elf
+  base_path: ../../
+  platform: ps2
+  compiler: EEGCC
+
+  asm_path: code/_generated/novalis
+  src_path: code/novalis
+  data_path: build/novalis/data
+  build_path: build/novalis
+  ld_script_path: build/novalis/novalis.ld
+  o_as_suffix: True
+
+  find_file_boundaries: False
+  disasm_unknown: True
+  named_regs_for_c_funcs: False
+
+  pair_rodata_to_text: False
+  rodata_string_guesser_level: 0
+
+  generate_asm_macros_files: False
+
+  create_undefined_funcs_auto: True
+  undefined_funcs_auto_path: build/novalis/undefined_funcs_auto.txt
+  create_undefined_syms_auto: True
+  undefined_syms_auto_path: build/novalis/undefined_syms_auto.txt
+  symbol_addrs_path:
+    - config/novalis/symbols.txt
+    - config/novalis/core_symbols.txt
+
+  ld_legacy_generation: True
+  check_consecutive_segment_types: False
+  subalign: 8
+
+segments:
+  - [0, databin, elf_header]
+
+  - name: lit
+    type: lit4
+    start: 0x1000
+    vram: 0x0015ef00
+
+  # .bss is NOBITS in the section table but the single PT_LOAD covers it with zeros.
+  - name: bss
+    type: data
+    pair_segment: text
+    start: 0x4380
+    vram: 0x00162280
+
+  - name: data
+    type: data
+    start: 0x8580
+    vram: 0x00166480
+
+  - name: lvl.vtbl
+    type: rodata
+    start: 0xadc00
+    vram: 0x0020bb00
+
+  - name: lvl.camvtbl
+    type: rodata
+    start: 0xae580
+    vram: 0x0020c480
+
+  - name: lvl.sndvtbl
+    type: rodata
+    start: 0xae680
+    vram: 0x0020c580
+
+  - name: text
+    type: code
+    start: 0xae700
+    vram: 0x0020c600
+    subsegments:
+    - [0xae700, cpp, game/actuator]
+    - [0xaeb30, cpp, game/bloaders]
+    - [0xaed78, cpp, game/bmain]
+    - [0xaedb0, cpp, game/camera]
+    - [0xb2558, asm, game/cmecpu]
+    - [0xb38d0, asm, game/collproc]
+    - [0xb7338, cpp, game/debug]
+    - [0xba938, cpp, game/draw]
+    - [0xc0c90, asm, game/drawquad]
+    - [0xc2f20, asm, game/fastfunc]
+    - [0xc45f8, cpp, game/framebuf]
+    - [0xc5730, cpp, game/freeze]
+    - [0xc7368, cpp, game/help]
+    - [0xc8c70, cpp, game/hero]
+    - [0xec630, cpp, game/hud]
+    - [0xf3d30, cpp, game/initlevel]
+    - [0xf4170, cpp, game/initonce]
+    - [0xf4670, cpp, game/initsky]
+    - [0xf46f0, cpp, game/lights]
+    - [0xf51f0, cpp, game/loaders]
+    - [0xfbd40, cpp, game/main]
+    - [0xfc5c0, cpp, game/map]
+    - [0x100d38, cpp, game/mcstate]
+    - [0x101528, cpp, game/memcard]
+    - [0x103790, asm, game/miscproc]
+    - [0x103d10, cpp, game/mesh]
+    - [0x104860, cpp, game/mission]
+    - [0x105400, cpp, game/mobyfunc]
+    - [0x107a00, asm, game/mobyproc]
+    - [0x10e0f8, cpp, game/mobyutil]
+    - [0x11b3d0, cpp, game/mobyupd]
+    - [0x11b7f8, cpp, game/music]
+    - [0x11d128, cpp, game/npc]
+    - [0x11da28, cpp, game/pad]
+    - [0x11e598, asm, game/partproc]
+    - [0x11f5e0, cpp, game/partupd]
+    - [0x12d510, cpp, game/path]
+    - [0x12df38, cpp, game/pause]
+    - [0x13cc50, cpp, game/respawn]
+    - [0x13d2c0, cpp, game/shadowfunc]
+    - [0x13da48, asm, game/shadowproc]  # identical to boot shadowproc (handwritten)
+    - [0x13ebf8, cpp, game/shrubfunc]
+    - [0x13eef0, asm, game/shrubproc]
+    - [0x140eb0, cpp, game/skyfunc]
+    - [0x141c7c, asm, game/skyproc]
+    - [0x142290, cpp, game/sound]
+    - [0x143d40, cpp, game/space]
+    - [0x1496e8, cpp, game/stash]
+    - [0x149af0, cpp, game/tfragfunc]
+    - [0x149f58, asm, game/tfragproc]
+    - [0x14b5e8, cpp, game/tiefunc]
+    - [0x14bb90, asm, game/tieproc]
+    - [0x14da18, cpp, game/update]
+    - [0x14fb30, cpp, game/vendor]
+    - [0x156570, cpp, game/vuchain]
+    - [0x157260, cpp, game/walk]
+    - [0x159b48, cpp, game/water]
+    - [0x15bfb0, cpp, game/update/moby726]
+    - [0x15c758, cpp, game/update/moby809]
+    - [0x15c848, cpp, game/update/moby1007]
+    - [0x15cac0, cpp, game/update/moby11]
+    - [0x15d858, cpp, game/update/moby13]
+    - [0x15e5f0, cpp, game/update/moby27]
+    - [0x15f578, cpp, game/update/moby71]
+    - [0x1617a0, cpp, game/update/moby74]
+    - [0x1641e0, cpp, game/update/moby112]
+    - [0x1644c0, cpp, game/update/moby121]
+    - [0x166d20, cpp, game/update/moby122]
+    - [0x167180, cpp, game/update/moby149]
+    - [0x167540, cpp, game/update/moby153]
+    - [0x1693c0, cpp, game/update/moby156]
+    - [0x169858, cpp, game/update/moby157]
+    - [0x16adc0, cpp, game/update/moby163]
+    - [0x16b1c0, cpp, game/update/moby166]
+    - [0x16b9b8, cpp, game/update/moby167]
+    - [0x16c410, cpp, game/update/moby168]
+    - [0x16d438, cpp, game/update/moby172]
+    - [0x16e930, cpp, game/update/moby175]
+    - [0x16f100, cpp, game/update/moby176]
+    - [0x16ff98, cpp, game/update/moby177]
+    - [0x171078, cpp, game/update/moby179]
+    - [0x1732c0, cpp, game/update/moby180]
+    - [0x173868, cpp, game/update/moby185]
+    - [0x174d00, cpp, game/update/moby186]
+    - [0x179480, cpp, game/update/moby188]
+    - [0x1794e0, cpp, game/update/moby190]
+    - [0x17a1f0, cpp, game/update/moby192]
+    - [0x17af28, cpp, game/update/moby203]
+    - [0x17d010, cpp, game/update/moby204]
+    - [0x17d950, cpp, game/update/moby208]
+    - [0x17ecf0, cpp, game/update/moby209]
+    - [0x17f088, cpp, game/update/moby229]
+    - [0x17fb60, cpp, game/update/moby230]
+    - [0x181040, cpp, game/update/moby270]
+    - [0x182b28, cpp, game/update/moby280]
+    - [0x183bc0, cpp, game/update/moby304]
+    - [0x183dc8, cpp, game/update/moby305]
+    - [0x184b18, cpp, game/update/moby428]
+    - [0x1851b0, cpp, game/update/moby433]
+    - [0x1851b8, cpp, game/update/moby437]
+    - [0x186cb8, cpp, game/update/moby454]
+    - [0x187838, cpp, game/update/moby457]
+    - [0x188618, cpp, game/update/moby459]
+    - [0x18ad20, cpp, game/update/moby479]
+    - [0x18c278, cpp, game/update/moby500]
+    - [0x18cd18, cpp, game/update/moby530]
+    - [0x18ef90, cpp, game/update/moby531]
+    - [0x18ef98, cpp, game/update/moby562]
+    - [0x18fb00, cpp, game/update/moby567]
+    - [0x18fda0, cpp, game/update/moby572]
+    - [0x190d68, cpp, game/update/moby577]
+    - [0x193d78, cpp, game/update/moby585]
+    - [0x194c68, cpp, game/update/moby604]
+    - [0x194fb8, cpp, game/update/moby605]
+    - [0x1951c0, cpp, game/update/moby607]
+    - [0x195220, cpp, game/update/moby613]
+    - [0x195668, cpp, game/update/moby618]
+    - [0x195670, cpp, game/update/moby639]
+    - [0x196448, cpp, game/update/moby641]
+    - [0x196528, cpp, game/update/moby660]
+    - [0x196810, cpp, game/update/moby665]
+    - [0x196a60, cpp, game/update/moby666]
+    - [0x197140, cpp, game/update/moby676]
+    - [0x198250, cpp, game/update/moby678]
+    - [0x198428, cpp, game/update/moby679]
+    - [0x1989a0, cpp, game/update/moby686]
+    - [0x199828, cpp, game/update/moby688]
+    - [0x19a2c8, cpp, game/update/moby695]
+    - [0x19a630, cpp, game/update/moby696]
+    - [0x19ad58, cpp, game/update/moby700]
+    - [0x19b100, cpp, game/update/moby701]
+    - [0x19b6c0, cpp, game/update/moby703]
+    - [0x19b910, cpp, game/update/moby704]
+    - [0x19bcf0, cpp, game/update/moby705]
+    - [0x19be80, cpp, game/update/moby709]
+    - [0x19c168, cpp, game/update/moby722]
+    - [0x19c820, cpp, game/update/moby724]
+    - [0x19c900, cpp, game/update/moby729]
+    - [0x19cd80, cpp, game/update/moby730]
+    - [0x19d5b8, cpp, game/update/moby737]
+    - [0x19d9a8, cpp, game/update/moby746]
+    - [0x19dc20, cpp, game/update/moby750]
+    - [0x19ee88, cpp, game/update/moby751]
+    - [0x19faa0, cpp, game/update/moby754]
+    - [0x19fcc0, cpp, game/update/moby760]
+    - [0x1a0180, cpp, game/update/moby761]
+    - [0x1a0e68, cpp, game/update/moby768]
+    - [0x1a1128, cpp, game/update/moby774]
+    - [0x1a1868, cpp, game/update/moby775]
+    - [0x1a1960, cpp, game/update/moby778]
+    - [0x1a1b90, cpp, game/update/moby779]
+    - [0x1a1dd0, cpp, game/update/moby787]
+    - [0x1a2180, cpp, game/update/moby804]
+    - [0x1a2320, cpp, game/update/moby805]
+    - [0x1a2618, cpp, game/update/moby806]
+    - [0x1a3d00, cpp, game/update/moby815]
+    - [0x1a4428, cpp, game/update/moby832]
+    - [0x1a48e8, cpp, game/update/moby849]
+    - [0x1a61b8, cpp, game/update/moby1042]
+    - [0x1a9da0, cpp, game/update/moby1134]
+    - [0x1aa480, cpp, game/update/moby1135]
+    - [0x1ab3d0, cpp, game/update/moby1138]
+    - [0x1ab9f0, cpp, game/update/moby1143]
+    - [0x1abb68, cpp, game/update/moby1225]
+    - [0x1abdd0, cpp, game/update/moby1251]
+    - [0x1ac5e0, cpp, game/update/moby1289]
+    - [0x1ac7d0, cpp, game/update/moby1290]
+    - [0x1acad8, cpp, game/update/moby1341]
+    - [0x1ad718, cpp, game/update/moby1504]
+    - [0x1adb18, cpp, game/update/moby1510]
+    - [0x1adf70, cpp, game/update/moby1546]
+    - [0x1ae998, cpp, game/update/moby1633]
+    - [0x1aee18, cpp, game/update/moby1736]
+    - [0x1af1f0, cpp, game/update/moby1813]
+    - [0x1af300, cpp, game/update/moby1816]
+    - [0x1af308, cpp, game/update/moby1818]
+    - [0x1b1018, cpp, game/update/moby1848]
+    - [0x1b1438, cpp, game/update/camera0]
+    - [0x1b6f98, cpp, game/update/camera3]
+    - [0x1b81b8, cpp, game/update/camera4]
+    - [0x1b8ed0, cpp, game/update/camera5]
+    - [0x1b97d0, cpp, game/update/camera6]
+    - [0x1ba130, cpp, game/update/camera7]
+    - [0x1bad40, cpp, game/update/camera17]
+    - [0x1bb8a0, cpp, game/update/sound0]
+    - [0x1bba28, cpp, game/update/sound1]
+    - [0x1bbdc8, cpp, game/update/sound2]
+    - [0x1bc018, cpp, game/update/sound3]
+    - [0x1bc178, cpp, game/update/sound5]
+    - [0x1bc228, cpp, game/update/sound6]
+    - [0x1bc360, cpp, movie/movie]
+    - [0x1bcb78, cpp, movie/audiodec]
+    - [0x1bd1b8, cpp, movie/disp]
+    - [0x1bd598, cpp, movie/read]
+    - [0x1bd8e8, cpp, movie/readbuf]
+    - [0x1bd9f0, cpp, movie/strfile]
+    - [0x1bdaa0, cpp, movie/vibuf]
+    - [0x1bea70, cpp, movie/videodec]
+    - [0x1bf138, cpp, movie/vobuf]
+
+  - [0x1bf308, databin, section_headers]
+  - [0x1bf4b4]

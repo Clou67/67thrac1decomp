@@ -1,0 +1,45 @@
+#include "common.h"
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecCreate__FP8VideoDecPUciPUxT3iP9TimeStampi);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CA70);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecSetStream__FP8VideoDeciiPFP7sceMpegP13sceMpegCbDataPv_iPv);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecBeginPut__FP8VideoDecPPUcPiT1T2);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecEndPut__FP8VideoDec);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecReset__FP8VideoDec);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecDelete__FP8VideoDec);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecAbort__FP8VideoDec);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecGetState);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecSetState__FP8VideoDecUi);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecPutTs__FP8VideoDecllPUci);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecInputCount__FP8VideoDec);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CBA8);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecFlush__FP8VideoDec);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecIsFlushed__FP8VideoDec);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecMain__FPv);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", decBs0__FP8VideoDec);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", mpegError__FP7sceMpegP18sceMpegCbDataErrorPv);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", mpegNodata__FP7sceMpegP13sceMpegCbDataPv);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CF88);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", mpegRestartVideoDMA__Fv);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", FUN_0031cfe8);

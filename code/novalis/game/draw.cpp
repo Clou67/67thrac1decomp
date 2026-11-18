@@ -1,0 +1,174 @@
+#include "common.h"
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ScreenPosFromWorldSpace);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetLevelCounters);
+
+void STUB_00218990(void) {
+}
+
+void printf_stub2(void) {
+}
+
+void printf_stub3(void) {
+}
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetFrameBufferForCutscene);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ComposeCameraMatrix);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", UpdateFog);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ParseOcclGrid);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", GetOcclGridFromPair);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", BuildOcclVisibility);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", UpdateOcclusion);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", InitViewContext);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", UpdateViewContext);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetUserViewContext);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetPalMode);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetDrawGlobals);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupFogColorGsReg);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetGsRegistersPr);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DefaultDraw);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDraw);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDrawMovie);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDrawFreeze);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", CallDrawOverlayIfNoCutscene);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawFrameEnd);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FlipAndExploreTimersVU1);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FinalizeVU1FramePacketChain);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontSet);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", RegisterMobyDraw);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ExecuteRegisteredMobyFuncs);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ExecutePostDraws);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ExecutePostPreDraws);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", RegisterPreDraw);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ExecutePreDraws);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawLameShadows);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FadeToBlack);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", Draw_FlushAndPresent);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawSubtitles);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", UpdateLetterBox);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawScreenEffect);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawScreenOverlay);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetScreenClearColorPacket);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawRectOverlay);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021BE88);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawSprite);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawSpriteF);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawSpriteFont);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", Sprite_DrawRotated);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021C950);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawTextShadow);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawRoundedRect);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", EnableFontColors);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DisableFontColors);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenWithTable);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLen);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenSmall);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenLarge);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrint);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintMediumLeft);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintSmallLeft);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintLarge);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindowLine);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021D3E0);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintMediumRight);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintSmallRight);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintLargeRight);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintCenter);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintCenterSmall);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintCenterLarge);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWrapped);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWrappedSmall);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021DB28);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindow);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindowMedium);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindowSmall);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021E118);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetFontWindow);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawScreenCopyToVU1);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupVU1WorldDraw);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", BeginAuxDrawMode);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", EndAuxDrawMode);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawWorldEffectsPass);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", InitAlphaPal);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintCenterScaled);
+
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawTimedHelpMsg);
