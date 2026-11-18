@@ -288,7 +288,12 @@ void csf_no_room(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f2d0);
+void csf_prompt_load_failed(void)
+{
+    if (!(mcstate_flags & MCSTATE_FLAG_PROMPT)) {
+        mc_state = CS_NOCARD;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f2f8);
 
