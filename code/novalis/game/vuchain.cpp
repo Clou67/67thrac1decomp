@@ -6,7 +6,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU0_loadMicroPr
 
 void VU1_setBufSizeByLevel(void)
 {
-    int level = currentLevelId;
+    int level = Level;
 
     if (level >= LEVEL_COUNT) {
         level = 0;

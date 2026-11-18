@@ -2,7 +2,7 @@
 #define VUCHAIN_H
 
 // Current level (core global).
-extern int currentLevelId;
+extern int Level;
 
 #define LEVEL_COUNT 19
 
