@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU0_loadMicroProgram);
 
@@ -52,6 +53,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_VIF1_Handl
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_BEIS_Handler);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", Vif1ChainCmd);
+// Appends a VIF1 command packet (command word plus three zero words) to the VU1 chain.
+void Vif1ChainCmd(int command)
+{
+    unsigned int *chainHead = vu1_bufPtr;
+    unsigned int *packet = chainHead;
+
+    chainHead += 4;
+    vu1_bufPtr = chainHead;
+
+    packet[0] = command + 0x90000000;
+    packet[1] = 0;
+    packet[2] = 0;
+    packet[3] = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B5148);
