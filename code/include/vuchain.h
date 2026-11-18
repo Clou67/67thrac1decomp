@@ -2,6 +2,7 @@
 #define VUCHAIN_H
 
 #include "sce.h"
+#include "eekernel.h"
 #include "eeregs.h"
 
 void FastSitAndSpin(int cycles);

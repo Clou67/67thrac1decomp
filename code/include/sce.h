@@ -16,9 +16,6 @@ struct sceGsStoreImage {
     unsigned long data[14];
 };
 
-// Sony eekernel.h: interrupt handlers return through sync.l; ei.
-#define ExitHandler() asm volatile("sync.l; ei")
-
 extern "C" {
 void FlushCache(int operation);
 
