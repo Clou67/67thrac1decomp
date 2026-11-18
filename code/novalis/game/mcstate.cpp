@@ -230,7 +230,22 @@ void csf_create_save_pending(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f158);
+void csf_creating_save(void)
+{
+    if (g_memcard.stage == MC_STAGE_IDLE && g_memcard.nextstage < 0) {
+        if (g_memcard.err != 0) {
+            mc_state = CS_PROMPT_CREATE_FAILED;
+            mcstate_flags |= MCSTATE_FLAG_PROMPT;
+            return;
+        }
+
+        g_memcard.nextstage = MC_STAGE_CHECK_SAVE;
+        g_memcard.useslot = 0;
+        g_memcard.memcards[0].saveslot = 0;
+        g_memcard.nextslot = 0;
+        mc_state = CS_NEWCARD;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f1d0);
 
