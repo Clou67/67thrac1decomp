@@ -43,7 +43,7 @@ void VU1_initChain(void)
 void VU1_swapChain(void)
 {
     vu1_bufId = 1 - vu1_bufId;
-    vu1_chainEnd = vu1_bufPtr;
+    vu1_bufLimit = vu1_bufPtr;
     vu1_bufPtr = vu1_DmaBuffers[vu1_bufId];
 
     EngScratchPad = vu1_bufPtr + vu1_bufSize - EngScratchPadSize;
