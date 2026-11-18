@@ -103,7 +103,19 @@ void VU1_addDataRef(void *data, int qcnt)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4818);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_addDataDirect);
+
+void VU1_addDataDirect(int address, void *data, int qcnt)
+{
+    VU1_CHAIN_WORD(0) = qcnt | DMA_TAG_CNT;
+    VU1_CHAIN_WORD(4) = 0;
+    VU1_CHAIN_WORD(8) = VIF_STCYCL_4_4;
+    VU1_CHAIN_WORD(12) = address | (qcnt << 16) | VIF_UNPACK_V4_32;
+
+    vu1_bufPtr += 16;
+
+    FastMemCopy16(vu1_bufPtr, data, qcnt << 4);
+    vu1_bufPtr += qcnt << 4;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B48C8);
 
