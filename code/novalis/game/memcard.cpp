@@ -110,7 +110,18 @@ int memcard_Checksum(char *data, int size)
     return crc & 0xFFFF;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_TestChecksum);
+int memcard_TestChecksum(char *addr)
+{
+    int checksum = *(int *)(addr + 4);
+    int good = 0;
+    int size = *(int *)addr;
+
+    if (checksum != 0) {
+        good = memcard_Checksum(addr + 8, size) == checksum;
+    }
+
+    return good;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_PrepData);
 
