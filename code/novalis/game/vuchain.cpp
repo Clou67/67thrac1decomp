@@ -150,7 +150,16 @@ void VU1_gsRegsEffects(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4C20);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_gsRegsBlock_13cf10);
+
+void VU1_gsRegsFont(void)
+{
+    VU1_CHAIN_WORD(0) = DMA_TAG_REF | 11;
+    VU1_CHAIN_WORD(4) = (unsigned int)vu1GsRegsFont;
+    VU1_CHAIN_WORD(8) = 0;
+    VU1_CHAIN_WORD(12) = VIF_DIRECT | 11;
+
+    vu1_bufPtr += 16;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", StashGSMem);
 
