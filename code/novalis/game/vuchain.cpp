@@ -15,7 +15,16 @@ void VU1_setBufSizeByLevel(void)
     vu1_bufSize = vu1_buf_table[level];
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_initChain);
+void VU1_initChain(void)
+{
+    vu1_DmaBuffers[0] = MemSlots.vu1_chain[0];
+    vu1_DmaBuffers[1] = MemSlots.vu1_chain[1];
+    vu1_bufId = 0;
+    vu1_bufPtr = vu1_DmaBuffers[0];
+
+    EngScratchPad = vu1_bufPtr + vu1_bufSize - EngScratchPadSize;
+    SkinVertexCache = EngScratchPad - SKIN_VERTEX_CACHE_SIZE;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_swapChain);
 

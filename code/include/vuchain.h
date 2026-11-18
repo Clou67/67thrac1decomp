@@ -10,8 +10,29 @@ extern int Level;
 extern int vu1_buf_table[LEVEL_COUNT];
 extern int vu1_bufSize;
 
+// Memory slot table set up by InitMemSlots (RC1 layout; only the fields known so far).
+struct MEMSLOTS {
+    void *base;
+    unsigned char *vu1_chain[2];
+};
+
+extern MEMSLOTS MemSlots;
+
+// The two VU1 DMA chain buffers, built and sent in turn.
+extern unsigned char *vu1_DmaBuffers[];
+// Which of vu1_DmaBuffers is being built.
+extern int vu1_bufId;
 // Write position in the VU1 chain buffer being built.
 extern unsigned char *vu1_bufPtr;
+// End of the chain built last frame (kept by the swap).
+extern unsigned char *vu1_chainEnd;
+
+// Scratch memory carved from the top of the chain buffer being built.
+extern unsigned char *EngScratchPad;
+extern int EngScratchPadSize;
+extern unsigned char *SkinVertexCache;
+
+#define SKIN_VERTEX_CACHE_SIZE 0x2000
 
 // Word at a byte offset from the VU1 chain write position.
 #define VU1_CHAIN_WORD(offset) (*(unsigned int *)(vu1_bufPtr + (offset)))
@@ -43,6 +64,8 @@ extern unsigned int vu1GsRegsEffects[12];
 extern unsigned int vu1GsRegsFont[44];
 
 void VU1_setBufSizeByLevel(void);
+void VU1_initChain(void);
+void VU1_swapChain(void);
 void VU1_addDataRef(void *data, int qcnt);
 void VU1_addVIFcode(unsigned int vifcode);
 void VU1_addGSregister(unsigned int reg, unsigned long value);
