@@ -72,6 +72,7 @@ extern unsigned long AuxBufferTex0;
 void FastMemSetZero(void *destination, int size);
 
 void SetupFS_AA_buffer(int drawWidth, int drawHeight, int dispWidth, int dispHeight, int offsetX, int offsetY);
+void DrawLineList(int width, int height);
 void SetBackgroundColor(int red, int green, int blue);
 void PutDispBuffer(void);
 void PutDrawBufferLarge(void);

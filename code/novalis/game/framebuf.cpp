@@ -272,7 +272,64 @@ void AA_DisplayPass(int opaque)
     vu1_bufPtr.bytes += 16;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", DrawLineList);
+void DrawLineList(int width, int height)
+{
+    DmaTag *tag;
+    unsigned long *packet;
+    unsigned long *corner;
+    int columns;
+    int column;
+    int zero;
+    int left;
+    int right;
+    unsigned long top;
+    unsigned long bottom;
+
+    columns = width / 32;
+
+    VU1_addGSregister(GS_REG_ALPHA_1, 0x800000004AUL);
+
+    vu1_bufPtr.tag->tag = DMA_TAG_CNT | (columns + 5);
+    vu1_bufPtr.tag->addr = 0;
+    vu1_bufPtr.tag->vif0 = 0;
+    vu1_bufPtr.tag->vif1 = VIF_DIRECT | (columns + 5);
+
+    tag = vu1_bufPtr.tag;
+    packet = (unsigned long *)(tag + 1);
+    vu1_bufPtr.tag = tag + 1;
+
+    zero = 0;
+    packet[zero] = 0x1000000000000001UL;
+    packet[1] = GIF_REG_AD;
+    packet[2] = 0x32003;
+    packet[3] = 0x47;
+    packet[4] = 0x2400000000000001UL;
+    packet[5] = 0x10;
+    packet[6] = 0x146;
+    packet[7] = 0x80008080UL;
+    packet[8] = (unsigned long)(columns | 0x8000) | 0x2400000000000000UL;
+    packet[9] = 0x44;
+
+    column = zero;
+
+    if (columns > zero) {
+        top = (long)(0x8000 - height * 8) << 16;
+        left = -(width * 8) + 0x8000;
+        corner = &packet[10];
+        right = -(width * 8) + 0x8200;
+        bottom = (long)(height * 8 + 0x7FF0) << 16;
+
+        do {
+            *corner++ = left | top;
+            *corner++ = right | bottom;
+            right += 0x200;
+            left += 0x200;
+            column++;
+        } while (column < columns);
+    }
+
+    vu1_bufPtr.bytes += columns * 16 + 0x50;
+}
 
 void DrawFilledRectGS(int x0, int y0, int x1, int y1, int width, int height, unsigned int color)
 {
