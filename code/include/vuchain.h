@@ -1,6 +1,42 @@
 #ifndef VUCHAIN_H
 #define VUCHAIN_H
 
+#include "sce.h"
+#include "eeregs.h"
+
+void FastSitAndSpin(int cycles);
+void FastMemCopy16(void *destination, void *source, int size);
+void printf_stub(const char *format, ...);
+void ResetFrameBufferForCutscene(void);
+
+// VU1 chain stages still in flight (bits 0-4); cleared by the VIF1 DMA interrupt.
+extern volatile int VifChainFlags;
+#define VIF_CHAIN_ALL_STAGES 0x1F
+
+// Most chain bytes used in one frame.
+extern int vu1_bufMaxUsed;
+
+// D1_CHCR bits 16-31 hold the upper half of the DMA tag just read.
+#define D_CHCR_TAG_MASK 0x03FF0000
+#define D_CHCR_ASP_MASK 0x0000000C
+#define D_CHCR_TAG_ID_MASK 0x70000000
+#define D_CHCR_TAG_ID_END 0x70000000
+
+// Tag bit marking a chain stage checkpoint (Vif1ChainCmd commands), and the four stages.
+#define VIF_CHAIN_STAGE_BIT 0x02000000
+#define VIF_CHAIN_STAGE_1 0x02010000
+#define VIF_CHAIN_STAGE_2 0x02020000
+#define VIF_CHAIN_STAGE_3 0x02040000
+#define VIF_CHAIN_STAGE_4 0x02080000
+
+// Handler ids from AddDmacHandler: VIF1 channel, then bus error.
+extern int _dmacHandle[2];
+
+#define DMA_CHANNEL_VIF1 1
+#define DMA_CHANNEL_BUS_ERROR 15
+// D_STAT channel interrupt mask bit for VIF1 (writing 1 toggles it).
+#define D_STAT_CIM_VIF1 0x20000
+
 // Current level (core global).
 extern int Level;
 
@@ -42,6 +78,7 @@ extern unsigned char *SkinVertexCache;
 // DMA tag ids (bits 28-30): payload follows the tag inline (cnt) or sits at the address in word 1 (ref).
 #define DMA_TAG_CNT 0x10000000
 #define DMA_TAG_REF 0x30000000
+#define DMA_TAG_END 0x70000000
 
 // VIF codes (bits 24-31 of a VIF word).
 #define VIF_DIRECT 0x50000000
@@ -53,6 +90,15 @@ extern unsigned char *SkinVertexCache;
 #define GIF_REG_AD 0xE
 
 #define GS_REG_SCISSOR_1 0x40
+
+// VIF codes for an inline upload: STCYCL 4/4, then UNPACK V4-32 of qcnt quadwords to VU memory.
+#define VIF_STCYCL_4_4 0x01000404
+#define VIF_UNPACK_V4_32 0x6C000000
+
+// GS memory is moved in 64x64 PSMCT32 blocks of 0x4000 bytes.
+#define GS_TRANSFER_BLOCK_SIZE 0x4000
+#define GS_TRANSFER_BLOCK_QWC (GS_TRANSFER_BLOCK_SIZE / 16)
+#define GS_LOAD_IMAGE_QWC (sizeof(sceGsLoadImage) / 16)
 
 // Display size, read by the scissor clamp (core global).
 extern int occlViewParams[];
@@ -74,6 +120,16 @@ void VU1_texFlush(void);
 void VU1_gsRegsNormal(void);
 void VU1_gsRegsEffects(void);
 void VU1_gsRegsFont(void);
+void VU0_loadMicroProgram(long *data);
+void VU1_sendChain(void);
+void VU1_syncChain(int syncFlags);
+void VU1_addDataDirect(int address, void *data, int qcnt);
+void StashGSMem(void *ram, int gs_start, int size);
+void UploadGSMemLinear(void *ram, int gs_loc, int width, int height);
+void DMAC_VIF1_Enable(void);
+void DMAC_VIF1_Disable(void);
+int DMAC_VIF1_Handler(int channel);
+int DMAC_BEIS_Handler(int channel);
 void Vif1ChainCmd(int command);
 
 #endif

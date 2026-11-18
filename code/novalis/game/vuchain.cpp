@@ -1,6 +1,8 @@
 #include "common.h"
 #include "vuchain.h"
 
+volatile int VifChainFlags = 0;
+
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU0_loadMicroProgram);
 
 
