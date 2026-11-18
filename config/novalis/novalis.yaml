@@ -90,19 +90,28 @@ segments:
     - [0xac718, data]
 
   - name: lvl.vtbl
-    type: rodata
+    type: code
+    align: 0x80
     start: 0xadc00
     vram: 0x0020bb00
+    subsegments:
+    - [0xadc00, .rodata, game/vtbl]
 
   - name: lvl.camvtbl
-    type: rodata
+    type: code
+    align: 0x80
     start: 0xae580
     vram: 0x0020c480
+    subsegments:
+    - [0xae580, .rodata, game/camvtbl]
 
   - name: lvl.sndvtbl
-    type: rodata
+    type: code
+    align: 0x80
     start: 0xae680
     vram: 0x0020c580
+    subsegments:
+    - [0xae680, .rodata, game/sndvtbl]
 
   - name: text
     type: code
