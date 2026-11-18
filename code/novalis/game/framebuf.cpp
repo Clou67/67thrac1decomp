@@ -1,11 +1,164 @@
 #include "common.h"
 #include "framebuf.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", SetupFS_AA_buffer);
+void SetupFS_AA_buffer(int drawWidth, int drawHeight, int dispWidth, int dispHeight, int offsetX, int offsetY)
+{
+    qword *regs;
+
+    pAAbuff = &aaBuff;
+    aaBuff.drawW = drawWidth;
+    aaBuff.drawH = drawHeight;
+    aaBuff.dispW = dispWidth;
+    aaBuff.dispH = dispHeight;
+    aaBuff.dispOfsX = offsetX;
+    aaBuff.dispOfsY = offsetY;
+    aaBuff.update_context = 0;
+    aaBuff.dispPSM = 0;
+    aaBuff.drawPSM = 0;
+    aaBuff.auxPSM = 0;
+    aaBuff.zPSM = 0x31;
+    aaBuff.dispFBP = GSmemDisplay >> 13;
+    aaBuff.drawFBP = GSmemDraw >> 13;
+    aaBuff.zFBP = GSmemZbuf >> 13;
+
+    sceGsSetDefDispEnv(&aaBuff.disp, 0, dispWidth, dispHeight, offsetX, offsetY);
+    pAAbuff->disp.dispfb.FBP = aaBuff.dispFBP;
+
+    sceGsSetDefDrawEnv(&pAAbuff->drawLarge, aaBuff.drawPSM, aaBuff.drawW, aaBuff.drawH, 3, aaBuff.zPSM);
+    pAAbuff->drawLarge.frame1.FBP = aaBuff.drawFBP;
+    *(unsigned long *)&pAAbuff->drawLarge.zbuf1 = SCE_GS_SET_ZBUF(aaBuff.zFBP, aaBuff.zPSM & 0xF, 0);
+    *(u_long128 *)&pAAbuff->giftagDrawLarge = 0;
+    pAAbuff->giftagDrawLarge.NLOOP = 8;
+    pAAbuff->giftagDrawLarge.EOP = 1;
+    pAAbuff->giftagDrawLarge.NREG = 1;
+    pAAbuff->giftagDrawLarge.REGS0 = GIF_REG_AD;
+
+    sceGsSetDefDrawEnv(&pAAbuff->drawSmall, aaBuff.dispPSM, aaBuff.dispW, aaBuff.dispH, 0, 0);
+    pAAbuff->drawSmall.frame1.FBP = aaBuff.dispFBP;
+    *(unsigned long *)&pAAbuff->drawSmall.zbuf1 = 1UL << 32;
+    *(u_long128 *)&pAAbuff->giftagDrawSmall = 0;
+    pAAbuff->giftagDrawSmall.NLOOP = 8;
+    pAAbuff->giftagDrawSmall.EOP = 1;
+    pAAbuff->giftagDrawSmall.NREG = 1;
+    pAAbuff->giftagDrawSmall.REGS0 = GIF_REG_AD;
+
+    regs = aaDisplayRegs;
+    QWORD_LO(regs[0]) = 0x408B400000000001UL;
+    QWORD_HI(regs[0]) = 0xEEEE;
+    QWORD_LO(regs[1]) = 0x30000;
+    QWORD_HI(regs[1]) = 0x47;
+    QWORD_LO(regs[2]) = 5;
+    QWORD_HI(regs[2]) = 8;
+    QWORD_LO(regs[3]) = 0x100000261UL;
+    QWORD_HI(regs[3]) = 0x14;
+    QWORD_LO(regs[4]) = ((long)pAAbuff->drawFBP << 5) | ((unsigned long)((pAAbuff->drawW >> 6) & 0x3F) << 14)
+                     | ((long)pAAbuff->drawPSM << 20) | 0xEA8000000UL;
+    QWORD_HI(regs[4]) = 6;
+    QWORD_LO(regs[5]) = 0x4400000000008010UL;
+    QWORD_HI(regs[5]) = 0x5353;
+
+    unsigned long *displayStrip;
+    int column;
+
+    for (column = 0, displayStrip = (unsigned long *)&regs[6]; column < 16; column++) {
+        *displayStrip++ = column * pAAbuff->drawW;
+        *displayStrip++ = (column * pAAbuff->dispW + (0x8000 - pAAbuff->dispW * 8)) | ((long)(0x7FF8 - pAAbuff->dispH * 8) << 16);
+        *displayStrip++ = (column + 1) * pAAbuff->drawW | ((long)pAAbuff->drawH << 20);
+        *displayStrip++ = ((column + 1) * pAAbuff->dispW + (0x8000 - pAAbuff->dispW * 8)) | ((long)(pAAbuff->dispH * 8 + 0x7FF8) << 16);
+    }
+
+    QWORD_LO(regs[38]) = 0x4400000000008001UL;
+    QWORD_HI(regs[38]) = 0x4410;
+    QWORD_LO(regs[39]) = 0x181;
+    QWORD_HI(regs[39]) = 0x80000000UL;
+    QWORD_LO(regs[40]) = 0x6FF8 | ((long)(0x7FF8 - pAAbuff->dispH * 8) << 16);
+    QWORD_HI(regs[40]) = 0x6FF8 | ((long)(pAAbuff->dispH * 8 + 0x7FF8) << 16);
+
+    regs = aaMovieDisplayRegs;
+    QWORD_LO(regs[0]) = 0x308B400000000001UL;
+    QWORD_HI(regs[0]) = 0xEEE;
+    QWORD_LO(regs[1]) = 0x30000;
+    QWORD_HI(regs[1]) = 0x47;
+    QWORD_LO(regs[2]) = 0x100000261UL;
+    QWORD_HI(regs[2]) = 0x14;
+    QWORD_LO(regs[3]) = ((long)pAAbuff->drawFBP << 5) | ((unsigned long)((pAAbuff->drawW >> 6) & 0x3F) << 14)
+                          | ((long)pAAbuff->drawPSM << 20) | 0xEA8000000UL;
+    QWORD_HI(regs[3]) = 6;
+    QWORD_LO(regs[4]) = 0x4400000000008010UL;
+    QWORD_HI(regs[4]) = 0x5353;
+
+    unsigned long *movieStrip = (unsigned long *)&regs[5];
+
+    for (int column = 0; column < 16; column++) {
+        *movieStrip++ = column * pAAbuff->drawW;
+        *movieStrip++ = (column * 0x200 + 0x6FF8) | ((long)(0x7FF8 - pAAbuff->dispH * 8) << 16);
+        *movieStrip++ = (column + 1) * pAAbuff->drawW | 0x1A000000;
+        *movieStrip++ = ((column + 1) * 0x200 + 0x6FF8) | ((long)(pAAbuff->dispH * 8 + 0x7FF8) << 16);
+    }
+
+    regs = aaBlurRegs;
+    QWORD_LO(regs[0]) = 0x408B400000000001UL;
+    QWORD_HI(regs[0]) = 0xEEEE;
+    QWORD_LO(regs[1]) = 0x30000;
+    QWORD_HI(regs[1]) = 0x47;
+    QWORD_LO(regs[2]) = 5;
+    QWORD_HI(regs[2]) = 8;
+    QWORD_LO(regs[3]) = 0x100000261UL;
+    QWORD_HI(regs[3]) = 0x14;
+    QWORD_LO(regs[4]) = ((long)pAAbuff->drawFBP << 5) | ((unsigned long)((pAAbuff->drawW >> 6) & 0x3F) << 14)
+                  | ((long)pAAbuff->drawPSM << 20) | 0xEA8000000UL;
+    QWORD_HI(regs[4]) = 6;
+    QWORD_LO(regs[5]) = 0x4400000000008010UL;
+    QWORD_HI(regs[5]) = 0x5353;
+
+    unsigned long *blurStrip = (unsigned long *)&regs[6];
+
+    for (int column = 0; column < 16; column++) {
+        *blurStrip++ = column * 0x200;
+        *blurStrip++ = (column * 0x200 + 0x7000) | ((long)(0x8000 - pAAbuff->drawH * 8) << 16);
+        *blurStrip++ = ((column + 1) * 0x200) | ((long)pAAbuff->drawH << 20);
+        *blurStrip++ = ((column + 1) * 0x200 + 0x7000) | ((long)(pAAbuff->drawH * 8 + 0x7FF0) << 16);
+    }
+
+    regs = aaClearRegs;
+    QWORD_LO(regs[0]) = 0x1000000000000001UL;
+    QWORD_HI(regs[0]) = 0xE;
+    QWORD_LO(regs[1]) = 0x30000;
+    QWORD_HI(regs[1]) = 0x47;
+    QWORD_LO(regs[2]) = 0x2400000000008001UL;
+    QWORD_HI(regs[2]) = 0x10;
+    QWORD_LO(regs[3]) = 0x106;
+    QWORD_HI(regs[3]) = 0x80008000UL;
+    QWORD_LO(regs[4]) = 0x2400000000008010UL;
+    QWORD_HI(regs[4]) = 0x44;
+
+    unsigned long *clearStrip = (unsigned long *)&regs[5];
+
+    for (int column = 0; column < 16; column++) {
+        *clearStrip++ = (column * 0x200 + 0x6FF8) | ((long)(0x7FF8 - pAAbuff->drawH * 8) << 16);
+        *clearStrip++ = ((column + 1) * 0x200 + 0x6FF8) | ((long)(pAAbuff->drawH * 8 + 0x7FF8) << 16);
+    }
+
+    regs = gif_clear_screen;
+    unsigned long *screenStrip = (unsigned long *)&regs[4];
+
+    for (int column = 0; column < 16; column++) {
+        *screenStrip++ = (column * 0x200 + 0x6FF8) | ((long)(0x7FF8 - pAAbuff->drawH * 8) << 16);
+        *screenStrip++ = ((column + 1) * 0x200 + 0x6FF8) | ((long)(pAAbuff->drawH * 8 + 0x7FF8) << 16);
+    }
+
+    regs = gif_clear_frame_buf;
+    unsigned long *frameStrip = (unsigned long *)&regs[4];
+
+    for (int column = 0; column < 16; column++) {
+        *frameStrip++ = (column * 0x200 + 0x6FF8) | ((long)(0x7FF8 - pAAbuff->dispH * 8) << 16);
+        *frameStrip++ = ((column + 1) * 0x200 + 0x6FF8) | ((long)(pAAbuff->dispH * 8 + 0x7FF8) << 16);
+    }
+}
 
 void SetBackgroundColor(int red, int green, int blue)
 {
-    aaClearRegs[AA_CLEAR_REGS_RGBAQ] = (long)red | ((long)green << 8) | ((long)blue << 16) | 0x80000000L;
+    QWORD_HI(aaClearRegs[AA_CLEAR_REGS_RGBAQ]) = (long)red | ((long)green << 8) | ((long)blue << 16) | 0x80000000L;
 }
 
 void PutDispBuffer(void)
@@ -82,7 +235,7 @@ void SetMovieDrawSmallVIFChain(int widthLog2, int heightLog2, int gsAddress)
     drawEnv = (sceGsDrawEnv1 *)vu1_bufPtr.words;
     sceGsSetDefDrawEnv(drawEnv, aaBuff.auxPSM, aaBuff.auxW, aaBuff.auxH, 3, 0);
     drawEnv->frame1.FBP = aaBuff.auxFBP;
-    drawEnv->zbuf1 = SCE_GS_SET_ZBUF(aaBuff.zFBP, aaBuff.zPSM & 0xF, 0);
+    *(unsigned long *)&drawEnv->zbuf1 = SCE_GS_SET_ZBUF(aaBuff.zFBP, aaBuff.zPSM & 0xF, 0);
     vu1_bufPtr.words += sizeof(sceGsDrawEnv1) / 4;
 
     clearSprite = (long *)vu1_bufPtr.words;

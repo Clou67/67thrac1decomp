@@ -30,33 +30,36 @@ struct fsAABuff {
     int update_context;
 };
 
-// GS memory map (DL GSMEM; only the fields known so far).
-struct GSMEM {
-    int display;
-    int draw;
-    int zbuf;
-    int base;
-};
-
-extern GSMEM GSmem;
+// GS memory addresses. DL keeps these in a GSMEM struct, but RC1 addresses
+// each one as a separate global.
+extern int GSmemDisplay;
+extern int GSmemDraw;
+extern int GSmemZbuf;
 extern fsAABuff aaBuff;
 extern fsAABuff *pAAbuff;
 
+// One 128-bit DMA/GIF quadword, as DL types it.
+typedef int qword[4];
+
+// The low and high 64-bit halves of a quadword.
+#define QWORD_LO(q) (*(unsigned long *)&(q)[0])
+#define QWORD_HI(q) (*(unsigned long *)&(q)[2])
+
 // GIF packets for the AA passes (qword counts are in the DMA tags that send them).
-extern unsigned long aaBlurRegs[];
-extern unsigned long aaDisplayRegs[];
-extern unsigned long aaMovieDisplayRegs[];
-extern unsigned long aaClearRegs[];
-extern unsigned long gif_clear_screen[];
-extern unsigned long gif_clear_frame_buf[];
+extern qword aaBlurRegs[];
+extern qword aaDisplayRegs[];
+extern qword aaMovieDisplayRegs[];
+extern qword aaClearRegs[];
+extern qword gif_clear_screen[];
+extern qword gif_clear_frame_buf[];
 
 #define AA_BLUR_REGS_QWC 0x26
 #define AA_DISPLAY_REGS_QWC 0x29
 #define AA_CLEAR_REGS_QWC 0x15
 #define AA_DRAW_ENV_QWC 9
 
-// RGBAQ word of the clear packet.
-#define AA_CLEAR_REGS_RGBAQ 7
+// Quadword of the clear packet holding the RGBAQ register (data in the high half).
+#define AA_CLEAR_REGS_RGBAQ 3
 
 #define EE_PHYSICAL_ADDRESS_MASK 0x0FFFFFFF
 
@@ -68,6 +71,7 @@ extern unsigned long AuxBufferTex0;
 
 void FastMemSetZero(void *destination, int size);
 
+void SetupFS_AA_buffer(int drawWidth, int drawHeight, int dispWidth, int dispHeight, int offsetX, int offsetY);
 void SetBackgroundColor(int red, int green, int blue);
 void PutDispBuffer(void);
 void PutDrawBufferLarge(void);

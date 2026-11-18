@@ -17,6 +17,17 @@ struct sceGsStoreImage {
 };
 
 // libgraph register images (Sony libgraph.h layouts).
+typedef unsigned int u_long128 __attribute__((mode(TI)));
+
+struct sceGsZbuf {
+    unsigned long ZBP : 9;
+    unsigned long pad09 : 15;
+    unsigned long PSM : 4;
+    unsigned long pad28 : 4;
+    unsigned long ZMSK : 1;
+    unsigned long pad33 : 31;
+};
+
 struct sceGsFrame {
     unsigned long FBP : 9;
     unsigned long pad09 : 7;
@@ -48,7 +59,7 @@ struct sceGsDispEnv {
 struct sceGsDrawEnv1 {
     sceGsFrame frame1;
     unsigned long frame1addr;
-    unsigned long zbuf1;
+    sceGsZbuf zbuf1;
     unsigned long zbuf1addr;
     unsigned long xyoffset1;
     unsigned long xyoffset1addr;
@@ -104,8 +115,8 @@ int sceGsSetDefLoadImage(sceGsLoadImage *image, short bp, short bw, short psm, s
 int sceGsSetDefStoreImage(sceGsStoreImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsExecStoreImage(sceGsStoreImage *image, void *destination);
 int sceGsSyncPath(int mode, unsigned short timeout);
-int sceGsSetDefDispEnv(sceGsDispEnv *disp, short psm, short w, short h, short dx, short dy);
-int sceGsSetDefDrawEnv(sceGsDrawEnv1 *draw, short psm, short w, short h, short ztest, short zpsm);
+void sceGsSetDefDispEnv(sceGsDispEnv *disp, short psm, short w, short h, short dx, short dy);
+void sceGsSetDefDrawEnv(sceGsDrawEnv1 *draw, short psm, short w, short h, short ztest, short zpsm);
 void sceGsPutDispEnv(sceGsDispEnv *disp);
 int sceGsPutDrawEnv(sceGifTag *giftag);
 
