@@ -82,7 +82,33 @@ int memcard_GetDataSize(mc_data *mcd)
     return size + 8;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Checksum);
+int memcard_Checksum(char *data, int size)
+{
+    unsigned char *byte = (unsigned char *)data;
+    unsigned char *end;
+    unsigned int crc;
+
+    if (size > MEMCARD_CHECKSUM_LIMIT) {
+        return 0;
+    }
+
+    end = byte + size;
+    crc = 0xEDB88320;
+
+    while (byte < end) {
+        crc ^= *byte++ << 8;
+
+        for (int bit = 7; bit >= 0; bit--) {
+            if (crc & 0x8000) {
+                crc = (crc << 1) ^ 0x1F45;
+            } else {
+                crc <<= 1;
+            }
+        }
+    }
+
+    return crc & 0xFFFF;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_TestChecksum);
 
