@@ -115,7 +115,16 @@ void VU1_setScissor(int left, int right, int top, int bottom)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4AF8);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_texFlush);
+
+void VU1_texFlush(void)
+{
+    VU1_CHAIN_WORD(0) = DMA_TAG_REF | 3;
+    VU1_CHAIN_WORD(4) = (unsigned int)Gif_Tex_Flush;
+    VU1_CHAIN_WORD(8) = 0;
+    VU1_CHAIN_WORD(12) = VIF_DIRECT | 3;
+
+    vu1_bufPtr += 16;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_gsRegsNormal);
 
