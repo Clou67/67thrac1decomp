@@ -18,7 +18,6 @@ void VU0_loadMicroProgram(long *data)
     }
 }
 
-
 void VU1_setBufSizeByLevel(void)
 {
     int level = Level;
@@ -41,7 +40,6 @@ void VU1_initChain(void)
     SkinVertexCache = EngScratchPad - SKIN_VERTEX_CACHE_SIZE;
 }
 
-
 void VU1_swapChain(void)
 {
     vu1_bufId = 1 - vu1_bufId;
@@ -51,7 +49,6 @@ void VU1_swapChain(void)
     EngScratchPad = vu1_bufPtr + vu1_bufSize - EngScratchPadSize;
     SkinVertexCache = EngScratchPad - SKIN_VERTEX_CACHE_SIZE;
 }
-
 
 void VU1_sendChain(void)
 {
@@ -90,7 +87,6 @@ void VU1_sendChain(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_syncChain);
 
-
 void VU1_addDataRef(void *data, int qcnt)
 {
     VU1_CHAIN_WORD(0) = qcnt | DMA_TAG_REF;
@@ -102,7 +98,6 @@ void VU1_addDataRef(void *data, int qcnt)
 }
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4818);
-
 
 void VU1_addDataDirect(int address, void *data, int qcnt)
 {
@@ -119,7 +114,6 @@ void VU1_addDataDirect(int address, void *data, int qcnt)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B48C8);
 
-
 void VU1_addVIFcode(unsigned int vifcode)
 {
     VU1_CHAIN_WORD(0) = DMA_TAG_CNT;
@@ -129,7 +123,6 @@ void VU1_addVIFcode(unsigned int vifcode)
 
     vu1_bufPtr += 16;
 }
-
 
 void VU1_addGSregister(unsigned int reg, unsigned long value)
 {
@@ -151,7 +144,6 @@ void VU1_addGSregister(unsigned int reg, unsigned long value)
 }
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B49D0);
-
 
 void VU1_setScissor(int left, int right, int top, int bottom)
 {
@@ -194,7 +186,6 @@ void VU1_setScissor(int left, int right, int top, int bottom)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4AF8);
 
-
 void VU1_texFlush(void)
 {
     VU1_CHAIN_WORD(0) = DMA_TAG_REF | 3;
@@ -205,7 +196,6 @@ void VU1_texFlush(void)
     vu1_bufPtr += 16;
 }
 
-
 void VU1_gsRegsNormal(void)
 {
     VU1_CHAIN_WORD(0) = DMA_TAG_REF | 3;
@@ -215,7 +205,6 @@ void VU1_gsRegsNormal(void)
 
     vu1_bufPtr += 16;
 }
-
 
 void VU1_gsRegsEffects(void)
 {
@@ -229,7 +218,6 @@ void VU1_gsRegsEffects(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4C20);
 
-
 void VU1_gsRegsFont(void)
 {
     VU1_CHAIN_WORD(0) = DMA_TAG_REF | 11;
@@ -239,7 +227,6 @@ void VU1_gsRegsFont(void)
 
     vu1_bufPtr += 16;
 }
-
 
 void StashGSMem(void *ram, int gs_start, int size)
 {
@@ -256,7 +243,6 @@ void StashGSMem(void *ram, int gs_start, int size)
         sceGsSyncPath(0, 0);
     }
 }
-
 
 void UploadGSMemLinear(void *ram, int gs_loc, int width, int height)
 {
@@ -286,7 +272,6 @@ void UploadGSMemLinear(void *ram, int gs_loc, int width, int height)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_VIF1_Enable);
 
-
 void DMAC_VIF1_Disable(void)
 {
     if (*D_STAT & D_STAT_CIM_VIF1) {
@@ -300,8 +285,6 @@ void DMAC_VIF1_Disable(void)
     _dmacHandle[0] = 0;
     _dmacHandle[1] = 0;
 }
-
-
 
 int DMAC_VIF1_Handler(int channel)
 {
@@ -336,7 +319,6 @@ int DMAC_VIF1_Handler(int channel)
     ExitHandler();
     return 0;
 }
-
 
 int DMAC_BEIS_Handler(int channel)
 {
