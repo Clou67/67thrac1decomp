@@ -91,7 +91,30 @@ void csf_unformatted(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ee70);
+void csf_prompt_format(void)
+{
+    if (g_memcard.memcards[0].result != MC_RESULT_UNFORMATTED) {
+        mc_state = CS_NOCARD;
+        return;
+    }
+
+    if (mcstate_flags & MCSTATE_FLAG_ANSWER_NO) {
+        mcstate_flags ^= MCSTATE_FLAG_ANSWER_NO;
+
+        if (InFrontEnd) {
+            mc_state = CS_PROMPT_BEGIN_UNFORMATTED;
+            return;
+        }
+
+        mc_state = CS_UNFORMATTED;
+        return;
+    }
+
+    if (mcstate_flags & MCSTATE_FLAG_FORMAT_YES) {
+        mcstate_flags ^= MCSTATE_FLAG_FORMAT_YES;
+        mc_state = CS_FORMAT_PENDING;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025eef0);
 
