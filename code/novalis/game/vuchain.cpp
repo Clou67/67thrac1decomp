@@ -3,7 +3,20 @@
 
 volatile int VifChainFlags = 0;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU0_loadMicroProgram);
+void VU0_loadMicroProgram(long *data)
+{
+    while (*D0_CHCR & D_CHCR_STR) {
+        FastSitAndSpin(16);
+    }
+
+    *D0_QWC = 0;
+    *D0_TADR = (unsigned int)data & 0x0FFFFFFF;
+    *D0_CHCR = 0x145;
+
+    while (*D0_CHCR & D_CHCR_STR) {
+        FastSitAndSpin(16);
+    }
+}
 
 
 void VU1_setBufSizeByLevel(void)
