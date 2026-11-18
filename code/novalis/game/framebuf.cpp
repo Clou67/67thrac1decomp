@@ -13,7 +13,19 @@ void PutDispBuffer(void)
     sceGsPutDispEnv(&pAAbuff->disp);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", PutDrawBufferLarge);
+void PutDrawBufferLarge(void)
+{
+    if (vu1_bufPtr != 0) {
+        VU1_CHAIN_WORD(0) = DMA_TAG_REF | AA_DRAW_ENV_QWC;
+        VU1_CHAIN_WORD(4) = (unsigned int)&pAAbuff->giftagDrawLarge & EE_PHYSICAL_ADDRESS_MASK;
+        VU1_CHAIN_WORD(8) = 0;
+        VU1_CHAIN_WORD(12) = VIF_DIRECT | AA_DRAW_ENV_QWC;
+
+        vu1_bufPtr += 16;
+    } else {
+        sceGsPutDrawEnv(&pAAbuff->giftagDrawLarge);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", ClearDrawBufferLarge);
 
