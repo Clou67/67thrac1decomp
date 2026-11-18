@@ -85,6 +85,7 @@ struct memcard_globals {
 extern memcard_globals g_memcard;
 extern mc_data mc_gamedata[];
 extern mc_data mc_leveldata[];
+extern int g_loaderr;
 
 // Memory card paths, patched with the disc's product code by memcard_GetName.
 extern char SAVEGAME_NAME[];

@@ -7,6 +7,9 @@
 #include "music.h"
 #include "vuchain.h"
 
+// Save chunks whose data differed from what was already in memory on the last restore.
+int g_loaderr = 0;
+
 void memcard_GetName(char *buff)
 {
     int position;
@@ -175,6 +178,92 @@ void memcard_RestoreInfo(char *addr, int slot, int index)
     g_memcard.memcards[slot].info[index].saveTime = *(sceCdCLOCK *)addr;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_RestoreData);
+int memcard_RestoreData(char *addr, int index, mc_data *mcd)
+{
+    int errors;
+    int restored;
+    int entryIndex;
+
+    if (!memcard_TestChecksum(addr)) {
+        return 1;
+    }
+
+    addr += 8;
+    errors = 0;
+    restored = 8;
+
+    for (entryIndex = 0; mcd[entryIndex].addr != 0; entryIndex++) {
+        mcd[entryIndex].mark = 0;
+    }
+
+    while (((mc_chunk *)addr)->iff != -1) {
+        mc_chunk *chunk = (mc_chunk *)addr;
+        mc_data *entry;
+
+        entryIndex = 0;
+
+        if (mcd[0].addr == 0) {
+            goto missing;
+        }
+
+        while (mcd[entryIndex].iff != chunk->iff) {
+            entryIndex++;
+
+            if (mcd[entryIndex].addr == 0) {
+                goto missing;
+            }
+        }
+
+        entry = (mc_data *)(entryIndex * (int)sizeof(mc_data) + (int)mcd);
+
+        if (entry->addr != 0) {
+            int chunkSize = chunk->size;
+            char *destination = (char *)entry->addr + index * entry->size;
+            int size;
+
+            if (chunkSize == entry->size) {
+                size = entry->size;
+                entry->mark = 1;
+            } else if (chunkSize < entry->size) {
+                size = chunkSize;
+                entry->mark = -1;
+            } else {
+                size = entry->size;
+                entry->mark = -2;
+            }
+
+            if (memcmp(destination, chunk + 1, size) != 0) {
+                g_loaderr++;
+            }
+
+            FastMemCopy32(destination, chunk + 1, size);
+            restored += ((size + 3) & ~3) + 8;
+        } else {
+        missing:
+            errors++;
+        }
+
+        addr += ((chunk->size + 3) & ~3) + 8;
+    }
+
+    restored += 8;
+
+    if (restored != memcard_GetDataSize(mcd)) {
+        errors++;
+    }
+
+    // The terminating chunk is followed by the id of the last block that was saved.
+    addr += 8;
+
+    for (entryIndex = 0; mcd[entryIndex].addr != 0 && mcd[entryIndex].iff != *(int *)addr; entryIndex++) {
+        if (mcd[entryIndex].mark <= 0) {
+            errors++;
+        }
+    }
+
+    g_memcard.memcards[g_memcard.slot].oldsave = errors;
+
+    return errors;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Save);
