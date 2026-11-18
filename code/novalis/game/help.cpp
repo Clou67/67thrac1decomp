@@ -232,7 +232,44 @@ void Help_Resume(void)
     Help.suspend = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_StartMessageBox);
+void Help_StartMessageBox(void)
+{
+    FontWindow window;
+    char *text;
+    int screenHeight;
+    int top;
+    int halfHeight;
+    short textWidth;
+    short textHeight;
+
+    Help.state = HELP_STATE_BOX_OPENING;
+    Help.counter = 0;
+
+    if (sceneHelpMsgFlag1 != 0 || sceneHelpMsgFlag0 != 0) {
+        sound_LevelPlay(0, 1, 0);
+    }
+
+    text = HelpMsgs[Help.message_index].text;
+    SetFontWindow(&window, 0xF0, 0x1E0, 0x2C, 0x1D4, HELP_BOX_CENTER_X, 0x168, 0x10, 7);
+    FontPrintWindowSmall(&window, HELP_TEXT_COLOR, text, -1);
+
+    screenHeight = occlViewParams[1];
+    textWidth = window.max_width;
+    textHeight = window.max_height;
+    halfHeight = (textHeight >> 1) + HELP_BOX_PADDING_Y;
+    top = screenHeight - HELP_BOX_BOTTOM_OFFSET;
+
+    Help.half_width = (textWidth >> 1) + HELP_BOX_PADDING_X;
+    Help.half_height = halfHeight;
+    Help.center_x = HELP_BOX_CENTER_X;
+    Help.frame_half_width = HELP_BOX_START_HALF_SIZE;
+    Help.frame_half_height = HELP_BOX_START_HALF_SIZE;
+    Help.center_y = top;
+
+    if (screenHeight - HELP_BOX_BOTTOM_MARGIN < top + halfHeight) {
+        Help.center_y = screenHeight - HELP_BOX_BOTTOM_MARGIN - halfHeight;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Update);
 
