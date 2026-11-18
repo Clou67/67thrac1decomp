@@ -337,7 +337,19 @@ int DMAC_VIF1_Handler(int channel)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_BEIS_Handler);
+
+int DMAC_BEIS_Handler(int channel)
+{
+    unsigned int chcr = *D1_CHCR;
+    unsigned int tadr = *D1_TADR;
+
+    printf_stub("DMAC(15) - Bus Error\n");
+    printf_stub("D1_CHCR=%X\nD1_TADR=%X", chcr, tadr);
+    printf_stub("Why doesn't this work?");
+
+    for (;;) {
+    }
+}
 
 // Appends a VIF1 command packet (command word plus three zero words) to the VU1 chain.
 void Vif1ChainCmd(int command)
