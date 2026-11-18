@@ -167,7 +167,14 @@ void Help_Kill(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_ClearUsedSinceDeath);
+void Help_ClearUsedSinceDeath(void)
+{
+    int i;
+
+    for (i = 0; i < HELP_DATUM_COUNT; i++) {
+        HelpDataMessages[i].level_die &= ~HELP_LEVEL_DIE_USED;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_FindIndex);
 
