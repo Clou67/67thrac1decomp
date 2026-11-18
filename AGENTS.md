@@ -112,3 +112,10 @@ Rules:
 - Each level overlay is loaded over the boot ELF's level region (from 0x15EF00), so overlay addresses overlap boot level-code addresses. Always check which binary a symbol belongs to. Resident core code (below 0x15EF00) is shared, and its names come from the boot project.
 - Some overlay files are identical to boot files (for example `movie/*` and `shadowproc`). Reuse the boot source rather than decompiling twice.
 - Moby update code is one file per class (`game/update/moby<oClass>.cpp`). Helpers before an `UpdateMoby_<N>` belong to that file and are named `M<oClass>_<Behavior>`, e.g. `M773_HandleStepping`.
+
+## Commits
+
+- One commit per matched function, with the message `match FunctionName` (the plain, unmangled name). Nothing else in the message: no description, no trailers, no attribution.
+- Supporting changes (new headers, struct fields, global names, symbol renames) go in the same commit as the function that needs them, or in their own short commit (`add framebuf header`, `rename currentLevelId to Level`).
+- Never commit a symbol rename for a function that is still `INCLUDE_ASM`; the split depends on those names.
+- Work on one branch per source file. Pull requests are opened by the maintainer, not by agents.
