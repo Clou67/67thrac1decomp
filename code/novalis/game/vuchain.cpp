@@ -286,7 +286,20 @@ void UploadGSMemLinear(void *ram, int gs_loc, int width, int height)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_VIF1_Enable);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_VIF1_Disable);
+
+void DMAC_VIF1_Disable(void)
+{
+    if (*D_STAT & D_STAT_CIM_VIF1) {
+        *D_STAT = D_STAT_CIM_VIF1;
+    }
+
+    RemoveDmacHandler(DMA_CHANNEL_VIF1, _dmacHandle[0]);
+    RemoveDmacHandler(DMA_CHANNEL_BUS_ERROR, _dmacHandle[1]);
+    DisableDmac(DMA_CHANNEL_VIF1);
+
+    _dmacHandle[0] = 0;
+    _dmacHandle[1] = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_VIF1_Handler);
 
