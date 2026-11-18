@@ -62,8 +62,23 @@ extern MEMSLOTS MemSlots;
 extern unsigned char *vu1_DmaBuffers[];
 // Which of vu1_DmaBuffers is being built.
 extern int vu1_bufId;
-// Write position in the VU1 chain buffer being built.
-extern unsigned char *vu1_bufPtr;
+struct DmaTag {
+    unsigned int tag;
+    unsigned int addr;
+    unsigned int vif0;
+    unsigned int vif1;
+};
+
+// Write position in the VU1 chain buffer being built. DL declares it qword *, but
+// RC1's code reloads it around every packet store, which a union of pointer views
+// reproduces (both in vuchain and in the packet builders elsewhere).
+union Vu1ChainCursor {
+    DmaTag *tag;
+    unsigned int *words;
+    unsigned char *bytes;
+};
+
+extern Vu1ChainCursor vu1_bufPtr;
 // End of the chain built last frame, kept by VU1_swapChain (no DL counterpart).
 extern unsigned char *vu1_lastChainEnd;
 
@@ -75,9 +90,9 @@ extern unsigned char *SkinVertexCache;
 #define SKIN_VERTEX_CACHE_SIZE 0x2000
 
 // Word at a byte offset from the VU1 chain write position.
-#define VU1_CHAIN_WORD(offset) (*(unsigned int *)(vu1_bufPtr + (offset)))
+#define VU1_CHAIN_WORD(offset) (vu1_bufPtr.words[(offset) / 4])
 // Doubleword at a byte offset from the VU1 chain write position.
-#define VU1_CHAIN_DWORD(offset) (*(unsigned long *)(vu1_bufPtr + (offset)))
+#define VU1_CHAIN_DWORD(offset) (*(unsigned long *)&vu1_bufPtr.words[(offset) / 4])
 
 // DMA tag ids (bits 28-30): payload follows the tag inline (cnt) or sits at the address in word 1 (ref).
 #define DMA_TAG_CNT 0x10000000
