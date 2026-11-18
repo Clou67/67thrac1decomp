@@ -128,7 +128,18 @@ void csf_format_pending(void)
     mc_state = CS_FORMATTING;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ef20);
+void csf_formatting(void)
+{
+    if (g_memcard.stage == MC_STAGE_IDLE && g_memcard.nextstage < 0) {
+        if (g_memcard.err != 0) {
+            mc_state = CS_PROMPT_FORMAT_FAILED;
+            mcstate_flags |= MCSTATE_FLAG_PROMPT;
+            return;
+        }
+
+        mc_state = CS_CREATE_SAVE_PENDING;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ef80);
 
