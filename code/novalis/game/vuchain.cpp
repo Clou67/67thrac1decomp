@@ -3,7 +3,17 @@
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU0_loadMicroProgram);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_setBufSizeByLevel);
+
+void VU1_setBufSizeByLevel(void)
+{
+    int level = currentLevelId;
+
+    if (level >= LEVEL_COUNT) {
+        level = 0;
+    }
+
+    vu1_bufSize = vu1_buf_table[level];
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_initChain);
 
