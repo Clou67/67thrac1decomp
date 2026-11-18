@@ -34,19 +34,19 @@ void VU1_initChain(void)
     vu1_DmaBuffers[0] = MemSlots.vu1_chain[0];
     vu1_DmaBuffers[1] = MemSlots.vu1_chain[1];
     vu1_bufId = 0;
-    vu1_bufPtr = vu1_DmaBuffers[0];
+    vu1_bufPtr.bytes = vu1_DmaBuffers[0];
 
-    EngScratchPad = vu1_bufPtr + vu1_bufSize - EngScratchPadSize;
+    EngScratchPad = vu1_bufPtr.bytes + vu1_bufSize - EngScratchPadSize;
     SkinVertexCache = EngScratchPad - SKIN_VERTEX_CACHE_SIZE;
 }
 
 void VU1_swapChain(void)
 {
     vu1_bufId = 1 - vu1_bufId;
-    vu1_chainEnd = vu1_bufPtr;
-    vu1_bufPtr = vu1_DmaBuffers[vu1_bufId];
+    vu1_lastChainEnd = vu1_bufPtr.bytes;
+    vu1_bufPtr.bytes = vu1_DmaBuffers[vu1_bufId];
 
-    EngScratchPad = vu1_bufPtr + vu1_bufSize - EngScratchPadSize;
+    EngScratchPad = vu1_bufPtr.bytes + vu1_bufSize - EngScratchPadSize;
     SkinVertexCache = EngScratchPad - SKIN_VERTEX_CACHE_SIZE;
 }
 
@@ -56,10 +56,10 @@ void VU1_sendChain(void)
     int used;
 
     VifChainFlags |= VIF_CHAIN_ALL_STAGES;
-    used = vu1_bufPtr - vu1_DmaBuffers[vu1_bufId];
+    used = vu1_bufPtr.bytes - vu1_DmaBuffers[vu1_bufId];
 
-    if (used > vu1_bufMaxUsed) {
-        vu1_bufMaxUsed = used;
+    if (used > vu1_maxUse) {
+        vu1_maxUse = used;
 
         if (used > vu1_bufSize) {
             printf_stub("vu1 chain overflow\n");
@@ -114,7 +114,7 @@ void VU1_addDataRef(void *data, int qcnt)
     VU1_CHAIN_WORD(8) = 0;
     VU1_CHAIN_WORD(12) = 0;
 
-    vu1_bufPtr += 16;
+    vu1_bufPtr.bytes += 16;
 }
 
 TEXT_PADDING(0xAF82C020, 0x00000000);
@@ -126,10 +126,10 @@ void VU1_addDataDirect(int address, void *data, int qcnt)
     VU1_CHAIN_WORD(8) = VIF_STCYCL_4_4;
     VU1_CHAIN_WORD(12) = address | (qcnt << 16) | VIF_UNPACK_V4_32;
 
-    vu1_bufPtr += 16;
+    vu1_bufPtr.bytes += 16;
 
-    FastMemCopy16(vu1_bufPtr, data, qcnt << 4);
-    vu1_bufPtr += qcnt << 4;
+    FastMemCopy16(vu1_bufPtr.bytes, data, qcnt << 4);
+    vu1_bufPtr.bytes += qcnt << 4;
 }
 
 TEXT_PADDING(0xAF82C020, 0x00000000);
@@ -141,7 +141,7 @@ void VU1_addVIFcode(unsigned int vifcode)
     VU1_CHAIN_WORD(8) = 0;
     VU1_CHAIN_WORD(12) = vifcode;
 
-    vu1_bufPtr += 16;
+    vu1_bufPtr.bytes += 16;
 }
 
 void VU1_addGSregister(unsigned int reg, unsigned long value)
@@ -160,7 +160,7 @@ void VU1_addGSregister(unsigned int reg, unsigned long value)
     VU1_CHAIN_WORD(40) = reg;
     VU1_CHAIN_WORD(44) = 0;
 
-    vu1_bufPtr += 48;
+    vu1_bufPtr.bytes += 48;
 }
 
 TEXT_PADDING(0xAF82C020, 0x00000000);
@@ -201,7 +201,7 @@ void VU1_setScissor(int left, int right, int top, int bottom)
     VU1_CHAIN_WORD(40) = GS_REG_SCISSOR_1;
     VU1_CHAIN_WORD(44) = 0;
 
-    vu1_bufPtr += 48;
+    vu1_bufPtr.bytes += 48;
 }
 
 TEXT_PADDING(0x27BD0030, 0x00000000);
@@ -213,7 +213,7 @@ void VU1_texFlush(void)
     VU1_CHAIN_WORD(8) = 0;
     VU1_CHAIN_WORD(12) = VIF_DIRECT | 3;
 
-    vu1_bufPtr += 16;
+    vu1_bufPtr.bytes += 16;
 }
 
 void VU1_gsRegsNormal(void)
@@ -223,7 +223,7 @@ void VU1_gsRegsNormal(void)
     VU1_CHAIN_WORD(8) = 0;
     VU1_CHAIN_WORD(12) = VIF_DIRECT | 3;
 
-    vu1_bufPtr += 16;
+    vu1_bufPtr.bytes += 16;
 }
 
 void VU1_gsRegsEffects(void)
@@ -233,7 +233,7 @@ void VU1_gsRegsEffects(void)
     VU1_CHAIN_WORD(8) = 0;
     VU1_CHAIN_WORD(12) = VIF_DIRECT | 3;
 
-    vu1_bufPtr += 16;
+    vu1_bufPtr.bytes += 16;
 }
 
 TEXT_PADDING(0xAF82C020, 0x00000000);
@@ -245,7 +245,7 @@ void VU1_gsRegsFont(void)
     VU1_CHAIN_WORD(8) = 0;
     VU1_CHAIN_WORD(12) = VIF_DIRECT | 11;
 
-    vu1_bufPtr += 16;
+    vu1_bufPtr.bytes += 16;
 }
 
 void StashGSMem(void *ram, int gs_start, int size)
@@ -274,17 +274,17 @@ void UploadGSMemLinear(void *ram, int gs_loc, int width, int height)
         VU1_CHAIN_WORD(4) = 0;
         VU1_CHAIN_WORD(8) = 0;
         VU1_CHAIN_WORD(12) = VIF_DIRECT | GS_LOAD_IMAGE_QWC;
-        vu1_bufPtr += 16;
+        vu1_bufPtr.bytes += 16;
 
         remaining -= GS_TRANSFER_BLOCK_SIZE;
-        sceGsSetDefLoadImage((sceGsLoadImage *)vu1_bufPtr, (gs_loc + offset) >> 8, 1, 0, 0, 0, 64, 64);
-        vu1_bufPtr += sizeof(sceGsLoadImage);
+        sceGsSetDefLoadImage((sceGsLoadImage *)vu1_bufPtr.bytes, (gs_loc + offset) >> 8, 1, 0, 0, 0, 64, 64);
+        vu1_bufPtr.bytes += sizeof(sceGsLoadImage);
 
         VU1_CHAIN_WORD(0) = DMA_TAG_REF | GS_TRANSFER_BLOCK_QWC;
         VU1_CHAIN_WORD(4) = (unsigned int)((unsigned char *)ram + offset);
         VU1_CHAIN_WORD(8) = 0;
         VU1_CHAIN_WORD(12) = VIF_DIRECT | GS_TRANSFER_BLOCK_QWC;
-        vu1_bufPtr += 16;
+        vu1_bufPtr.bytes += 16;
 
         offset += GS_TRANSFER_BLOCK_SIZE;
     }
@@ -369,11 +369,11 @@ int DMAC_BEIS_Handler(int channel)
 // Appends a VIF1 command packet (command word plus three zero words) to the VU1 chain.
 void Vif1ChainCmd(int command)
 {
-    unsigned char *chainHead = vu1_bufPtr;
+    unsigned char *chainHead = vu1_bufPtr.bytes;
     unsigned int *packet = (unsigned int *)chainHead;
 
     chainHead += 16;
-    vu1_bufPtr = chainHead;
+    vu1_bufPtr.bytes = chainHead;
 
     packet[0] = command + VIF_CHAIN_CMD;
     packet[1] = 0;
