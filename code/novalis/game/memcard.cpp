@@ -1286,7 +1286,7 @@ int memcard_Save(int force, int level)
             g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].level = Level;
             g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].elapsedTime = ElapsedTime;
             g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].saveTime = LastSaveTime;
-            g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].completes = GameCompleted;
+            g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].completes = ChallengeMode;
 
             memcard_PrepData(mc_gameprepbuff, 0, mc_gamedata);
             memcard_PrepData(mc_levelprepbuff, g_memcard.level, mc_leveldata);

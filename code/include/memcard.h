@@ -218,7 +218,7 @@ extern sceCdCLOCK LastSaveTime;
 extern unsigned char LevelVisited[];
 extern int HeroBolts;
 extern int ElapsedTime;
-extern int GameCompleted;
+extern int ChallengeMode;
 
 // Memory card paths, patched with the disc's product code by memcard_GetName.
 extern char SAVEGAME_NAME[];
