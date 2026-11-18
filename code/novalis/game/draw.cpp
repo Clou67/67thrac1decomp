@@ -4,14 +4,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ScreenPosFromWorld
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetLevelCounters);
 
-void STUB_00218990(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", STUB_00218990);
 
-void printf_stub2(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", printf_stub2);
 
-void printf_stub3(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", printf_stub3);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetFrameBufferForCutscene);
 

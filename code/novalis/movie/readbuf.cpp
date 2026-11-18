@@ -2,8 +2,7 @@
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufCreate__FP7ReadBuf);
 
-void readBufDelete__FP7ReadBuf(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufDelete__FP7ReadBuf);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufBeginPut__FP7ReadBufPPUc);
 

@@ -51,10 +51,16 @@ options:
 segments:
   - [0, databin, elf_header]
 
+  # Small data (.lit holds the overlay's .sdata/.lit4). Matched files' .sdata is
+  # carved out at its original address.
   - name: lit
-    type: lit4
+    type: code
     start: 0x1000
     vram: 0x0015ef00
+    subsegments:
+    - [0x1000, lit4]
+    - [0x32a0, .sdata, game/vuchain]  # VifChainFlags
+    - [0x32a4, lit4]
 
   # .bss is NOBITS in the section table but the single PT_LOAD covers it with zeros.
   - name: bss

@@ -1,7 +1,6 @@
 #include "common.h"
 
-void update_stub(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update", update_stub);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update", ResetGameCounters);
 

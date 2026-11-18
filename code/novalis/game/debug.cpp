@@ -24,26 +24,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", func_002174D8);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", DrawDebugMenu);
 
-void STUB_002187f8(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_002187f8);
 
-void STUB_00218800(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218800);
 
-void STUB_00218808(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218808);
 
-void STUB_00218810(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218810);
 
-void STUB_00218818(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218818);
 
-void STUB_00218820(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218820);
 
-void STUB_00218828(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218828);
 
-void STUB_00218830(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218830);

@@ -6,11 +6,8 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera17", FUN_003
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera17", InitCamera_17);
 
-void ActivateCamera_17(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera17", ActivateCamera_17);
 
-void UpdateCamera_17(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera17", UpdateCamera_17);
 
-void ExitCamera_17(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera17", ExitCamera_17);

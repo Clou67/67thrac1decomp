@@ -1,7 +1,6 @@
 #include "common.h"
 
-void STUB_RET_2525f0(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", STUB_RET_2525f0);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", CreatePointLight3);
 

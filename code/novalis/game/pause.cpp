@@ -228,11 +228,9 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", UpdateAfterEquipG
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MenuHero_Update);
 
-void func_00298568(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00298568);
 
-void func_00298570(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00298570);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MenuHero_MobyUpdateA);
 
@@ -262,8 +260,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", M1957_Update_Girl
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GameComplete_Draw);
 
-void func_002996C0(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002996C0);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_InitStreamBuffers);
 

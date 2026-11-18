@@ -2,8 +2,7 @@
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufCreate__FP5VoBufP6VoDataP5VoTagi);
 
-void voBufDelete__FP5VoBuf(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufDelete__FP5VoBuf);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufReset__FP5VoBuf);
 

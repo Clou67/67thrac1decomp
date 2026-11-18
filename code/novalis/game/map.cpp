@@ -162,7 +162,6 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DrawIcon);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_SaveLevelObjectState);
 
-void map_stub(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_stub);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_PointSideOfLine);

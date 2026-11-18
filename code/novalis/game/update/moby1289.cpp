@@ -6,5 +6,4 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1289", FUN_003
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1289", FUN_0030a670);
 
-void UpdateMoby_1289(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1289", UpdateMoby_1289);

@@ -42,8 +42,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseColl);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", PrintMobyMemory);
 
-void STUB_RET_255950(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", STUB_RET_255950);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ResetLevelData);
 

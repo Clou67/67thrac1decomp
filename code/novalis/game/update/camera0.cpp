@@ -1,7 +1,6 @@
 #include "common.h"
 
-void FUN_0030f338(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f338);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f340);
 
@@ -11,8 +10,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f498);
 
-void FUN_0030f600(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f600);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f608);
 
@@ -36,8 +34,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0031
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_00310a08);
 
-void FUN_00311008(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_00311008);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_00311010);
 
@@ -123,5 +120,4 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", InitCame
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", UpdateCamera_0);
 
-void ExitCamera_0(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", ExitCamera_0);
