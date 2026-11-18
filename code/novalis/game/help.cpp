@@ -176,7 +176,29 @@ void Help_ClearUsedSinceDeath(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_FindIndex);
+int Help_FindIndex(int id)
+{
+    int found = -1;
+    int index = 0;
+
+    if (Help.num_message > 0) {
+        if (HelpMsgs[0].id == id) {
+            found = 0;
+        } else {
+        next:
+            index++;
+            if (index < Help.num_message) {
+                if (HelpMsgs[index].id == id) {
+                    found = index;
+                } else {
+                    goto next;
+                }
+            }
+        }
+    }
+
+    return found;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", msg_string);
 
