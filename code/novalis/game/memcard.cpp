@@ -54,7 +54,18 @@ void memcard_ResetGame(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Update);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_MakeWholeSave);
+void memcard_MakeWholeSave(char *addr)
+{
+    *(int *)addr = memcard_GetDataSize(mc_gamedata);
+    *(int *)(addr + 4) = memcard_GetDataSize(mc_leveldata);
+
+    addr += 8;
+    addr += memcard_PrepData(addr, 0, mc_gamedata);
+
+    for (int level = 0; level < MEMCARD_LEVEL_COUNT; level++) {
+        addr += memcard_PrepData(addr, level, mc_leveldata);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Init);
 
