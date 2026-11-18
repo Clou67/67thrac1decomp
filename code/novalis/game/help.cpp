@@ -227,7 +227,10 @@ void Help_Suspend(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Resume);
+void Help_Resume(void)
+{
+    Help.suspend = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_StartMessageBox);
 
