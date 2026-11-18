@@ -88,6 +88,8 @@ segments:
     - [0x8580, data]
     - [0x1b990, .data, game/help]  # Help, HelpPairs
     - [0x1bc28, data]
+    - [0xaace0, .rodata, game/help]  # jump tables
+    - [0xaad00, data]
     - [0xabde0, .rodata, game/memcard]
     - [0xabfa0, data]
     - [0xac690, .rodata, game/vuchain]

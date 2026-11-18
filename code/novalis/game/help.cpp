@@ -102,9 +102,50 @@ HelpPair HelpPairs[HELP_PAIR_COUNT] = {
     {0, 0}, {0, 0},
 };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Skip);
+void Help_Skip(void)
+{
+    switch (Help.state) {
+    case HELP_STATE_IDLE:
+        Help.message_id = HELP_NO_MESSAGE;
+        break;
+    case HELP_STATE_BOX_OPENING:
+    case HELP_STATE_PROMPT:
+        Help.state = HELP_STATE_BOX_CLOSING;
+        Help.counter = 0;
+        break;
+    case HELP_STATE_PROMPT_TO_BOX:
+        Help.state = HELP_STATE_BOX_CLOSING;
+        Help.counter = 0;
+        break;
+    case HELP_STATE_TEXT_FADE_IN:
+        Help.state = HELP_STATE_TEXT_FADE_OUT;
+        Help.counter = HELP_TEXT_FADE_FRAMES - Help.counter;
+        break;
+    case HELP_STATE_TEXT_SHOWN:
+        Help.state = HELP_STATE_TEXT_FADE_OUT;
+        Help.counter = 0;
+        break;
+    case HELP_STATE_TEXT_FADE_OUT:
+    case HELP_STATE_BOX_CLOSING:
+        break;
+    }
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_QueueMessage);
+int Help_QueueMessage(int id, int flag)
+{
+    if (Help.state == HELP_STATE_IDLE && Help.message_id == HELP_NO_MESSAGE) {
+        if (musicTransition.unk50 == 0 && musicTransition.unk1C == HELP_NO_MESSAGE) {
+            if (HelpDataMessages[flag].timesUsed != HELP_TIMES_USED_MAX) {
+                Help.message_id = id;
+                Help.message_flg = flag;
+                Help_AddToLog(id);
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Kill);
 
