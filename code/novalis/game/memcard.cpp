@@ -69,7 +69,18 @@ void memcard_MakeWholeSave(char *addr)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Init);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_GetDataSize);
+int memcard_GetDataSize(mc_data *mcd)
+{
+    int size = 8;
+
+    for (; mcd->addr != 0; mcd++) {
+        size += 8;
+        size += mcd->size;
+        size = (size + 3) & ~3;
+    }
+
+    return size + 8;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Checksum);
 
