@@ -184,7 +184,17 @@ void csf_checking_save(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f068);
+void csf_nosave(void)
+{
+    if (g_memcard.memcards[0].result != MC_RESULT_SAME_CARD) {
+        mc_state = CS_NOCARD;
+        return;
+    }
+
+    if (mcstate_flags & MCSTATE_FLAG_SAVE) {
+        mc_state = CS_PROMPT_CREATE_SAVE;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f0a0);
 
