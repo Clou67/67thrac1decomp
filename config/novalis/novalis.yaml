@@ -22,7 +22,7 @@ options:
 
   asm_path: code/_generated/novalis
   src_path: code/novalis
-  data_path: build/novalis/data
+  data_path: code/_generated/novalis/data
   build_path: build/novalis
   ld_script_path: build/novalis/novalis.ld
   o_as_suffix: True
