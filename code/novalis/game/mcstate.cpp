@@ -63,7 +63,21 @@ void csf_nocard(void)
     g_memcard.nextslot = -1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025edc8);
+void csf_wait_for_card(void)
+{
+    int result = g_memcard.memcards[0].result;
+
+    mcstate_flags &= ~MCSTATE_FLAG_ANSWER_NO;
+
+    if (result == MC_RESULT_SAME_CARD) {
+        mc_state = CS_FORMATTED;
+    } else if (result == MC_RESULT_NEW_CARD) {
+        g_memcard.memcards[0].result = MC_RESULT_SAME_CARD;
+        mc_state = CS_FORMATTED;
+    } else if (result == MC_RESULT_UNFORMATTED) {
+        mc_state = CS_UNFORMATTED;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ee30);
 
