@@ -301,7 +301,41 @@ void DMAC_VIF1_Disable(void)
     _dmacHandle[1] = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_VIF1_Handler);
+
+
+int DMAC_VIF1_Handler(int channel)
+{
+    unsigned int chcr = *D1_CHCR;
+    unsigned int tag = chcr & D_CHCR_TAG_MASK;
+
+    if (*D1_TADR != 0 && (chcr & D_CHCR_ASP_MASK)) {
+        if ((chcr & D_CHCR_TAG_ID_MASK) == D_CHCR_TAG_ID_END) {
+            VifChainFlags &= ~0x1F;
+        } else {
+            if (tag & VIF_CHAIN_STAGE_BIT) {
+                switch (tag) {
+                case VIF_CHAIN_STAGE_1:
+                    VifChainFlags &= ~0x2;
+                    break;
+                case VIF_CHAIN_STAGE_2:
+                    VifChainFlags &= ~0x4;
+                    break;
+                case VIF_CHAIN_STAGE_3:
+                    VifChainFlags &= ~0x8;
+                    break;
+                case VIF_CHAIN_STAGE_4:
+                    VifChainFlags &= ~0x10;
+                    break;
+                }
+            }
+
+            *D1_CHCR = chcr | D_CHCR_STR;
+        }
+    }
+
+    ExitHandler();
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_BEIS_Handler);
 
