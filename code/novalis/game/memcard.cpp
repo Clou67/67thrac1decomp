@@ -158,7 +158,22 @@ int memcard_PrepData(char *addr, int index, mc_data *mcd)
     return size + 8;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_RestoreInfo);
+void memcard_RestoreInfo(char *addr, int slot, int index)
+{
+    g_memcard.memcards[slot].info[index].bad = !memcard_TestChecksum(addr);
+
+    // Each value sits in its own save chunk: 8 bytes of chunk header, then the int.
+    addr += 0x10;
+    g_memcard.memcards[slot].info[index].level = *(int *)addr;
+    addr += 0xC;
+    g_memcard.memcards[slot].info[index].bolts = *(int *)addr;
+    addr += 0xC;
+    g_memcard.memcards[slot].info[index].completes = *(int *)addr;
+    addr += 0xC;
+    g_memcard.memcards[slot].info[index].elapsedTime = *(int *)addr;
+    addr += 0xC;
+    g_memcard.memcards[slot].info[index].saveTime = *(sceCdCLOCK *)addr;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_RestoreData);
 
