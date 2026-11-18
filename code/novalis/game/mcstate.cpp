@@ -14,7 +14,12 @@ void UpdateMCState(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025eca0);
+void csf_init(void)
+{
+    mc_state = CS_NOCARD;
+    g_memcard.autosave = 0;
+    g_memcard.memcards[0].result = g_memcard.res;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ecc8);
 
