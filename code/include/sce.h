@@ -19,6 +19,17 @@ struct sceGsStoreImage {
 // libgraph register images (Sony libgraph.h layouts).
 typedef unsigned int u_long128 __attribute__((mode(TI)));
 
+struct sceCdCLOCK {
+    unsigned char stat;
+    unsigned char second;
+    unsigned char minute;
+    unsigned char hour;
+    unsigned char pad;
+    unsigned char day;
+    unsigned char month;
+    unsigned char year;
+};
+
 struct sceGsZbuf {
     unsigned long ZBP : 9;
     unsigned long pad09 : 15;
