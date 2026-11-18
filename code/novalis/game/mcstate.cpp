@@ -247,7 +247,25 @@ void csf_creating_save(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f1d0);
+void csf_newcard(void)
+{
+    int flags = mcstate_flags;
+
+    mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+    mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+
+    if (flags & MCSTATE_FLAG_SAVE_FAILED) {
+        mcstate_flags = (mcstate_flags ^ MCSTATE_FLAG_SAVE_FAILED) | MCSTATE_FLAG_PROMPT;
+        mc_state = CS_PROMPT_SAVE_FAILED;
+    } else if (flags & MCSTATE_FLAG_LOAD_FAILED) {
+        mcstate_flags = (mcstate_flags ^ MCSTATE_FLAG_LOAD_FAILED) | MCSTATE_FLAG_PROMPT;
+        mc_state = CS_PROMPT_LOAD_FAILED;
+    } else if (g_memcard.memcards[0].result != MC_RESULT_SAME_CARD) {
+        mc_state = CS_NOCARD;
+    } else if (g_memcard.autosave != 0) {
+        mc_state = CS_GOOD_SAVE;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f260);
 
