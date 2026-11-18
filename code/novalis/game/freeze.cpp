@@ -213,7 +213,7 @@ void UpdateModeFreeze(void)
 
             moby->enabled = 0;
             moby->collision = 0;
-            moby->modeBits |= MOBY_MODE_BIT_HIDDEN;
+            moby->modeBits |= DISABLED;
             Hero_RevertToRatchet();
             Hero_Warp(&Hero.savedPosRot[0], &Hero.savedPosRot[4], 0, 1);
             gameMode = GAME_MODE_NORMAL;

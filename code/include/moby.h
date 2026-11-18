@@ -26,7 +26,25 @@ struct MobyClass;
 struct Manipulator;
 
 // Bits of MobyInstance::modeBits.
-#define MOBY_MODE_BIT_HIDDEN 0x1
+enum MobyModeBit {
+    NONE = 0,
+    DISABLED = 1,
+    NO_UPDATE = 2,
+    NO_POST_UPDATE = 4,
+    TRANSPARENT = 8,
+    HAS_GLOW = 16,
+    HAS_SPECIAL_VARS = 32,
+    UNK_40 = 64,
+    NO_DRAW = 128,
+    LOCK_ROTATION = 256,
+    DRAW_TRANSPARENT_WEIRD = 512,
+    DRAW_SHADOW = 1024,
+    DISABLE_Z_WRITE = 2048,
+    CAN_BE_AUTO_TARGETED = 4096,
+    HIDE_BACKFACES = 8192,
+    CAN_BE_DAMAGED = 16384,
+    MIRROR = 32768
+};
 
 // A moby (game object) instance, 0x100 bytes.
 struct MobyInstance {
