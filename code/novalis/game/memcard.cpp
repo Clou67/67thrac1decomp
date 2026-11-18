@@ -8,6 +8,9 @@
 #include "vuchain.h"
 #include "mcstate.h"
 #include "map.h"
+#include "pause.h"
+
+#define CURRENT_CARD g_memcard.memcards[g_memcard.slot]
 
 // Save chunks whose data differed from what was already in memory on the last restore.
 int g_loaderr = 0;
@@ -58,6 +61,7 @@ void memcard_ResetGame(void)
 }
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Update);
+
 
 void memcard_MakeWholeSave(char *addr)
 {
