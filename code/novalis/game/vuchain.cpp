@@ -257,7 +257,32 @@ void StashGSMem(void *ram, int gs_start, int size)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", UploadGSMemLinear);
+
+void UploadGSMemLinear(void *ram, int gs_loc, int width, int height)
+{
+    int offset = 0;
+    int remaining = (width + GS_TRANSFER_BLOCK_SIZE - 1) & ~(GS_TRANSFER_BLOCK_SIZE - 1);
+
+    while (remaining > 0) {
+        VU1_CHAIN_WORD(0) = DMA_TAG_CNT | GS_LOAD_IMAGE_QWC;
+        VU1_CHAIN_WORD(4) = 0;
+        VU1_CHAIN_WORD(8) = 0;
+        VU1_CHAIN_WORD(12) = VIF_DIRECT | GS_LOAD_IMAGE_QWC;
+        vu1_bufPtr += 16;
+
+        remaining -= GS_TRANSFER_BLOCK_SIZE;
+        sceGsSetDefLoadImage((sceGsLoadImage *)vu1_bufPtr, (gs_loc + offset) >> 8, 1, 0, 0, 0, 64, 64);
+        vu1_bufPtr += sizeof(sceGsLoadImage);
+
+        VU1_CHAIN_WORD(0) = DMA_TAG_REF | GS_TRANSFER_BLOCK_QWC;
+        VU1_CHAIN_WORD(4) = (unsigned int)((unsigned char *)ram + offset);
+        VU1_CHAIN_WORD(8) = 0;
+        VU1_CHAIN_WORD(12) = VIF_DIRECT | GS_TRANSFER_BLOCK_QWC;
+        vu1_bufPtr += 16;
+
+        offset += GS_TRANSFER_BLOCK_SIZE;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_VIF1_Enable);
 
