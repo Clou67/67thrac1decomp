@@ -52,7 +52,41 @@ void VU1_swapChain(void)
     SkinVertexCache = EngScratchPad - SKIN_VERTEX_CACHE_SIZE;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_sendChain);
+
+void VU1_sendChain(void)
+{
+    int overflow = 0;
+    int used;
+
+    VifChainFlags |= VIF_CHAIN_ALL_STAGES;
+    used = vu1_bufPtr - vu1_DmaBuffers[vu1_bufId];
+
+    if (used > vu1_bufMaxUsed) {
+        vu1_bufMaxUsed = used;
+
+        if (used > vu1_bufSize) {
+            printf_stub("vu1 chain overflow\n");
+            overflow = 1;
+        }
+    }
+
+    if (!overflow) {
+        sceDmaChan *channel;
+
+        VU1_CHAIN_WORD(0) = DMA_TAG_END;
+        VU1_CHAIN_WORD(4) = 0;
+        VU1_CHAIN_WORD(8) = 0;
+        VU1_CHAIN_WORD(12) = 0;
+
+        channel = sceDmaGetChan(DMA_CHANNEL_VIF1);
+        channel->chcr |= 0xC0;
+        FlushCache(0);
+        sceDmaSend(channel, vu1_DmaBuffers[vu1_bufId]);
+        return;
+    }
+
+    VifChainFlags = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_syncChain);
 
