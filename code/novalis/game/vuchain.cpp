@@ -51,7 +51,25 @@ void VU1_addVIFcode(unsigned int vifcode)
     vu1_bufPtr += 16;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_addGSregister);
+
+void VU1_addGSregister(unsigned int reg, unsigned long value)
+{
+    VU1_CHAIN_WORD(0) = DMA_TAG_CNT | 2;
+    VU1_CHAIN_WORD(4) = 0;
+    VU1_CHAIN_WORD(8) = 0;
+    VU1_CHAIN_WORD(12) = VIF_DIRECT | 2;
+
+    VU1_CHAIN_WORD(16) = GIF_TAG_AD_LOW;
+    VU1_CHAIN_WORD(20) = GIF_TAG_AD_HIGH;
+    VU1_CHAIN_WORD(24) = GIF_REG_AD;
+    VU1_CHAIN_WORD(28) = 0;
+
+    VU1_CHAIN_DWORD(32) = value;
+    VU1_CHAIN_WORD(40) = reg;
+    VU1_CHAIN_WORD(44) = 0;
+
+    vu1_bufPtr += 48;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B49D0);
 
