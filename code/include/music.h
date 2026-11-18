@@ -1,7 +1,29 @@
 #ifndef MUSIC_H
 #define MUSIC_H
 
+struct MusicTransition {
+    char unk0[0x1C];
+    int unk1C;
+    char unk20[0x30];
+    int unk50;
+    short speechId;
+    short unk56;
+    short unk58;
+    short state;
+};
+
+// Speech ids are offset by this much from the ids stored in the help messages.
+#define MUSIC_SPEECH_ID_BASE 30000
+
+// Values of MusicTransition::state seen so far; 6 and 7 are the finishing states.
+#define MUSIC_STATE_READY 3
+#define MUSIC_STATE_STOPPING 5
+#define MUSIC_STATE_FINISHING 6
+
+extern MusicTransition musicTransition;
+
 void music_Sync(int wait);
+void music_PlayPreseekedSpeech(void);
 // Nonzero while a music_LoadFile read is still streaming in.
 extern short CdReadActive[];
 
