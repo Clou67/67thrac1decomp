@@ -13,4 +13,6 @@ extern int gsFrame;
 // Nonzero when the console is running in PAL mode.
 extern int videoModePal;
 
+void FadeToBlack(int frames);
+
 #endif

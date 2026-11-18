@@ -10,5 +10,6 @@ struct MapPageState {
 };
 
 extern MapPageState MapPage;
+extern int pauseActionList[];
 
 #endif

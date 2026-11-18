@@ -11,6 +11,9 @@ struct PAD {
 extern PAD padState;
 
 #define PAD_TRIANGLE 0x0010
+#define PAD_CIRCLE 0x0020
+#define PAD_CROSS 0x0040
+#define PAD_START 0x0800
 #define PAD_UP 0x1000
 #define PAD_RIGHT 0x2000
 #define PAD_DOWN 0x4000

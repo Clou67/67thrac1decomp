@@ -1,14 +1,17 @@
 #include "common.h"
 #include "freeze.h"
+#include "mcstate.h"
 #include "draw.h"
 #include "fastfunc.h"
 #include "font.h"
 #include "gameglobals.h"
+#include "hero.h"
 #include "gsregs.h"
 #include "help.h"
 #include "hud.h"
 #include "memcard.h"
 #include "music.h"
+#include "pad.h"
 #include "pause.h"
 #include "sound.h"
 #include "vuchain.h"
@@ -32,6 +35,33 @@
 
 // Message that is logged as seen when the save-failed prompt appears.
 #define HELP_MSG_SAVE_FAILED 0x4E2B
+
+// Frames of the delayed-continue freeze before the prompt fades and before it can be left.
+#define FREEZE_DELAYED_FADE_FRAMES 0x5A
+#define FREEZE_DELAYED_CONTINUE_FRAMES 0x78
+
+#define LEVEL_NOVALIS 1
+#define LEVEL_RILGAR 5
+#define LEVEL_KALEBO_3 0x10
+
+#define FREEZE_DISPATCH_FADE_FRAMES 30
+#define FREEZE_RETRY_TIME_FRAMES 0x1068
+#define VIDEO_TEST_TIMEOUT_FRAMES 0x258
+#define CONFIRM_BOX_STEPS 8
+
+enum video_test_state {
+    VIDEO_TEST_INPUT_DELAY,
+    VIDEO_TEST_AWAIT_START,
+    VIDEO_TEST_PREVIEW_ACTIVE,
+    VIDEO_TEST_AWAIT_TIMEOUT_ACK
+};
+
+enum confirm_state {
+    CONFIRM_PREPARE,
+    CONFIRM_AWAIT_INPUT,
+    CONFIRM_ACCEPT,
+    CONFIRM_CANCEL
+};
 
 // Level select map.
 #define LEVEL_MARKER_COUNT 20
@@ -127,7 +157,342 @@ void mode_freezeInit(int dialog, int restorePage)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", DrawDialogText);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", UpdateModeFreeze);
+// Data DrawDialogText reads (layout rectangles and its jump tables) until the function is matched.
+__asm__(
+ ".section .rodata\n"
+ ".align 4\n"
+ ".word 0x01540050, 0x01A00060, 0x00540100, 0x00000000\n"
+ ".word 0x00010010, 0x00000000, 0x012C0064, 0x01A00060\n"
+ ".word 0x00680100, 0x00000000, 0x00010010, 0x00000000\n"
+ ".word 0x00224150, 0x00224868, 0x002247B0, 0x00223B6C\n"
+ ".word 0x00224868, 0x00223848, 0x00223F5C, 0x00000000\n"
+ ".word 0x00223C0C, 0x00223CBC, 0x00223CBC, 0x00223D08\n"
+ ".word 0x00223BB0, 0x00223BE4, 0x00223BE4, 0x00223D4C\n"
+ ".word 0x00223BDC, 0x00223BDC, 0x00223BBC, 0x00223BD0\n"
+ ".word 0x00223BEC, 0x00223BEC, 0x00223D4C, 0x00223BF4\n"
+ ".word 0x00223C00, 0x00223C2C, 0x00223C84, 0x00223C78\n"
+ ".word 0x00223D4C, 0x00223CB4, 0x00223C90, 0x00000000\n"
+ ".section .text\n"
+);
+
+void UpdateModeFreeze(void)
+{
+    int step;
+    int video_mode;
+    freeze_t *frozen;
+
+    sound_Update();
+
+    if (Freeze.countdown != 0) {
+        Freeze.countdown--;
+    }
+
+    switch (Freeze.mode) {
+    case FREEZE_MODE_DELAYED_CONTINUE:
+        frozen = &Freeze;
+        frozen->updTimers[1]++;
+        if (FastScaleRoundInt(FREEZE_DELAYED_FADE_FRAMES) < frozen->updTimers[1]) {
+            if (frozen->updTimers[2] != 0) {
+                frozen->updTimers[2]--;
+            }
+        }
+
+        frozen = &Freeze;
+        if (FastScaleRoundInt(FREEZE_DELAYED_CONTINUE_FRAMES) < frozen->updTimers[1]) {
+            if (padState.bitsOn & PAD_CROSS) {
+                gameMode = GAME_MODE_NORMAL;
+                if (Level == LEVEL_NOVALIS) {
+                    memcard_Save(0, -1);
+                }
+            }
+        }
+        break;
+    case FREEZE_MODE_TRIANGLE_HIDE_HERO:
+        if (padState.bitsOn & PAD_TRIANGLE) {
+            MobyInstance *moby = Hero.moby;
+
+            moby->visible = 0;
+            moby->collision = 0;
+            moby->flags |= MOBY_FLAG_HIDDEN;
+            Hero_RevertToRatchet();
+            Hero_Warp(&Hero.savedPosRot[0], &Hero.savedPosRot[4], 0, 1);
+            gameMode = GAME_MODE_NORMAL;
+        } else if (padState.bitsOn & PAD_CROSS) {
+            gameMode = GAME_MODE_NORMAL;
+        }
+        break;
+    case FREEZE_MODE_VIDEO_MODE_TEST:
+        switch (Freeze.updTimers[0]) {
+        case VIDEO_TEST_INPUT_DELAY:
+            if (Freeze.countdown != 0) {
+                Freeze.countdown--;
+                if (Freeze.countdown == 0) {
+                    Freeze.updTimers[0] = VIDEO_TEST_AWAIT_START;
+                }
+            } else {
+                Freeze.updTimers[0] = VIDEO_TEST_AWAIT_START;
+            }
+            break;
+        case VIDEO_TEST_AWAIT_START:
+            if (padState.bitsOn & PAD_TRIANGLE) {
+                gameMode = Freeze.prevGameMode;
+            } else if (padState.bitsOn & PAD_CROSS) {
+                FadeToBlack(4);
+                PalModeRequest = 0;
+                Freeze.updTimers[0] = VIDEO_TEST_PREVIEW_ACTIVE;
+                Freeze.updTimers[1] = FastScaleRoundInt(VIDEO_TEST_TIMEOUT_FRAMES);
+            }
+            break;
+        case VIDEO_TEST_PREVIEW_ACTIVE:
+            if (Freeze.updTimers[1] == 0 || --Freeze.updTimers[1] == 0) {
+                PalModeRequest = 1;
+                Freeze.updTimers[0] = VIDEO_TEST_AWAIT_TIMEOUT_ACK;
+            } else if (padState.bitsOn & PAD_TRIANGLE) {
+                FadeToBlack(4);
+                PalModeRequest = 1;
+                gameMode = Freeze.prevGameMode;
+            } else if (padState.bitsOn & PAD_CROSS) {
+                PalModeRequest = 0;
+                gameMode = Freeze.prevGameMode;
+            }
+            break;
+        case VIDEO_TEST_AWAIT_TIMEOUT_ACK:
+            if (padState.bitsOn & PAD_CROSS) {
+                gameMode = Freeze.prevGameMode;
+            }
+            break;
+        default:
+            gameMode = Freeze.prevGameMode;
+            break;
+        }
+        break;
+    case FREEZE_MODE_TRIANGLE_SET_SHIP_FLAG:
+        OcclMode = 2;
+        if (padState.bitsOn & PAD_TRIANGLE) {
+            gameMode = GAME_MODE_NORMAL;
+            Hero.shipFlags |= HERO_SHIP_FLAG_RESET;
+        } else if (padState.bitsOn & PAD_CROSS) {
+            gameMode = GAME_MODE_NORMAL;
+        }
+        break;
+    case FREEZE_MODE_AWAIT_CROSS:
+        OcclMode = 2;
+        if (padState.bitsOn & PAD_CROSS) {
+            gameMode = GAME_MODE_NORMAL;
+        }
+        break;
+    case FREEZE_MODE_CONFIRM_CANCEL:
+        switch (Freeze.updTimers[0]) {
+        case CONFIRM_PREPARE:
+            if (Freeze.updTimers[1] < CONFIRM_BOX_STEPS) {
+                Freeze.updTimers[1]++;
+            } else if (Freeze.updTimers[2] < CONFIRM_BOX_STEPS) {
+                Freeze.updTimers[2]++;
+            } else {
+                Freeze.updTimers[0] = CONFIRM_AWAIT_INPUT;
+            }
+            break;
+        case CONFIRM_AWAIT_INPUT:
+            if (padState.bitsOn & PAD_CROSS) {
+                Freeze.updTimers[0] = CONFIRM_ACCEPT;
+            } else if (padState.bitsOn & (PAD_CIRCLE | PAD_START)) {
+                Freeze.updTimers[0] = CONFIRM_CANCEL;
+            }
+
+            video_mode = PalModeRequest; // fakematch
+            if (video_mode >= 0) { // fakematch
+                break; // fakematch
+            } // fakematch
+        case CONFIRM_ACCEPT:
+        case CONFIRM_CANCEL:
+            if (Freeze.updTimers[2] != 0) {
+                Freeze.updTimers[2]--;
+            } else if (Freeze.updTimers[1] != 0) {
+                Freeze.updTimers[1]--;
+            } else {
+                step = Freeze.updTimers[0];
+                video_mode = PalModeRequest; // fakematch
+                if (video_mode < 0) { // fakematch
+                    Freeze.updTimers[0] = step; // fakematch
+                } else if (step == CONFIRM_ACCEPT) {
+                    if (Hero.trickHudHandle != HERO_NO_HUD_HANDLE) {
+                        Hud_SetEntryValueById(Hero.trickHudHandle, 0);
+                        Hero.trickHudHandle = HERO_NO_HUD_HANDLE;
+                    }
+                    HudStub();
+                    if (FastScaleRoundInt(FREEZE_RETRY_TIME_FRAMES) < Hero.controlModeTimer) {
+                        if (Level == LEVEL_RILGAR) {
+                            RilgarRetryCount++;
+                        } else if (Level == LEVEL_KALEBO_3) {
+                            KaleboRetryCount++;
+                        }
+                    }
+                    gameMode = GAME_MODE_NORMAL;
+                    Hero_Warp(&Hero.savedPosRot[0], &Hero.savedPosRot[4], 0, 1);
+                } else {
+                    gameMode = GAME_MODE_NORMAL;
+                    if (Hero.raceLap >= HERO_RACE_LAP_COUNT) {
+                        Hero.raceLap--;
+                        Hero.raceMoby[HERO_RACE_MOBY_LAP_OFFSET] = HERO_RACE_LAP_COUNT;
+                    }
+                }
+            }
+            break;
+        }
+        break;
+    case FREEZE_MODE_STATE_DISPATCH:
+        Freeze.updTimers[1]++;
+        if (FastScaleRoundInt(FREEZE_DISPATCH_FADE_FRAMES) < Freeze.updTimers[1]) {
+            if (Freeze.updTimers[2] != 0) {
+                Freeze.updTimers[2]--;
+            }
+        }
+
+        switch (mc_state) {
+        case CS_GOOD_LOAD:
+            if (Freeze.countdown == 0) {
+                if (padState.bitsOn & PAD_CROSS) {
+                    mcstate_flags &= ~MCSTATE_FLAG_CARD_CHANGED;
+                    gameMode = Freeze.prevGameMode;
+                }
+            }
+            break;
+        case CS_PROMPT_FORMAT:
+            if (padState.bitsOn & PAD_CIRCLE) {
+                mcstate_flags |= MCSTATE_FLAG_FORMAT_YES;
+            } else if (padState.bitsOn & PAD_TRIANGLE) {
+                mcstate_flags |= MCSTATE_FLAG_ANSWER_NO;
+                mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                if (InFrontEnd == 0) {
+                    gameMode = Freeze.prevGameMode;
+                }
+            }
+            break;
+        case CS_PROMPT_CREATE_SAVE:
+            if (padState.bitsOn & PAD_CIRCLE) {
+                mcstate_flags |= MCSTATE_FLAG_CREATE_YES;
+            } else if (padState.bitsOn & PAD_TRIANGLE) {
+                mcstate_flags |= MCSTATE_FLAG_ANSWER_NO;
+                mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                if (InFrontEnd == 0) {
+                    gameMode = Freeze.prevGameMode;
+                }
+            }
+            break;
+        case CS_PROMPT_FORMAT_FAILED:
+        case CS_PROMPT_CREATE_FAILED:
+        case CS_PROMPT_LOAD_FAILED:
+        case CS_PROMPT_SAVE_FAILED:
+            if (padState.bitsOn & PAD_CROSS) {
+                mcstate_flags ^= MCSTATE_FLAG_PROMPT;
+                mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                gameMode = Freeze.prevGameMode;
+            }
+            break;
+        case CS_NEWCARD:
+            gameMode = Freeze.prevGameMode;
+            pauseActionList[0] = Freeze.restorePage;
+            break;
+        case CS_NOSAVE:
+            if (mcstate_flags & MCSTATE_FLAG_SAVE) {
+                break;
+            }
+        case CS_NOCARD:
+        case CS_UNFORMATTED:
+            if (padState.bitsOn & PAD_TRIANGLE) {
+                mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                gameMode = Freeze.prevGameMode;
+            }
+            break;
+        case CS_NO_ROOM:
+            if (InFrontEnd != 0 && (mcstate_flags & MCSTATE_FLAG_SAVE)) {
+                if (padState.bitsOn & PAD_CROSS) {
+                    memcard_ResetGame();
+                    mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                    mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                    mcstate_flags |= MCSTATE_FLAG_ANSWER_NO;
+                    ChangeLevel(0);
+                    LevelChangePending[0] = 1;
+                } else if (padState.bitsOn & PAD_TRIANGLE) {
+                    mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                    mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                    gameMode = Freeze.prevGameMode;
+                }
+            } else if (padState.bitsOn & PAD_TRIANGLE) {
+                mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                gameMode = Freeze.prevGameMode;
+            }
+            break;
+        case CS_PROMPT_BEGIN_UNFORMATTED:
+        case CS_PROMPT_BEGIN_NOSAVE:
+            if (padState.bitsOn & PAD_CROSS) {
+                memcard_ResetGame();
+                mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                mcstate_flags |= MCSTATE_FLAG_ANSWER_NO;
+                ChangeLevel(0);
+                LevelChangePending[0] = 1;
+            } else if (padState.bitsOn & PAD_TRIANGLE) {
+                mcstate_flags |= MCSTATE_FLAG_ANSWER_NO;
+                gameMode = Freeze.prevGameMode;
+            }
+            break;
+        case CS_WAIT_FOR_CARD:
+            if (InFrontEnd != 0) {
+                if (mcstate_flags & MCSTATE_FLAG_SAVE) {
+                    if (padState.bitsOn & PAD_CROSS) {
+                        memcard_ResetGame();
+                        mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                        mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                        ChangeLevel(0);
+                        LevelChangePending[0] = 1;
+                    }
+
+                    if (padState.bitsOn & PAD_TRIANGLE) {
+                        mcstate_flags |= MCSTATE_FLAG_ANSWER_NO;
+                        mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                        mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                        gameMode = Freeze.prevGameMode;
+                    }
+                } else if (mcstate_flags & MCSTATE_FLAG_LOAD) {
+                    if (padState.bitsOn & PAD_TRIANGLE) {
+                        mcstate_flags |= MCSTATE_FLAG_ANSWER_NO;
+                        mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                        mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                        gameMode = Freeze.prevGameMode;
+                    }
+                } else {
+                    gameMode = Freeze.prevGameMode;
+                }
+            } else if (padState.bitsOn & PAD_TRIANGLE) {
+                mcstate_flags |= MCSTATE_FLAG_ANSWER_NO;
+                mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+                mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+                gameMode = Freeze.prevGameMode;
+            }
+            break;
+        case CS_FORMATTED:
+            if (InFrontEnd != 0) {
+                if (!(mcstate_flags & (MCSTATE_FLAG_SAVE | MCSTATE_FLAG_LOAD))) {
+                    gameMode = Freeze.prevGameMode;
+                }
+            }
+            break;
+        }
+        break;
+    }
+
+    if ((unsigned int)(gameMode - GAME_MODE_PAUSE) >= 2) {
+        snd_ContinueAllSoundsInGroup(FREEZE_SOUND_GROUP);
+        music_Unpause();
+        snd_FlushSoundCommands();
+    }
+}
 
 int GetSaveDialogRect(unsigned int size, void **first, void **second)
 {

@@ -6,5 +6,7 @@ void Hud_DrawFlatRect(int left, int top, int right, int bottom, unsigned long rg
 void Hud_DrawFlatRectFixed(int left, int top, int right, int bottom, unsigned long rgba, int mode);
 void Hud_DrawTexQuad(int frame, int x, int y, int width, int height, int alpha);
 void Hud_DrawTexQuadF(int frame, int x, int y, int width, int height, int u, int v, int alpha);
+void Hud_SetEntryValueById(int id, int value);
+void HudStub(void);
 
 #endif
