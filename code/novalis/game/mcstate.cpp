@@ -221,7 +221,14 @@ void csf_prompt_create_save(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f118);
+void csf_create_save_pending(void)
+{
+    if (g_memcard.stage == MC_STAGE_IDLE && g_memcard.nextstage < 0) {
+        g_memcard.nextstage = MC_STAGE_CREATE_SAVE;
+        g_memcard.nextslot = 0;
+        mc_state = CS_CREATING_SAVE;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f158);
 
