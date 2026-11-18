@@ -2129,3 +2129,6 @@ MediumFontHeight = 0x0015F650; // size:0x4
 MapPage = 0x00184670;
 LevelSelectTexts = 0x001C22C0; // size:0xE4
 LevelMapMarkers = 0x001C23A8; // size:0x140
+Help = 0x00179890; // size:0x40
+HelpPairs = 0x001798D0; // size:0x258
+HelpMsgs = 0x0015F660; // size:0x4
