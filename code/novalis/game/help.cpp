@@ -213,7 +213,19 @@ char *msg_string(int id)
     return not_found;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Suspend);
+void Help_Suspend(void)
+{
+    if (Help.suspend == 0) {
+        Help.suspend = 1;
+        Help.suspend_timer = FastScaleRoundInt(HELP_SUSPEND_FRAMES);
+
+        Help_Skip();
+
+        if (Help.state == HELP_STATE_IDLE) {
+            Help.state = HELP_STATE_SUSPENDED;
+        }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Resume);
 
