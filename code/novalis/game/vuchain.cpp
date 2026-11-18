@@ -240,7 +240,22 @@ void VU1_gsRegsFont(void)
     vu1_bufPtr += 16;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", StashGSMem);
+
+void StashGSMem(void *ram, int gs_start, int size)
+{
+    sceGsStoreImage image;
+    int offset = 0;
+    int remaining = (size + GS_TRANSFER_BLOCK_SIZE - 1) & ~(GS_TRANSFER_BLOCK_SIZE - 1);
+
+    while (remaining > 0) {
+        sceGsSetDefStoreImage(&image, (gs_start + offset) >> 8, 1, 0, 0, 0, 64, 64);
+        remaining -= GS_TRANSFER_BLOCK_SIZE;
+        FlushCache(0);
+        sceGsExecStoreImage(&image, (unsigned char *)ram + offset);
+        offset += GS_TRANSFER_BLOCK_SIZE;
+        sceGsSyncPath(0, 0);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", UploadGSMemLinear);
 
