@@ -2,8 +2,26 @@
 #define FREEZE_H
 
 // Prompt ids for DisplayPrompt.
+#define PROMPT_PAUSE 0
 #define PROMPT_SAVE_FAILED 3
+#define PROMPT_PUSH_HELP_HISTORY 5
 
+// State of the prompt shown while the game is frozen.
+struct FreezePrompt {
+    int prompt;
+    int timer;
+    char *text[3];
+    int previousGameMode;
+    int arg;
+    int choice;
+    int boxTimer;
+    int fadeStep;
+    int unk28;
+};
+
+extern FreezePrompt Freeze;
+
+int GetFreezePrevGameMode(void);
 void DisplayPrompt(int prompt, int arg);
 
 // Places the two buffers the save dialog reads a save into; fails if the save is too big.

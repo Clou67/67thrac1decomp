@@ -3,14 +3,35 @@
 #include "draw.h"
 #include "fastfunc.h"
 #include "font.h"
+#include "gameglobals.h"
 #include "gsregs.h"
 #include "help.h"
 #include "hud.h"
 #include "memcard.h"
+#include "music.h"
 #include "pause.h"
+#include "sound.h"
 #include "vuchain.h"
 
 #define SAVE_DIALOG_MAX_SIZE 0x20000
+
+// Frames the prompt waits before it can be dismissed.
+#define PROMPT_DEFAULT_TIMER 0x78
+#define PROMPT_TIMER_FRAMES 30
+
+// Sound group that is paused while the game is frozen.
+#define FREEZE_SOUND_GROUP 0x1D
+
+// Message ids of the texts the prompts show.
+#define MSG_PROMPT_0_TITLE 0x4F6E
+#define MSG_PROMPT_0_YES 0x5248
+#define MSG_PROMPT_0_NO 0x5249
+#define MSG_PROMPT_OK 0x524A
+#define MSG_PROMPT_1_TITLE 0x5229
+#define MSG_PROMPT_1_BODY 0x4EE0
+
+// Message that is logged as seen when the save-failed prompt appears.
+#define HELP_MSG_SAVE_FAILED 0x4E2B
 
 // Level select map.
 #define LEVEL_MARKER_COUNT 20
@@ -40,7 +61,10 @@ enum map_level_state {
 
 int MediumFontHeight = 17;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", GetFreezePrevGameMode);
+int GetFreezePrevGameMode(void)
+{
+    return Freeze.previousGameMode;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", DisplayPrompt);
 
