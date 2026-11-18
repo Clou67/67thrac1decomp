@@ -582,6 +582,21 @@ void Help_Draw(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_FindPairIndex);
+int Help_FindPairIndex(short id, int reverse, unsigned short *other)
+{
+    int i;
+
+    for (i = 0; i < HELP_PAIR_COUNT; i++) {
+        if (HelpPairs[i].column[reverse] == id) {
+            if (other != 0) {
+                *other = HelpPairs[i].column[reverse ? 0 : 1];
+            }
+
+            return i;
+        }
+    }
+
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_AddToLog);
