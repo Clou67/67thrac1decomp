@@ -1,0 +1,71 @@
+#ifndef FRAMEBUF_H
+#define FRAMEBUF_H
+
+#include "sce.h"
+#include "vuchain.h"
+
+// Full-screen anti-aliasing buffer: display and draw environments plus the sizes they were built from (DL fsAABuff).
+struct fsAABuff {
+    sceGsDispEnv disp;
+    sceGifTag giftagDrawLarge;
+    sceGsDrawEnv1 drawLarge;
+    sceGifTag giftagDrawSmall;
+    sceGsDrawEnv1 drawSmall;
+    short drawW;
+    short drawH;
+    short drawPSM;
+    short drawFBP;
+    short dispW;
+    short dispH;
+    short dispPSM;
+    short dispFBP;
+    short auxW;
+    short auxH;
+    short auxPSM;
+    short auxFBP;
+    short dispOfsX;
+    short dispOfsY;
+    short zPSM;
+    short zFBP;
+    int update_context;
+};
+
+// GS memory map (DL GSMEM; only the fields known so far).
+struct GSMEM {
+    int display;
+    int draw;
+    int zbuf;
+    int base;
+};
+
+extern GSMEM GSmem;
+extern fsAABuff aaBuff;
+extern fsAABuff *pAAbuff;
+
+// GIF packets for the AA passes (qword counts are in the DMA tags that send them).
+extern unsigned long aaBlurRegs[];
+extern unsigned long aaDisplayRegs[];
+extern unsigned long aaMovieDisplayRegs[];
+extern unsigned long aaClearRegs[];
+extern unsigned long gif_clear_screen[];
+extern unsigned long gif_clear_frame_buf[];
+
+#define AA_BLUR_REGS_QWC 0x26
+#define AA_DISPLAY_REGS_QWC 0x29
+#define AA_CLEAR_REGS_QWC 0x15
+#define AA_DRAW_ENV_QWC 9
+
+// RGBAQ word of the clear packet.
+#define AA_CLEAR_REGS_RGBAQ 7
+
+#define EE_PHYSICAL_ADDRESS_MASK 0x0FFFFFFF
+
+void SetBackgroundColor(int red, int green, int blue);
+void PutDispBuffer(void);
+void PutDrawBufferLarge(void);
+void ClearDrawBufferLarge(int black);
+void PutDrawBufferSmall(void);
+void AA_BlurPass(void);
+void AA_DisplayPass(int opaque);
+
+#endif

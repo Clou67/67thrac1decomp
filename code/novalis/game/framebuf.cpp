@@ -1,4 +1,5 @@
 #include "common.h"
+#include "framebuf.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", SetupFS_AA_buffer);
 
