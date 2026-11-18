@@ -1,0 +1,3 @@
+// Mangled names the linker needs for functions that are still INCLUDE_ASM.
+// splat keeps using the plain names in symbols.txt until they are decompiled.
+DisplayPrompt__Fii = 0x00223640;

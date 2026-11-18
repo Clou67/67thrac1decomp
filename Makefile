@@ -163,8 +163,8 @@ novalis: $(NOVALIS_BIN)
 $(NOVALIS_BIN): $(NOVALIS_ELF)
 	$(CROSS)-objcopy -O binary $< $@
 
-$(NOVALIS_ELF): $(NOVALIS_OBJS) $(NOVALIS_LD) config/novalis/symbols.txt config/novalis/core_symbols.txt
-	python3 tools/symbols_to_ld.py $(NOVALIS_DIR)/symbols.ld config/novalis/symbols.txt config/novalis/core_symbols.txt
+$(NOVALIS_ELF): $(NOVALIS_OBJS) $(NOVALIS_LD) config/novalis/symbols.txt config/novalis/core_symbols.txt config/novalis/link_aliases.txt
+	python3 tools/symbols_to_ld.py $(NOVALIS_DIR)/symbols.ld config/novalis/symbols.txt config/novalis/core_symbols.txt config/novalis/link_aliases.txt
 	$(CROSS)-ld -EL --defsym _gp=0x166c00 -T $(NOVALIS_DIR)/symbols.ld -T $(NOVALIS_DIR)/undefined_funcs_auto.txt -T $(NOVALIS_DIR)/undefined_syms_auto.txt -T $(NOVALIS_LD) -Map $(NOVALIS_DIR)/novalis.map $(NOVALIS_OBJS) -o $@
 
 $(NOVALIS_DIR)/%.o: %.s
