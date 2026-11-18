@@ -24,6 +24,15 @@
 #endif
 __asm__(".include \"code/include/labels.inc\"\n");
 
+// Words the original toolchain left between two functions: alignment padding
+// filled with stale bytes, not code. Emitted verbatim so the layout matches.
+#define TEXT_PADDING(words...) \
+    __asm__( \
+        ".section .text\n" \
+        "    .align 3\n" \
+        "    .word " #words "\n" \
+    )
+
 #else
 
 #ifndef INCLUDE_ASM
@@ -32,6 +41,7 @@ __asm__(".include \"code/include/labels.inc\"\n");
 #ifndef INCLUDE_RODATA
 #define INCLUDE_RODATA(FOLDER, NAME)
 #endif
+#define TEXT_PADDING(words...)
 
 #endif /* !defined(M2CTX) && !defined(PERMUTER) */
 

@@ -117,7 +117,7 @@ void VU1_addDataRef(void *data, int qcnt)
     vu1_bufPtr += 16;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4818);
+TEXT_PADDING(0xAF82C020, 0x00000000);
 
 void VU1_addDataDirect(int address, void *data, int qcnt)
 {
@@ -132,7 +132,7 @@ void VU1_addDataDirect(int address, void *data, int qcnt)
     vu1_bufPtr += qcnt << 4;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B48C8);
+TEXT_PADDING(0xAF82C020, 0x00000000);
 
 void VU1_addVIFcode(unsigned int vifcode)
 {
@@ -163,7 +163,7 @@ void VU1_addGSregister(unsigned int reg, unsigned long value)
     vu1_bufPtr += 48;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B49D0);
+TEXT_PADDING(0xAF82C020, 0x00000000);
 
 void VU1_setScissor(int left, int right, int top, int bottom)
 {
@@ -204,7 +204,7 @@ void VU1_setScissor(int left, int right, int top, int bottom)
     vu1_bufPtr += 48;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4AF8);
+TEXT_PADDING(0x27BD0030, 0x00000000);
 
 void VU1_texFlush(void)
 {
@@ -236,7 +236,7 @@ void VU1_gsRegsEffects(void)
     vu1_bufPtr += 16;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4C20);
+TEXT_PADDING(0xAF82C020, 0x00000000);
 
 void VU1_gsRegsFont(void)
 {
@@ -381,4 +381,4 @@ void Vif1ChainCmd(int command)
     packet[3] = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B5148);
+TEXT_PADDING(0x27BD0030, 0x00000000, 0xE4A301BC, 0x00000000, 0x27BD00F0, 0x00000000);
