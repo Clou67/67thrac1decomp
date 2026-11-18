@@ -501,7 +501,86 @@ void Help_DrawIconBox(void)
     DrawSprite(Help.center_x - HELP_ICON_HALF_SIZE, Help.center_y - HELP_ICON_HALF_SIZE, HELP_ICON_SIZE, HELP_ICON_SIZE, 0, 0, HELP_ICON_SIZE, HELP_ICON_SIZE, (alpha << 24) | HELP_SPRITE_RGB, FontSet(HELP_ICON_FONT));
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Draw);
+void Help_Draw(void)
+{
+    if (Help.state == HELP_STATE_IDLE) {
+        return;
+    }
+
+    if (Help.ready == 0) {
+        return;
+    }
+
+    if (sceneHelpMsgFlag1 == 0 && sceneHelpMsgFlag0 == 0) {
+        return;
+    }
+
+    switch (Help.state) {
+    case HELP_STATE_BOX_OPENING:
+        if (sceneHelpMsgFlag1) {
+            int extent = Help.counter * 4 + HELP_BOX_START_HALF_SIZE;
+
+            Help.frame_half_width = extent;
+            Help.frame_half_height = extent;
+            DrawTextShadow(Help.center_y - extent, Help.center_y + extent, Help.center_x - extent, Help.center_x + extent, HELP_FRAME_ALPHA);
+        }
+        break;
+    case HELP_STATE_PROMPT:
+        if (sceneHelpMsgFlag1) {
+            Help_DrawIconBox();
+        }
+        break;
+    case HELP_STATE_PROMPT_TO_BOX:
+        if (sceneHelpMsgFlag1) {
+            int halfWidth = (Help.half_width - HELP_ICON_HALF_SIZE) * Help.counter / HELP_TRANSITION_FRAMES + HELP_ICON_HALF_SIZE;
+            int halfHeight = (Help.half_height - HELP_ICON_HALF_SIZE) * Help.counter / HELP_TRANSITION_FRAMES + HELP_ICON_HALF_SIZE;
+            int alpha;
+
+            Help.frame_half_width = halfWidth;
+            Help.frame_half_height = halfHeight;
+            DrawTextShadow(Help.center_y - halfHeight, Help.center_y + halfHeight, Help.center_x - halfWidth, Help.center_x + halfWidth, HELP_FRAME_ALPHA);
+
+            alpha = (HELP_TRANSITION_FRAMES - Help.counter) * 16;
+            if (alpha < 0) {
+                alpha = 0;
+            }
+
+            DrawSprite(Help.center_x - HELP_ICON_HALF_SIZE, Help.center_y - HELP_ICON_HALF_SIZE, HELP_ICON_SIZE, HELP_ICON_SIZE, 0, 0, HELP_ICON_SIZE, HELP_ICON_SIZE, (alpha << 24) | HELP_SPRITE_RGB, FontSet(HELP_ICON_FONT));
+        }
+        break;
+    case HELP_STATE_TEXT_FADE_IN:
+    case HELP_STATE_TEXT_SHOWN:
+    case HELP_STATE_TEXT_FADE_OUT:
+        if (sceneHelpMsgFlag1) {
+            FontWindow window;
+            int color = HELP_TEXT_COLOR;
+            char *text;
+
+            Help.frame_half_width = Help.half_width;
+            Help.frame_half_height = Help.half_height;
+            DrawTextShadow(Help.center_y - Help.half_height, Help.center_y + Help.half_height, Help.center_x - Help.half_width, Help.center_x + Help.half_width, HELP_FRAME_ALPHA);
+
+            if (Help.state == HELP_STATE_TEXT_FADE_IN) {
+                color = HELP_TEXT_RGB | (Help.counter << 29);
+            } else if (Help.state == HELP_STATE_TEXT_FADE_OUT) {
+                color = ((HELP_TEXT_FADE_FRAMES - Help.counter) << 29) | HELP_TEXT_RGB;
+            }
+
+            text = HelpMsgs[Help.message_index].text;
+            SetFontWindow(&window, 0xF0, 0x1E0, 0x2C, 0x1D4, HELP_BOX_CENTER_X, Help.center_y, 0x10, 3);
+            FontPrintWindowSmall(&window, color, text, -1);
+        }
+        break;
+    case HELP_STATE_BOX_CLOSING:
+        if (sceneHelpMsgFlag1) {
+            int halfWidth = Help.frame_half_width - (Help.frame_half_width - HELP_BOX_START_HALF_SIZE) * Help.counter / HELP_TRANSITION_FRAMES;
+            int halfHeight = Help.frame_half_height - (Help.frame_half_height - HELP_BOX_START_HALF_SIZE) * Help.counter / HELP_TRANSITION_FRAMES;
+
+            DrawTextShadow(Help.center_y - halfHeight, Help.center_y + halfHeight, Help.center_x - halfWidth, Help.center_x + halfWidth, (HELP_TRANSITION_FRAMES - Help.counter) * 12);
+        }
+        break;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_FindPairIndex);
 

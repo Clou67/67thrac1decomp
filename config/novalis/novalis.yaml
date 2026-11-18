@@ -89,7 +89,7 @@ segments:
     - [0x1b990, .data, game/help]  # Help, HelpPairs, not_found
     - [0x1bc50, data]
     - [0xaace0, .rodata, game/help]  # jump tables
-    - [0xaad30, data]
+    - [0xaad50, data]
     - [0xabde0, .rodata, game/memcard]
     - [0xabfa0, data]
     - [0xac690, .rodata, game/vuchain]
