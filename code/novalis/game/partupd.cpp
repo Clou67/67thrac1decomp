@@ -66,8 +66,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_016);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_017);
 
-void UpdatePart_018(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_018);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_018);
 

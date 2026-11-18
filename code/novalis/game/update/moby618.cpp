@@ -1,4 +1,3 @@
 #include "common.h"
 
-void UpdateMoby_618(void) {
-}
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby618", UpdateMoby_618);
