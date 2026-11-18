@@ -73,7 +73,45 @@ void VU1_addGSregister(unsigned int reg, unsigned long value)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B49D0);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_setScissor);
+
+void VU1_setScissor(int left, int right, int top, int bottom)
+{
+    int maxX = occlViewParams[0] - 1;
+    int maxY = occlViewParams[1] - 1;
+
+    VU1_CHAIN_WORD(0) = DMA_TAG_CNT | 2;
+    VU1_CHAIN_WORD(4) = 0;
+    VU1_CHAIN_WORD(8) = 0;
+    VU1_CHAIN_WORD(12) = VIF_DIRECT | 2;
+
+    if (right > maxX) {
+        right = maxX;
+    }
+
+    if (left < 0) {
+        left = 0;
+    }
+
+    if (top < 0) {
+        top = 0;
+    }
+
+    if (bottom > maxY) {
+        bottom = maxY;
+    }
+
+    VU1_CHAIN_WORD(16) = GIF_TAG_AD_LOW;
+    VU1_CHAIN_WORD(20) = GIF_TAG_AD_HIGH;
+    VU1_CHAIN_WORD(24) = GIF_REG_AD;
+    VU1_CHAIN_WORD(28) = 0;
+
+    VU1_CHAIN_DWORD(32) = (unsigned long)left | ((unsigned long)right << 16)
+                                         | ((unsigned long)top << 32) | ((unsigned long)bottom << 48);
+    VU1_CHAIN_WORD(40) = GS_REG_SCISSOR_1;
+    VU1_CHAIN_WORD(44) = 0;
+
+    vu1_bufPtr += 48;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4AF8);
 
