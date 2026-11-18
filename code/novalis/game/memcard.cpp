@@ -46,7 +46,25 @@ void memcard_GetName(char *buff)
 
 TEXT_PADDING(0x27BD0060, 0x00000000);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_RestoreGame);
+void memcard_RestoreGame(char *addr)
+{
+    int gameSize = memcard_GetDataSize(mc_gamedata);
+    int levelSize = memcard_GetDataSize(mc_leveldata);
+
+    if (*(int *)addr != gameSize || *(int *)(addr + 4) != levelSize) {
+        printf_stub("Out of date save!\n");
+        return;
+    }
+
+    addr += 8;
+    memcard_RestoreData(addr, 0, mc_gamedata);
+    addr += gameSize;
+
+    for (int level = 0; level < MEMCARD_LEVEL_COUNT; level++) {
+        memcard_RestoreData(addr, level, mc_leveldata);
+        addr += levelSize;
+    }
+}
 
 void memcard_ResetGame(void)
 {
