@@ -56,7 +56,12 @@ void csf_good_load(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025eda0);
+void csf_nocard(void)
+{
+    g_memcard.nextstage = -1;
+    mc_state = CS_WAIT_FOR_CARD;
+    g_memcard.nextslot = -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025edc8);
 
