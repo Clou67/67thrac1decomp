@@ -51,7 +51,15 @@ void PutDrawBufferSmall(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", SetMovieDrawSmallVIFChain);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", AA_BlurPass);
+void AA_BlurPass(void)
+{
+    VU1_CHAIN_WORD(0) = DMA_TAG_REF | AA_BLUR_REGS_QWC;
+    VU1_CHAIN_WORD(4) = (unsigned int)aaBlurRegs;
+    VU1_CHAIN_WORD(8) = 0;
+    VU1_CHAIN_WORD(12) = VIF_DIRECT | AA_BLUR_REGS_QWC;
+
+    vu1_bufPtr += 16;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", AA_DisplayPass);
 
