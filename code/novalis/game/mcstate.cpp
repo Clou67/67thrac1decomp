@@ -49,7 +49,12 @@ void csf_good_save(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ed78);
+void csf_good_load(void)
+{
+    if (!(mcstate_flags & MCSTATE_FLAG_CARD_CHANGED)) {
+        mc_state = CS_NOCARD;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025eda0);
 
