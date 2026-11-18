@@ -95,7 +95,7 @@ segments:
     start: 0xadc00
     vram: 0x0020bb00
     subsegments:
-    - [0xadc00, .rodata, game/mobyvtbl]
+    - [0xadc00, .rodata, game/vtbl/mobyvtbl]
 
   - name: lvl.camvtbl
     type: code
@@ -103,7 +103,7 @@ segments:
     start: 0xae580
     vram: 0x0020c480
     subsegments:
-    - [0xae580, .rodata, game/camvtbl]
+    - [0xae580, .rodata, game/vtbl/camvtbl]
 
   - name: lvl.sndvtbl
     type: code
@@ -111,7 +111,7 @@ segments:
     start: 0xae680
     vram: 0x0020c580
     subsegments:
-    - [0xae680, .rodata, game/sndvtbl]
+    - [0xae680, .rodata, game/vtbl/sndvtbl]
 
   - name: text
     type: code
