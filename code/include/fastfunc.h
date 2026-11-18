@@ -3,6 +3,8 @@
 
 // Stops in the debugger; used when a save is bigger than its buffer.
 void FastTrap(void);
+int FastScaleRoundInt(int value);
+float FastVec3Length(float *vec);
 void FastMemCopy32(void *destination, void *source, int size);
 
 #endif

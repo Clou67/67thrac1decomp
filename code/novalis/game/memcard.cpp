@@ -3,7 +3,7 @@
 #include "fastfunc.h"
 #include "libc.h"
 #include "wad.h"
-#include "help.h"
+#include "freeze.h"
 #include "music.h"
 #include "vuchain.h"
 #include "mcstate.h"

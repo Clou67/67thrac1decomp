@@ -2125,3 +2125,7 @@ EngScratchPadSize = 0x0015F578; // size:0x4
 MemSlots = 0x00174280; // size:0xE4
 vu1_maxUse = 0x001611D4; // size:0x4
 vu1_bufLimit = 0x001611C8; // size:0x4
+MediumFontHeight = 0x0015F650; // size:0x4
+MapPage = 0x00184670;
+LevelSelectTexts = 0x001C22C0; // size:0xE4
+LevelMapMarkers = 0x001C23A8; // size:0x140
