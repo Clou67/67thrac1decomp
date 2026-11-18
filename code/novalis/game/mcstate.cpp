@@ -302,7 +302,19 @@ void csf_prompt_save_failed(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", CardState_Reset);
+void csf_saving(void)
+{
+    if (g_memcard.stage <= MC_STAGE_IDLE && g_memcard.nextstage < 0) {
+        if (g_memcard.err != 0) {
+            DisplayPrompt(PROMPT_SAVE_FAILED, 0);
+            mc_state = CS_PROMPT_SAVE_FAILED;
+            mcstate_flags |= MCSTATE_FLAG_PROMPT;
+            return;
+        }
+
+        mc_state = CS_GOOD_SAVE;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f398);
 
