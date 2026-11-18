@@ -1,6 +1,5 @@
 // Mangled names the linker needs for functions that are still INCLUDE_ASM.
 // splat keeps using the plain names in symbols.txt until they are decompiled.
-DisplayPrompt__Fii = 0x00223640;
 music_Sync__Fi = 0x0027ACA0;
 music_LoadFileSync__FPvii = 0x0027AC20;
 map_SaveLevelObjectState__Fv = 0x0025EB68;
@@ -204,3 +203,5 @@ MB_RequestHelpMessage__Fii = 0x00279000;
 music_PlayPreseekedSpeech__Fv = 0x00279E78;
 sound_LevelPlay__Fiii = 0x002A1770;
 
+snd_PauseAllSoundsInGroup__Fi = 0x0012E3E8;
+music_Pause__Fi = 0x0027A408;

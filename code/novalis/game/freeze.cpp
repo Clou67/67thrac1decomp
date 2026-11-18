@@ -66,7 +66,64 @@ int GetFreezePrevGameMode(void)
     return Freeze.previousGameMode;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", DisplayPrompt);
+void DisplayPrompt(int prompt, int arg)
+{
+    if (gameMode != GAME_MODE_PLAY) {
+        snd_PauseAllSoundsInGroup(FREEZE_SOUND_GROUP);
+        music_Pause(0);
+    }
+
+    Freeze.previousGameMode = gameMode;
+    Freeze.arg = arg;
+    gameMode = GAME_MODE_FREEZE;
+    Freeze.prompt = prompt;
+
+    switch (prompt) {
+    case PROMPT_PAUSE:
+        Freeze.text[0] = msg_string(MSG_PROMPT_0_TITLE);
+        Freeze.text[1] = msg_string(MSG_PROMPT_0_YES);
+        Freeze.text[2] = msg_string(MSG_PROMPT_0_NO);
+        Freeze.timer = 0;
+        Freeze.choice = 0;
+        Freeze.boxTimer = 0;
+        Freeze.fadeStep = 0;
+        Freeze.unk28 = 0;
+        break;
+    case 2:
+        Freeze.text[0] = msg_string(MSG_PROMPT_OK);
+        Freeze.text[1] = 0;
+        Freeze.timer = 0;
+        break;
+    case 1:
+    case 4:
+        Freeze.text[0] = msg_string(MSG_PROMPT_1_TITLE);
+        Freeze.text[1] = msg_string(MSG_PROMPT_1_BODY);
+        Freeze.text[2] = msg_string(MSG_PROMPT_OK);
+        Freeze.timer = 0;
+        break;
+    case PROMPT_PUSH_HELP_HISTORY:
+        Help_AddToLog(HELP_MSG_SAVE_FAILED);
+        Freeze.timer = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        Freeze.boxTimer = 0;
+        Freeze.fadeStep = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        break;
+    case PROMPT_SAVE_FAILED:
+        Freeze.timer = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        Freeze.boxTimer = 0;
+        Freeze.fadeStep = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        break;
+    case 6:
+        Freeze.timer = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        Freeze.choice = 0;
+        break;
+    default:
+        Freeze.text[0] = 0;
+        Freeze.text[1] = 0;
+        Freeze.text[2] = 0;
+        Freeze.timer = PROMPT_DEFAULT_TIMER;
+        break;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", DrawDialogText);
 
