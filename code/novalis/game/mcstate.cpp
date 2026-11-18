@@ -316,6 +316,17 @@ void csf_saving(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f398);
+void csf_prompt_begin_unformatted(void)
+{
+    if (g_memcard.memcards[0].result != MC_RESULT_UNFORMATTED) {
+        mc_state = CS_NOCARD;
+        return;
+    }
+
+    if (mcstate_flags & MCSTATE_FLAG_ANSWER_NO) {
+        mcstate_flags ^= MCSTATE_FLAG_ANSWER_NO;
+        mc_state = CS_UNFORMATTED;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f3e0);
