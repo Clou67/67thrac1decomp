@@ -79,7 +79,17 @@ void csf_wait_for_card(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ee30);
+void csf_unformatted(void)
+{
+    if (g_memcard.memcards[0].result != MC_RESULT_UNFORMATTED) {
+        mc_state = CS_NOCARD;
+        return;
+    }
+
+    if (mcstate_flags & MCSTATE_FLAG_SAVE) {
+        mc_state = CS_PROMPT_FORMAT;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ee70);
 
