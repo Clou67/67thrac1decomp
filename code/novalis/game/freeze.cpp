@@ -48,6 +48,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", DrawDialogText);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", UpdateFreeze);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", GetSaveDialogRect);
+int GetSaveDialogRect(unsigned int size, void **first, void **second)
+{
+    if (size > SAVE_DIALOG_MAX_SIZE) {
+        *first = 0;
+        *second = 0;
+        return -1;
+    }
+
+    *first = MemSlots.vu1_chain[0] + vu1_bufSize - size;
+    *second = MemSlots.vu1_chain[1] + vu1_bufSize - size;
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", DrawMessageBox);
