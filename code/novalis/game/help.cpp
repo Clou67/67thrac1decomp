@@ -271,7 +271,213 @@ void Help_StartMessageBox(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Update);
+// Every message that is shown counts as used, is stamped with the play time (in
+// minutes) it was last shown at and is marked as seen in the current level.
+static inline void Help_RecordUse(void)
+{
+    HelpDatum *datum = &HelpDataMessages[Help.message_flg];
+
+    if (datum->timesUsed < HELP_TIMES_USED_MAX) {
+        datum->timesUsed++;
+    }
+}
+
+static inline void Help_RecordTime(void)
+{
+    if (FastScaleRoundInt(TotalPlayTime) / HELP_FRAMES_PER_MINUTE > HelpDataMessages[Help.message_flg].lastTime) {
+        HelpDataMessages[Help.message_flg].lastTime = FastScaleRoundInt(TotalPlayTime) / HELP_FRAMES_PER_MINUTE;
+    }
+}
+
+static inline void Help_RecordLevel(void)
+{
+    HelpDataMessages[Help.message_flg].level_die = HelpDataMessages[Help.message_flg].level_die | (1 << Level) | HELP_LEVEL_DIE_USED;
+}
+
+void Help_Update(void)
+{
+    if (Help.ready == 0) {
+        if (Help.ready_timer == 0 && (padState.bits & PAD_DPAD)) {
+            Help.ready_timer = 1;
+        }
+
+        if (Help.ready_timer != 0) {
+            if (++Help.ready_timer >= FastScaleRoundInt(HELP_READY_FRAMES)) {
+                Help.ready = 1;
+            }
+        }
+    }
+
+    if (gameMode != 0 || Help.ready == 0) {
+        Help.message_id = HELP_NO_MESSAGE;
+        Help.state = HELP_STATE_IDLE;
+        Help.counter = 0;
+        return;
+    }
+
+    Help.counter++;
+
+    switch (Help.state) {
+    case HELP_STATE_SUSPENDED:
+        if (Help.suspend != 0) {
+            break;
+        }
+
+        if (Help.message_index >= 0) {
+            if (Help.text_shown == 0) {
+                if (FastDecTimer(Help.suspend_timer) != 0) {
+                    Help_StartMessageBox();
+                    Help.text_shown++;
+                }
+                break;
+            }
+
+            Help_RecordUse();
+        }
+
+        Help_RecordTime();
+        Help_RecordLevel();
+        Help.message_index = HELP_NO_MESSAGE;
+        Help.state = HELP_STATE_IDLE;
+        Help.text_shown = 0;
+        break;
+
+    case HELP_STATE_IDLE:
+        if (Help.message_id >= 0) {
+            Help.message_index = Help_FindIndex(Help.message_id);
+            Help.message_id = HELP_NO_MESSAGE;
+
+            if (Help.message_index >= 0) {
+                Help_StartMessageBox();
+            }
+        }
+        break;
+
+    case HELP_STATE_BOX_OPENING: {
+        int vag;
+
+        MB_RequestHelpMessage(HELP_MESSAGE_SELECTOR, 0);
+
+        vag = HelpMsgs[Help.message_index].vag;
+        if (vag >= 0 && musicTransition.unk50 == 0 && musicTransition.unk1C == -1) {
+            musicTransition.unk1C = vag + MUSIC_SPEECH_ID_BASE;
+        }
+
+        if (padState.bitsOn & PAD_TRIANGLE) {
+            Help_RecordUse();
+            Help_RecordTime();
+            Help_RecordLevel();
+            Help.counter = HELP_TRANSITION_FRAMES - Help.counter;
+            Help.state = HELP_STATE_BOX_CLOSING;
+        } else if (Help.counter >= HELP_BOX_OPEN_FRAMES) {
+            Help.counter = 0;
+            Help.state = HELP_STATE_PROMPT;
+        }
+        break;
+    }
+
+    case HELP_STATE_PROMPT: {
+        int vag;
+
+        MB_RequestHelpMessage(HELP_MESSAGE_SELECTOR, 0);
+
+        if (padState.bitsOn & PAD_TRIANGLE) {
+            Help_RecordUse();
+            Help_RecordTime();
+            Help.state = HELP_STATE_BOX_CLOSING;
+            Help.counter = 0;
+            Help_RecordLevel();
+        } else if (Help.counter >= FastScaleRoundInt(HELP_PROMPT_FRAMES)) {
+            if (musicTransition.state == MUSIC_STATE_READY || (vag = HelpMsgs[Help.message_index].vag) == -1 || vag != musicTransition.speechId - MUSIC_SPEECH_ID_BASE) {
+                Help.state = HELP_STATE_PROMPT_TO_BOX;
+                Help.counter = 0;
+            }
+        }
+        break;
+    }
+
+    case HELP_STATE_PROMPT_TO_BOX:
+        MB_RequestHelpMessage(HELP_MESSAGE_SELECTOR, 0);
+
+        if (padState.bitsOn & PAD_TRIANGLE) {
+            Help_RecordUse();
+            Help_RecordTime();
+            Help.state = HELP_STATE_BOX_CLOSING;
+            Help.counter = 0;
+            Help_RecordLevel();
+        } else if (Help.counter >= HELP_TRANSITION_FRAMES) {
+            Help.counter = 0;
+            Help.state = HELP_STATE_TEXT_FADE_IN;
+        }
+        break;
+
+    case HELP_STATE_TEXT_FADE_IN: {
+        int vag;
+
+        MB_RequestHelpMessage(HELP_MESSAGE_SELECTOR, 0);
+
+        if (padState.bitsOn & PAD_TRIANGLE) {
+            Help_RecordUse();
+            Help_RecordTime();
+            Help.state = HELP_STATE_TEXT_FADE_OUT;
+            Help_RecordLevel();
+            Help.counter = HELP_TEXT_FADE_FRAMES - Help.counter;
+        } else if (Help.counter >= HELP_TEXT_FADE_FRAMES) {
+            vag = HelpMsgs[Help.message_index].vag;
+            if (vag != -1 && vag == musicTransition.speechId - MUSIC_SPEECH_ID_BASE && musicTransition.state == MUSIC_STATE_READY) {
+                music_PlayPreseekedSpeech();
+            }
+            Help.state = HELP_STATE_TEXT_SHOWN;
+            Help.counter = 0;
+        }
+        break;
+    }
+
+    case HELP_STATE_TEXT_SHOWN: {
+        int vag;
+
+        MB_RequestHelpMessage(HELP_MESSAGE_SELECTOR, 0);
+
+        if ((Help.counter >= FastScaleRoundInt(HELP_TEXT_SHOWN_FRAMES) && ((vag = HelpMsgs[Help.message_index].vag) == -1 || vag != musicTransition.speechId - MUSIC_SPEECH_ID_BASE || (musicTransition.unk50 == 0 && musicTransition.unk1C == -1))) || (padState.bitsOn & PAD_TRIANGLE)) {
+            Help_RecordUse();
+            Help_RecordTime();
+            Help.state = HELP_STATE_TEXT_FADE_OUT;
+            Help.counter = 0;
+            Help_RecordLevel();
+        }
+        break;
+    }
+
+    case HELP_STATE_TEXT_FADE_OUT:
+        if (sceneHelpMsgFlag1 == 0 || Help.counter >= HELP_TEXT_FADE_FRAMES || (padState.bitsOn & PAD_TRIANGLE)) {
+            Help.state = HELP_STATE_BOX_CLOSING;
+            Help.counter = 0;
+        }
+        break;
+
+    case HELP_STATE_BOX_CLOSING: {
+        int vag;
+
+        MB_RequestHelpMessage(HELP_MESSAGE_SELECTOR, 0);
+
+        vag = HelpMsgs[Help.message_index].vag;
+        if (vag != -1 && vag == musicTransition.speechId - MUSIC_SPEECH_ID_BASE && (unsigned short)(musicTransition.state - MUSIC_STATE_FINISHING) >= 2) {
+            musicTransition.state = MUSIC_STATE_STOPPING;
+        }
+
+        if (Help.counter >= HELP_TRANSITION_FRAMES) {
+            if (Help.suspend != 0) {
+                Help.state = HELP_STATE_SUSPENDED;
+            } else {
+                Help.state = HELP_STATE_IDLE;
+                Help.message_index = HELP_NO_MESSAGE;
+            }
+            Help.counter = 0;
+        }
+        break;
+    }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_DrawIconBox);
 
