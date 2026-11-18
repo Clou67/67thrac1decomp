@@ -1,6 +1,18 @@
 #include "common.h"
+#include "mcstate.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FlowState_Update);
+void UpdateMCState(void)
+{
+    int previousState = mc_state;
+
+    state_functions[mc_state]();
+
+    mcstate_time++;
+
+    if (mc_state != previousState) {
+        mcstate_time = 0;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025eca0);
 
