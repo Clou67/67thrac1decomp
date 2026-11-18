@@ -194,7 +194,6 @@ Hud_DrawTexQuad__Fiiiiii = 0x002500E0;
 Hud_DrawTexQuadF__Fiiiiiiii = 0x00250B00;
 Hud_DrawFlatRect__FiiiiUli = 0x00251528;
 Hud_DrawFlatRectFixed__FiiiiUli = 0x002516B0;
-msg_string__Fi = 0x002259E8;
 FastDecTimer__FRi = 0x00220E78;
 DrawTextShadow__Fiiiii = 0x0021C958;
 DrawSprite__FiiiiiiiiUlUl = 0x0021BE90;

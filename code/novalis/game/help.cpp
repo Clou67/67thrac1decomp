@@ -200,7 +200,18 @@ int Help_FindIndex(int id)
     return found;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", msg_string);
+char *msg_string(int id)
+{
+    static char not_found[] = "Paradox: This message does not exist";
+
+    int index = Help_FindIndex(id);
+
+    if (index >= 0) {
+        return HelpMsgs[index].text;
+    }
+
+    return not_found;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Suspend);
 
