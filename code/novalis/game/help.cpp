@@ -1,9 +1,5 @@
 #include "common.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", GetSaveDialogRect);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", DrawMessageBox);
-
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_Skip);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_QueueMessage);

@@ -64,6 +64,8 @@ segments:
     align: 4
     subsegments:
     - [0x1000, lit4]
+    - [0x1750, .sdata, game/freeze]  # MediumFontHeight
+    - [0x1754, lit4]
     - [0x2028, .sdata, game/memcard]  # g_loaderr
     - [0x202c, lit4]
     - [0x32a0, .sdata, game/vuchain]  # VifChainFlags
@@ -132,7 +134,7 @@ segments:
     - [0xc2f20, asm, game/fastfunc]
     - [0xc45f8, cpp, game/framebuf]
     - [0xc5730, cpp, game/freeze]
-    - [0xc7368, cpp, game/help]
+    - [0xc7890, cpp, game/help]
     - [0xc8c70, cpp, game/hero]
     - [0xec630, cpp, game/hud]
     - [0xf3d30, cpp, game/initlevel]

@@ -1,6 +1,8 @@
 #ifndef FRAMEBUF_H
 #define FRAMEBUF_H
 
+#include "gsregs.h"
+
 #include "sce.h"
 #include "vuchain.h"
 
@@ -64,7 +66,6 @@ extern qword gif_clear_frame_buf[];
 #define EE_PHYSICAL_ADDRESS_MASK 0x0FFFFFFF
 
 #define VIF_FLUSHA 0x13000000
-#define GS_REG_ALPHA_1 0x42
 
 // TEX0 for the aux render target set up by SetMovieDrawSmallVIFChain.
 extern unsigned long AuxBufferTex0;

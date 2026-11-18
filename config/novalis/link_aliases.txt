@@ -1,7 +1,6 @@
 // Mangled names the linker needs for functions that are still INCLUDE_ASM.
 // splat keeps using the plain names in symbols.txt until they are decompiled.
 DisplayPrompt__Fii = 0x00223640;
-GetSaveDialogRect__FUiPPvT1 = 0x00225268;
 music_Sync__Fi = 0x0027ACA0;
 music_LoadFileSync__FPvii = 0x0027AC20;
 map_SaveLevelObjectState__Fv = 0x0025EB68;
@@ -183,3 +182,16 @@ UpdateSound_5__FP12AmbientSound = 0x0031A078;
 UpdateSound_6__FP12AmbientSound = 0x0031A128;
 func_002E0BA8__FP12MobyInstance = 0x002E0BA8;
 func_002F1DF8__FP12MobyInstance = 0x002F1DF8;
+// Helpers the level select map calls.
+FastScaleRoundInt__Fi = 0x00220E30;
+FastVec3Length__FPf = 0x00221318;
+FlipAndExploreTimersVU1__Fi = 0x0021AC60;
+FinalizeVU1FramePacketChain__Fv = 0x0021AD78;
+FontLen__FPci = 0x0021CC90;
+FontPrintMediumLeft__FiiUlPci = 0x0021CF70;
+HudTex_GetFrame__Fii = 0x0024FE10;
+Hud_DrawTexQuad__Fiiiiii = 0x002500E0;
+Hud_DrawTexQuadF__Fiiiiiiii = 0x00250B00;
+Hud_DrawFlatRect__FiiiiUli = 0x00251528;
+Hud_DrawFlatRectFixed__FiiiiUli = 0x002516B0;
+msg_string__Fi = 0x002259E8;
