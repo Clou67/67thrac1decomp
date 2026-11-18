@@ -45,6 +45,9 @@ options:
     - config/novalis/core_symbols.txt
 
   ld_legacy_generation: True
+  # Sections are packed back to back in the original; no extra ALIGN(16) between them.
+  ld_align_section_vram_end: False
+  ld_align_segment_vram_end: False
   check_consecutive_segment_types: False
   subalign: 8
 
@@ -57,6 +60,8 @@ segments:
     type: code
     start: 0x1000
     vram: 0x0015ef00
+    subalign: 4
+    align: 4
     subsegments:
     - [0x1000, lit4]
     - [0x32a0, .sdata, game/vuchain]  # VifChainFlags
@@ -69,10 +74,16 @@ segments:
     start: 0x4380
     vram: 0x00162280
 
+  # Matched files' string literals (.rodata) are carved out at their original address.
   - name: data
-    type: data
+    type: code
     start: 0x8580
     vram: 0x00166480
+    align: 4
+    subsegments:
+    - [0x8580, data]
+    - [0xac690, .rodata, game/vuchain]
+    - [0xac718, data]
 
   - name: lvl.vtbl
     type: rodata
@@ -93,6 +104,8 @@ segments:
     type: code
     start: 0xae700
     vram: 0x0020c600
+    subalign: 4
+    align: 4
     subsegments:
     - [0xae700, cpp, game/actuator]
     - [0xaeb30, cpp, game/bloaders]
@@ -138,7 +151,7 @@ segments:
     - [0x13ebf8, cpp, game/shrubfunc]
     - [0x13eef0, asm, game/shrubproc]
     - [0x140eb0, cpp, game/skyfunc]
-    - [0x141c7c, asm, game/skyproc]
+    - [0x141c78, asm, game/skyproc]
     - [0x142290, cpp, game/sound]
     - [0x143d40, cpp, game/space]
     - [0x1496e8, cpp, game/stash]

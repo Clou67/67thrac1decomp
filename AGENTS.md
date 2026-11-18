@@ -17,17 +17,17 @@ The goal is C++ source that compiles to the original bytes and is also good code
 
 - Compiler: EE GCC 2.95.2 (`tools/cc/bin/ee-gcc.exe`, run through Wine), always with exactly:
   ```
-  -G8 -O2 -fno-exceptions -Wa,-EL -Wa,-Iinclude
+  -G8 -O2 -fno-exceptions -snas
   ```
-- Assembler flags:
-  ```
-  -Iinclude -EL -no-pad-sections -march=5900 -mabi=eabi
-  ```
-- Things these flags imply for your code:
-  - `-G8`: globals of 8 bytes or less go in `.sdata`/`.sbss` and are accessed through `$gp`. Larger globals use `lui`/`addiu` pairs. So declare every `extern` global with its **true size and type**. If you declare a 4-byte global as an array (or the reverse), the access sequence changes and the function will not match.
-  - `-O2` reorders and schedules instructions, including delay slots. Statement order in the source matters less than the data flow, but it still matters.
-  - Float constants come from the `.lit` pool (lit4). Write them as `1.0f`; the compiler pools them.
-  - `-fno-exceptions`: no try/catch, no destructors that need unwinding. Classes are fine only as plain structs.
+- Assembler for compiled C++: SN `ps2eeas` 1.9.6.516 (`make setup-snas` installs it into `tools/cc/lib/gcc-lib/ee/2.95.2/`). Other ps2eeas builds pad DIV instructions differently and do not reproduce the original.
+- Generated `.s` files (data, handwritten asm files) are assembled with GNU as: `-EL -march=r5900 -mabi=eabi -no-pad-sections -Icode/include`.
+- What these choices imply for your code:
+  - ps2eeas commits to an addressing mode at the first reference. A small extern global is loaded with `lui`/`lw`; a global defined earlier in the same file (with an initializer) is loaded `$gp`-relative. Inside delay slots the compiler itself emits `$gp`-relative stores. So where retail uses `$gp` for a load, the global is probably defined in that file.
+  - Whether an extern array is declared with or without a size matters: an unsized array (`extern T x[];`) is addressed through its base address, a sized small one (`extern int x[2];`) through `symbol+offset`. Match the declaration to how retail addresses it.
+  - Globals shared with interrupt handlers are `volatile` (stores stay out of delay slots).
+  - `-O2` reorders and schedules instructions, including delay slots. Statement order matters less than data flow, but it still matters.
+  - `-fno-exceptions`: no try/catch, no destructors that need unwinding.
+- Sony SDK functions (libdma, libgraph, kernel) are C: declare them `extern "C"` in their SDK header (`sce.h`). SDK macros such as `ExitHandler()` live in their own headers (`eekernel.h`).
 
 ## Workflow for one function
 
@@ -92,10 +92,10 @@ Rules:
 
 ## Verifying
 
-1. **Compile only the file** and compare the function's object bytes to the original slice: same start offset inside `.text`, same size, same bytes. Relocations (jal targets, `%hi`/`%lo` and `%gp_rel`) must point at the same symbols.
-2. **Boot ELF:** `make && cmp build/boot_elf.elf assets/boot_elf.elf` must pass after every change.
-3. **Overlays:** until an overlay has its own full build, the object-level comparison against `assets/levels/<level>/overlay.elf` is the oracle. Once an overlay build exists, the same full `cmp` rule applies to it.
-4. If a change touches a shared header (a struct or a prototype), rebuild everything that includes it and check every affected function again.
+1. **Compile only the file** and compare the function's object bytes to the original slice: same start offset inside `.text`, same size, same bytes.
+2. **Full overlay build:** `make split-novalis && make novalis` must print `novalis: OK` (the rebuilt `overlay.elf` is byte-identical to `assets/levels/1_novalis/overlay.elf`). Run it after every function. This also checks string literals, data placement and every relocation.
+3. **Data carve-outs:** when a matched file gains string literals (`.rodata`) or initialized small globals (`.sdata`), add a `.rodata`/`.sdata` subsegment for that file at its original address in `config/novalis/novalis.yaml` (see vuchain). The literals only line up once every function in the file that uses strings is decompiled.
+4. If a change touches a shared header (a struct or a prototype), rebuild everything that includes it.
 
 ## When it doesn't match
 

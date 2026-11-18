@@ -21,5 +21,3 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkyDrawShell);
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkyDrawShellTextured);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkyDrawShellGouraud);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", func_0029FB78);
