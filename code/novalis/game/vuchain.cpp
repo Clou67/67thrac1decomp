@@ -26,7 +26,16 @@ void VU1_initChain(void)
     SkinVertexCache = EngScratchPad - SKIN_VERTEX_CACHE_SIZE;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_swapChain);
+
+void VU1_swapChain(void)
+{
+    vu1_bufId = 1 - vu1_bufId;
+    vu1_chainEnd = vu1_bufPtr;
+    vu1_bufPtr = vu1_DmaBuffers[vu1_bufId];
+
+    EngScratchPad = vu1_bufPtr + vu1_bufSize - EngScratchPadSize;
+    SkinVertexCache = EngScratchPad - SKIN_VERTEX_CACHE_SIZE;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_sendChain);
 
