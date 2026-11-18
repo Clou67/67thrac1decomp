@@ -123,7 +123,40 @@ int memcard_TestChecksum(char *addr)
     return good;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_PrepData);
+int memcard_PrepData(char *addr, int index, mc_data *mcd)
+{
+    int *cursor = (int *)(addr + 8);
+    int size = 0;
+
+    if (mcd->addr != 0) {
+        mc_data *entry = mcd;
+
+        do {
+            char *source = (char *)entry->addr + index * entry->size;
+
+            size += 8;
+            cursor[0] = entry->iff;
+            cursor[1] = entry->size;
+            cursor += 2;
+            FastMemCopy32(cursor, source, entry->size);
+
+            cursor = (int *)((char *)cursor + entry->size);
+            size += entry->size;
+            cursor = (int *)(((int)cursor + 3) & ~3);
+            size = (size + 3) & ~3;
+            entry++;
+        } while (entry->addr != 0);
+    }
+
+    cursor[1] = 0;
+    cursor[0] = -1;
+
+    size += 8;
+    *(int *)(addr + 4) = memcard_Checksum(addr + 8, size);
+    *(int *)addr = size;
+
+    return size + 8;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_RestoreInfo);
 
