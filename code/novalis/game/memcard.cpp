@@ -40,7 +40,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", func_0025F560);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_RestoreGame);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_ResetGame);
+void memcard_ResetGame(void)
+{
+    void *saveBuffer;
+    void *secondBuffer;
+
+    GetSaveDialogRect(bootAssets.savegame.length << 11, &saveBuffer, &secondBuffer);
+    music_Sync(1);
+    music_LoadFileSync(saveBuffer, bootAssets.savegame.offset, bootAssets.savegame.length);
+    memcard_RestoreGame((char *)saveBuffer + *(int *)((char *)saveBuffer + 0x10));
+    Level = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Update);
 
