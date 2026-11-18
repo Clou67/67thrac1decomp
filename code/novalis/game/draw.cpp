@@ -10,7 +10,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", printf_stub2);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", printf_stub3);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetFrameBufferForCutscene);
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetFrameBufferForCutscene__Fv);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ComposeCameraMatrix);
 

@@ -85,7 +85,27 @@ void VU1_sendChain(void)
     VifChainFlags = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_syncChain);
+void VU1_syncChain(int syncFlags)
+{
+    int spins = 0;
+
+    for (;;) {
+        if (!(VifChainFlags & syncFlags)) {
+            return;
+        }
+
+        FastSitAndSpin(0x400);
+
+        if (spins <= VU1_SYNC_TIMEOUT) {
+            spins++;
+            continue;
+        }
+
+        printf_stub("vu1 syncChain sit-and-spin timeout.\n");
+        ResetFrameBufferForCutscene();
+        return;
+    }
+}
 
 void VU1_addDataRef(void *data, int qcnt)
 {

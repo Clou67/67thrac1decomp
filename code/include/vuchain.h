@@ -14,6 +14,9 @@ void ResetFrameBufferForCutscene(void);
 extern volatile int VifChainFlags;
 #define VIF_CHAIN_ALL_STAGES 0x1F
 
+// Spins of 0x400 cycles before VU1_syncChain gives up.
+#define VU1_SYNC_TIMEOUT 100000
+
 // Most chain bytes used in one frame.
 extern int vu1_bufMaxUsed;
 
