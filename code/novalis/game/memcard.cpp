@@ -41,7 +41,7 @@ void memcard_GetName(char *buff)
     strncpy(SAVEGAME_SLOT, SAVEGAME_NAME, 13);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", func_0025F560);
+TEXT_PADDING(0x27BD0060, 0x00000000);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_RestoreGame);
 
