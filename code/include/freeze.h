@@ -1,28 +1,27 @@
 #ifndef FREEZE_H
 #define FREEZE_H
 
-// Prompt ids for DisplayPrompt.
-#define PROMPT_PAUSE 0
-#define PROMPT_SAVE_FAILED 3
-#define PROMPT_PUSH_HELP_HISTORY 5
+// Dialog ids for mode_freezeInit.
+#define FREEZE_DIALOG_CONFIRM 0
+#define FREEZE_DIALOG_SAVE_FAILED 3
+#define FREEZE_DIALOG_LOG_HELP 5
 
-// State of the prompt shown while the game is frozen.
-struct FreezePrompt {
-    int prompt;
-    int timer;
-    char *text[3];
-    int previousGameMode;
-    int arg;
-    int choice;
-    int boxTimer;
-    int fadeStep;
-    int unk28;
+// State of the dialog shown while the game is frozen.
+struct freeze_t {
+    int mode;
+    int countdown;
+    char *query;
+    char *ans1;
+    char *ans2;
+    int prevGameMode;
+    int restorePage;
+    int updTimers[4];
 };
 
-extern FreezePrompt Freeze;
+extern freeze_t Freeze;
 
-int GetFreezePrevGameMode(void);
-void DisplayPrompt(int prompt, int arg);
+int GetLastFreezeDialogType(void);
+void mode_freezeInit(int dialog, int restorePage);
 
 // Places the two buffers the save dialog reads a save into; fails if the save is too big.
 int GetSaveDialogRect(unsigned int size, void **first, void **second);

@@ -2,8 +2,13 @@
 #define GAMEGLOBALS_H
 
 // Values of gameMode.
-#define GAME_MODE_PLAY 3
-#define GAME_MODE_FREEZE 4
+enum gameMode_t {
+    GAME_MODE_NORMAL,
+    GAME_MODE_MOVIE,
+    GAME_MODE_SCENE,
+    GAME_MODE_PAUSE,
+    GAME_MODE_FREEZE
+};
 
 extern int gameMode;
 // Play time in game frames.

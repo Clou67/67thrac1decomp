@@ -61,73 +61,73 @@ enum map_level_state {
 
 int MediumFontHeight = 17;
 
-int GetFreezePrevGameMode(void)
+int GetLastFreezeDialogType(void)
 {
-    return Freeze.previousGameMode;
+    return Freeze.prevGameMode;
 }
 
-void DisplayPrompt(int prompt, int arg)
+void mode_freezeInit(int dialog, int restorePage)
 {
-    if (gameMode != GAME_MODE_PLAY) {
+    if (gameMode != GAME_MODE_PAUSE) {
         snd_PauseAllSoundsInGroup(FREEZE_SOUND_GROUP);
         music_Pause(0);
     }
 
-    Freeze.previousGameMode = gameMode;
-    Freeze.arg = arg;
+    Freeze.prevGameMode = gameMode;
+    Freeze.restorePage = restorePage;
     gameMode = GAME_MODE_FREEZE;
-    Freeze.prompt = prompt;
+    Freeze.mode = dialog;
 
-    switch (prompt) {
-    case PROMPT_PAUSE:
-        Freeze.text[0] = msg_string(MSG_PROMPT_0_TITLE);
-        Freeze.text[1] = msg_string(MSG_PROMPT_0_YES);
-        Freeze.text[2] = msg_string(MSG_PROMPT_0_NO);
-        Freeze.timer = 0;
-        Freeze.choice = 0;
-        Freeze.boxTimer = 0;
-        Freeze.fadeStep = 0;
-        Freeze.unk28 = 0;
+    switch (dialog) {
+    case FREEZE_DIALOG_CONFIRM:
+        Freeze.query = msg_string(MSG_PROMPT_0_TITLE);
+        Freeze.ans1 = msg_string(MSG_PROMPT_0_YES);
+        Freeze.ans2 = msg_string(MSG_PROMPT_0_NO);
+        Freeze.countdown = 0;
+        Freeze.updTimers[0] = 0;
+        Freeze.updTimers[1] = 0;
+        Freeze.updTimers[2] = 0;
+        Freeze.updTimers[3] = 0;
         break;
     case 2:
-        Freeze.text[0] = msg_string(MSG_PROMPT_OK);
-        Freeze.text[1] = 0;
-        Freeze.timer = 0;
+        Freeze.query = msg_string(MSG_PROMPT_OK);
+        Freeze.ans1 = 0;
+        Freeze.countdown = 0;
         break;
     case 1:
     case 4:
-        Freeze.text[0] = msg_string(MSG_PROMPT_1_TITLE);
-        Freeze.text[1] = msg_string(MSG_PROMPT_1_BODY);
-        Freeze.text[2] = msg_string(MSG_PROMPT_OK);
-        Freeze.timer = 0;
+        Freeze.query = msg_string(MSG_PROMPT_1_TITLE);
+        Freeze.ans1 = msg_string(MSG_PROMPT_1_BODY);
+        Freeze.ans2 = msg_string(MSG_PROMPT_OK);
+        Freeze.countdown = 0;
         break;
-    case PROMPT_PUSH_HELP_HISTORY:
+    case FREEZE_DIALOG_LOG_HELP:
         Help_AddToLog(HELP_MSG_SAVE_FAILED);
-        Freeze.timer = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
-        Freeze.boxTimer = 0;
-        Freeze.fadeStep = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        Freeze.countdown = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        Freeze.updTimers[1] = 0;
+        Freeze.updTimers[2] = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
         break;
-    case PROMPT_SAVE_FAILED:
-        Freeze.timer = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
-        Freeze.boxTimer = 0;
-        Freeze.fadeStep = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+    case FREEZE_DIALOG_SAVE_FAILED:
+        Freeze.countdown = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        Freeze.updTimers[1] = 0;
+        Freeze.updTimers[2] = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
         break;
     case 6:
-        Freeze.timer = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
-        Freeze.choice = 0;
+        Freeze.countdown = FastScaleRoundInt(PROMPT_TIMER_FRAMES);
+        Freeze.updTimers[0] = 0;
         break;
     default:
-        Freeze.text[0] = 0;
-        Freeze.text[1] = 0;
-        Freeze.text[2] = 0;
-        Freeze.timer = PROMPT_DEFAULT_TIMER;
+        Freeze.query = 0;
+        Freeze.ans1 = 0;
+        Freeze.ans2 = 0;
+        Freeze.countdown = PROMPT_DEFAULT_TIMER;
         break;
     }
 }
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", DrawDialogText);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", UpdateFreeze);
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", UpdateModeFreeze);
 
 int GetSaveDialogRect(unsigned int size, void **first, void **second)
 {
