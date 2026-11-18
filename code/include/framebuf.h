@@ -60,6 +60,14 @@ extern unsigned long gif_clear_frame_buf[];
 
 #define EE_PHYSICAL_ADDRESS_MASK 0x0FFFFFFF
 
+#define VIF_FLUSHA 0x13000000
+#define GS_REG_ALPHA_1 0x42
+
+// TEX0 for the aux render target set up by SetMovieDrawSmallVIFChain.
+extern unsigned long AuxBufferTex0;
+
+void FastMemSetZero(void *destination, int size);
+
 void SetBackgroundColor(int red, int green, int blue);
 void PutDispBuffer(void);
 void PutDrawBufferLarge(void);
@@ -67,5 +75,7 @@ void ClearDrawBufferLarge(int black);
 void PutDrawBufferSmall(void);
 void AA_BlurPass(void);
 void AA_DisplayPass(int opaque);
+void SetMovieDrawSmallVIFChain(int widthLog2, int heightLog2, int gsAddress);
+void DrawFilledRectGS(int x0, int y0, int x1, int y1, int width, int height, unsigned int color);
 
 #endif
