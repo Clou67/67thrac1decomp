@@ -1,16 +1,93 @@
 #ifndef MOBY_H
 #define MOBY_H
 
-#define MOBY_FLAG_HIDDEN 0x1
+struct Vec4 {
+    float x;
+    float y;
+    float z;
+    float w;
+};
 
-// Only the fields the freeze mode touches are known so far.
+struct Mtx4 {
+    Vec4 v0;
+    Vec4 v1;
+    Vec4 v2;
+    Vec4 v3;
+};
+
+struct BSphere {
+    float x;
+    float y;
+    float z;
+    float rad;
+};
+
+struct MobyClass;
+struct Manipulator;
+
+// Bits of MobyInstance::modeBits.
+#define MOBY_MODE_BIT_HIDDEN 0x1
+
+// A moby (game object) instance, 0x100 bytes.
 struct MobyInstance {
-    char unk0[0x31];
-    unsigned char visible;
-    char unk32[2];
-    unsigned short flags;
-    char unk36[0x5E];
-    int collision;
+    BSphere bSphere;
+    Vec4 pos;
+    unsigned char state;
+    signed char group;
+    unsigned char mClass;
+    signed char alpha;
+    MobyClass *pClass;
+    void *pChain;
+    float scale;
+    char updateDistance;
+    char enabled;
+    short drawDistance;
+    unsigned short modeBits;
+    unsigned short occlIndex;
+    unsigned int color;
+    unsigned int light;
+    Vec4 rotation;
+    char previousAnimationFrame;
+    char animationFrame;
+    unsigned char updateId;
+    unsigned char animationId;
+    float animationBlend;
+    float unk58;
+    float frameSpeed;
+    void *pAnimationLayers;
+    Manipulator *pManipulators;
+    void *pPreviousAnimationData;
+    void *pCurrentAnimationData;
+    char unk70[4];
+    void *pUpdate;
+    void *pVar;
+    char soundDesired;
+    char soundChannel;
+    char trigsCnt;
+    char shadow;
+    int colorManipulator;
+    int unk84;
+    int unk88;
+    char unk8C[4];
+    unsigned int glowRgba;
+    unsigned short *collision;
+    float *collisionMesh;
+    int collQueryStamp;
+    unsigned int collCount;
+    signed char damage;
+    char previousAnimationId;
+    unsigned short oClass;
+    int handle;
+    unsigned int index;
+    char levelFlagIdx;
+    char unkB1;
+    unsigned short uid;
+    char unkB4[4];
+    MobyInstance *unkB8;
+    char setByGroup;
+    char unkBD;
+    char unkBE[2];
+    Mtx4 transform;
 };
 
 #endif

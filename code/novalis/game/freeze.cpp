@@ -211,9 +211,9 @@ void UpdateModeFreeze(void)
         if (padState.bitsOn & PAD_TRIANGLE) {
             MobyInstance *moby = Hero.moby;
 
-            moby->visible = 0;
+            moby->enabled = 0;
             moby->collision = 0;
-            moby->flags |= MOBY_FLAG_HIDDEN;
+            moby->modeBits |= MOBY_MODE_BIT_HIDDEN;
             Hero_RevertToRatchet();
             Hero_Warp(&Hero.savedPosRot[0], &Hero.savedPosRot[4], 0, 1);
             gameMode = GAME_MODE_NORMAL;
