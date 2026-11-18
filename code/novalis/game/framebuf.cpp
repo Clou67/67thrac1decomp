@@ -61,7 +61,15 @@ void AA_BlurPass(void)
     vu1_bufPtr += 16;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", AA_DisplayPass);
+void AA_DisplayPass(int opaque)
+{
+    VU1_CHAIN_WORD(0) = DMA_TAG_REF | AA_DISPLAY_REGS_QWC;
+    VU1_CHAIN_WORD(4) = (unsigned int)aaDisplayRegs;
+    VU1_CHAIN_WORD(8) = 0;
+    VU1_CHAIN_WORD(12) = VIF_DIRECT | AA_DISPLAY_REGS_QWC;
+
+    vu1_bufPtr += 16;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/framebuf", DrawLineList);
 
