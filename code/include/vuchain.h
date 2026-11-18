@@ -64,8 +64,8 @@ extern unsigned char *vu1_DmaBuffers[];
 extern int vu1_bufId;
 // Write position in the VU1 chain buffer being built.
 extern unsigned char *vu1_bufPtr;
-// DL name; RC1 stores the previous frame's chain end here when swapping buffers.
-extern unsigned char *vu1_bufLimit;
+// End of the chain built last frame, kept by VU1_swapChain (no DL counterpart).
+extern unsigned char *vu1_lastChainEnd;
 
 // Scratch memory carved from the top of the chain buffer being built.
 extern unsigned char *EngScratchPad;
