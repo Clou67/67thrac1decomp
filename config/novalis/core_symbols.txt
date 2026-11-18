@@ -645,4 +645,6 @@ sceMcSync = 0x00123C30;
 sceMcGetDir = 0x00123EF0;
 strcpy = 0x001165B8;
 CdReadActive = 0x001516D8;
+TotalPlayTime = 0x0015EEA4;
 LevelUnlocked = 0x0013DD40;
+HelpDataMessages = 0x00141968;

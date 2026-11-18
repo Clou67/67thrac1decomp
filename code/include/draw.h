@@ -1,6 +1,9 @@
 #ifndef DRAW_H
 #define DRAW_H
 
+void DrawTextShadow(int top, int bot, int left, int right, int alpha);
+void DrawSprite(int sc_x, int sc_y, int sc_w, int sc_h, int tx_u, int tx_v, int tx_w, int tx_h, unsigned long rgba, unsigned long tex0);
+
 // Starts and ends a VU1 frame packet chain.
 void FlipAndExploreTimersVU1(int arg);
 void FinalizeVU1FramePacketChain(void);
