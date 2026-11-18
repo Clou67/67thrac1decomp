@@ -23,7 +23,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_sendChain);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_syncChain);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_addDataRef);
+
+void VU1_addDataRef(void *data, int qcnt)
+{
+    VU1_CHAIN_WORD(0) = qcnt | DMA_TAG_REF;
+    VU1_CHAIN_WORD(4) = (unsigned int)data;
+    VU1_CHAIN_WORD(8) = 0;
+    VU1_CHAIN_WORD(12) = 0;
+
+    vu1_bufPtr += 16;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", func_002B4818);
 
