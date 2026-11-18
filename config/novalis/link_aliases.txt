@@ -204,4 +204,3 @@ MB_RequestHelpMessage__Fii = 0x00279000;
 music_PlayPreseekedSpeech__Fv = 0x00279E78;
 sound_LevelPlay__Fiii = 0x002A1770;
 
-Help_AddToLog__Fi = 0x00226A70;

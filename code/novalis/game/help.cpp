@@ -599,4 +599,27 @@ int Help_FindPairIndex(short id, int reverse, unsigned short *other)
     return -1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/help", Help_AddToLog);
+void Help_AddToLog(int id)
+{
+    int slot = Help_FindPairIndex(id, 0, 0);
+    int i;
+
+    if (slot == -1) {
+        return;
+    }
+
+    for (i = 0; activeMessageRecords[i] != slot && i < activeMessageRecordCount; i++) {
+    }
+
+    if (i < activeMessageRecordCount) {
+        for (; i < activeMessageRecordCount - 1; i++) {
+            activeMessageRecords[i] = activeMessageRecords[i + 1];
+        }
+
+        activeMessageRecords[i] = 0;
+        activeMessageRecordCount--;
+    }
+
+    activeMessageRecords[activeMessageRecordCount] = slot;
+    activeMessageRecordCount++;
+}
