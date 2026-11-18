@@ -78,6 +78,7 @@ struct memcard_globals {
 #define MC_STAGE_FORMAT 3
 #define MC_STAGE_CHECK_SAVE 7
 #define MC_STAGE_CREATE_SAVE 9
+#define MC_STAGE_SAVE 0xF
 
 // Free space (in KB) a save needs.
 #define MC_SAVE_SIZE 0x15E
@@ -86,6 +87,17 @@ extern memcard_globals g_memcard;
 extern mc_data mc_gamedata[];
 extern mc_data mc_leveldata[];
 extern int g_loaderr;
+
+// Staging buffers memcard_Save packs the game and level blocks into.
+extern char mc_gameprepbuff[];
+extern char mc_levelprepbuff[];
+
+// Game state that goes into a save slot's summary.
+extern sceCdCLOCK LastSaveTime;
+extern unsigned char LevelVisited[];
+extern int HeroBolts;
+extern int ElapsedTime;
+extern int GameCompleted;
 
 // Memory card paths, patched with the disc's product code by memcard_GetName.
 extern char SAVEGAME_NAME[];

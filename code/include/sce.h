@@ -117,6 +117,8 @@ struct sceGifTag {
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
 extern "C" {
+int sceCdReadClock(sceCdCLOCK *clock);
+int sceScfGetLocalTimefromRTC(sceCdCLOCK *clock);
 void FlushCache(int operation);
 
 sceDmaChan *sceDmaGetChan(int channel);

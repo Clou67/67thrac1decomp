@@ -6,6 +6,8 @@
 #include "help.h"
 #include "music.h"
 #include "vuchain.h"
+#include "mcstate.h"
+#include "map.h"
 
 // Save chunks whose data differed from what was already in memory on the last restore.
 int g_loaderr = 0;
@@ -266,4 +268,58 @@ int memcard_RestoreData(char *addr, int index, mc_data *mcd)
     return errors;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/memcard", memcard_Save);
+int memcard_Save(int force, int level)
+{
+    sceCdReadClock(&LastSaveTime);
+    sceScfGetLocalTimefromRTC(&LastSaveTime);
+    map_SaveLevelObjectState();
+    map_SaveRevealMask(&MapRevealMasks[Level * MAP_REVEAL_MASK_SIZE]);
+
+    if (g_memcard.useslot == -1 || g_memcard.memcards[g_memcard.useslot].saveslot < 0) {
+        return force == 0;
+    }
+
+    g_memcard.autosave |= force;
+
+    if (g_memcard.autosave != 0) {
+        if (force == 0) {
+            mcstate_flags |= MCSTATE_FLAG_DO_SAVE;
+        }
+
+        if (g_memcard.stage < MC_STAGE_FORMAT && g_memcard.nextstage < 0) {
+            unsigned char visited = 0;
+
+            g_memcard.level = Level;
+
+            if (level >= 0) {
+                Level = level;
+                visited = LevelVisited[level];
+
+                if (!visited) {
+                    LevelVisited[level] = 1;
+                }
+            }
+
+            g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].bolts = HeroBolts;
+            g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].level = Level;
+            g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].elapsedTime = ElapsedTime;
+            g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].saveTime = LastSaveTime;
+            g_memcard.memcards[0].info[g_memcard.memcards[0].saveslot].completes = GameCompleted;
+
+            memcard_PrepData(mc_gameprepbuff, 0, mc_gamedata);
+            memcard_PrepData(mc_levelprepbuff, g_memcard.level, mc_leveldata);
+
+            if (level >= 0) {
+                LevelVisited[Level] = visited;
+                Level = g_memcard.level;
+            }
+
+            if (g_memcard.nextstage < 0) {
+                g_memcard.nextstage = MC_STAGE_SAVE;
+                g_memcard.nextslot = g_memcard.useslot;
+            }
+        }
+    }
+
+    return g_memcard.nextstage == MC_STAGE_SAVE;
+}
