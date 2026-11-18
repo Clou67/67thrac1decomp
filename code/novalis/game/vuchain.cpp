@@ -126,7 +126,16 @@ void VU1_texFlush(void)
     vu1_bufPtr += 16;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_gsRegsNormal);
+
+void VU1_gsRegsNormal(void)
+{
+    VU1_CHAIN_WORD(0) = DMA_TAG_REF | 3;
+    VU1_CHAIN_WORD(4) = (unsigned int)vu1GsRegsNormal;
+    VU1_CHAIN_WORD(8) = 0;
+    VU1_CHAIN_WORD(12) = VIF_DIRECT | 3;
+
+    vu1_bufPtr += 16;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", VU1_gsRegsEffects);
 
