@@ -329,4 +329,15 @@ void csf_prompt_begin_unformatted(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025f3e0);
+void csf_prompt_begin_nosave(void)
+{
+    if (g_memcard.memcards[0].result != MC_RESULT_SAME_CARD) {
+        mc_state = CS_NOCARD;
+        return;
+    }
+
+    if (mcstate_flags & MCSTATE_FLAG_ANSWER_NO) {
+        mcstate_flags ^= MCSTATE_FLAG_ANSWER_NO;
+        mc_state = CS_NOSAVE;
+    }
+}
