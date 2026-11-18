@@ -56,13 +56,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vuchain", DMAC_BEIS_Handl
 // Appends a VIF1 command packet (command word plus three zero words) to the VU1 chain.
 void Vif1ChainCmd(int command)
 {
-    unsigned int *chainHead = vu1_bufPtr;
-    unsigned int *packet = chainHead;
+    unsigned char *chainHead = vu1_bufPtr;
+    unsigned int *packet = (unsigned int *)chainHead;
 
-    chainHead += 4;
+    chainHead += 16;
     vu1_bufPtr = chainHead;
 
-    packet[0] = command + 0x90000000;
+    packet[0] = command + VIF_CHAIN_CMD;
     packet[1] = 0;
     packet[2] = 0;
     packet[3] = 0;
