@@ -21,7 +21,33 @@ void csf_init(void)
     g_memcard.memcards[0].result = g_memcard.res;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ecc8);
+void csf_good_save(void)
+{
+    int flags = mcstate_flags;
+
+    mcstate_flags &= ~MCSTATE_FLAG_LOAD;
+    mcstate_flags &= ~MCSTATE_FLAG_SAVE;
+
+    if (g_memcard.autosave == 0) {
+        mc_state = CS_NOCARD;
+        return;
+    }
+
+    if (flags & MCSTATE_FLAG_SAVE_FAILED) {
+        mcstate_flags = (mcstate_flags ^ MCSTATE_FLAG_SAVE_FAILED) | MCSTATE_FLAG_PROMPT;
+        mc_state = CS_PROMPT_SAVE_FAILED;
+    } else if (flags & MCSTATE_FLAG_LOAD_FAILED) {
+        mcstate_flags = (mcstate_flags ^ MCSTATE_FLAG_LOAD_FAILED) | MCSTATE_FLAG_PROMPT;
+        mc_state = CS_PROMPT_LOAD_FAILED;
+    } else if (g_memcard.memcards[0].result != MC_RESULT_SAME_CARD) {
+        g_memcard.autosave = 0;
+        mcstate_flags |= MCSTATE_FLAG_CARD_CHANGED;
+        mc_state = CS_GOOD_LOAD;
+    } else if (flags & MCSTATE_FLAG_DO_SAVE) {
+        mcstate_flags ^= MCSTATE_FLAG_DO_SAVE;
+        mc_state = CS_SAVING;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mcstate", FUN_0025ed78);
 
