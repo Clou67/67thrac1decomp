@@ -1,12 +1,27 @@
+#include <stddef.h>
+
 #include "common.h"
 #include "initlevel.h"
 #include "moby.h"
 #include "sky.h"
 #include "vuchain.h"
 
+struct SkyCluster {
+    Vec4 bounds;
+    void *data;
+    short vert_cnt;
+    short tri_cnt;
+    short vert_offset;
+    short attr_offset;
+    short tri_offset;
+    short data_size;
+};
+
 struct sky_shell {
     int cluster_cnt;
     int gouraud;
+    int unk_08[2];
+    SkyCluster clusters[0];
 };
 
 struct SkyGifPageMarker {
@@ -24,10 +39,22 @@ extern SkyGifPageMarker sky_gif_page_markerB;
 extern DrawConfig drawConfig;
 extern char skyGifPageLabel[];
 extern int GifLoadCnt;
+extern unsigned int skyTexturedSetup[];
+
+unsigned char *skyScratchBuffers[2] = {
+    (unsigned char *)0x70000000,
+    (unsigned char *)0x70001000
+};
+int skyScratchBufferIndex = 0;
 
 void FastMtx4Identity(float *matrix);
 void printf_stub3(const char *format, ...);
 void BuildGifTextureDma(void);
+void SkyBsphereCheck(SkyCluster *clusters, int cluster_count, unsigned char *visible);
+void SprDmaToSpr_Start(void *source, int quadwords, void *destination);
+void SprDmaToSpr_Wait(void);
+int SkyProcessVerts(void *source, void *destination, int vertex_count);
+void SkyDrawClusterTextured(int triangle_count, void *triangles, void *texcoords, void *vertices);
 
 void SkyLevelNone(void)
 {
@@ -103,6 +130,51 @@ void SkyDrawShell(int shell_index)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkyDrawShellTextured);
+void SkyDrawShellTextured(sky_shell *shell)
+{
+    const int setup_quadwords = 7;
+    void *const transformed = (void *)0x70002000;
+    unsigned char visible[shell->cluster_cnt];
+
+    if (!shell->cluster_cnt)
+        return;
+
+    SkyBsphereCheck(shell->clusters, shell->cluster_cnt, visible);
+
+    vu1_bufPtr.tag->tag = DMA_TAG_REF | setup_quadwords;
+    vu1_bufPtr.tag->addr = (unsigned int)skyTexturedSetup;
+    vu1_bufPtr.tag->vif0 = 0;
+    *(int *)(vu1_bufPtr.bytes + offsetof(DmaTag, vif1)) = VIF_DIRECT | setup_quadwords;
+    vu1_bufPtr.words += 4;
+
+    // Queue the first visible cluster before entering the double-buffered loop.
+    skyScratchBufferIndex = 1 - skyScratchBufferIndex;
+
+    if (visible[0] == 1)
+        SprDmaToSpr_Start(shell->clusters[0].data, shell->clusters[0].data_size >> 4,
+                          skyScratchBuffers[skyScratchBufferIndex]);
+
+    for (int cluster_index = 0; cluster_index < shell->cluster_cnt; cluster_index++) {
+        if (visible[cluster_index] == 1)
+            SprDmaToSpr_Wait();
+
+        skyScratchBufferIndex = 1 - skyScratchBufferIndex;
+        int next_index = cluster_index + 1;
+        if (next_index < shell->cluster_cnt && visible[next_index] == 1) {
+            SprDmaToSpr_Start(shell->clusters[next_index].data, shell->clusters[next_index].data_size >> 4,
+                              skyScratchBuffers[skyScratchBufferIndex]);
+        }
+
+        if (visible[cluster_index] == 1) {
+            unsigned char *buffer = skyScratchBuffers[1 - skyScratchBufferIndex];
+            int vertex_offset = shell->clusters[cluster_index].vert_offset;
+            unsigned char *triangles = buffer + shell->clusters[cluster_index].tri_offset;
+            unsigned char *texcoords = buffer + shell->clusters[cluster_index].attr_offset;
+
+            if (SkyProcessVerts(buffer + vertex_offset, transformed, shell->clusters[cluster_index].vert_cnt) == 0)
+                SkyDrawClusterTextured(shell->clusters[cluster_index].tri_cnt, triangles, texcoords, transformed);
+        }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkyDrawShellGouraud);

@@ -659,3 +659,4 @@ PurchasableVendorItems = 0x0015EDD0;
 strstr = 0x001169C8;
 LevelObjectStates = 0x0013D5B0;
 ItemFlags = 0x0013D388;
+skyTexturedSetup = 0x0013D160; // size:0x70
