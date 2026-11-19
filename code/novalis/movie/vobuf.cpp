@@ -28,7 +28,10 @@ void voBufReset(VoBuf *buffer)
     buffer->write = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIsFull__FP5VoBuf);
+int voBufIsFull(VoBuf *buffer)
+{
+    return buffer->count == buffer->size;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIncCount__FP5VoBuf);
 
