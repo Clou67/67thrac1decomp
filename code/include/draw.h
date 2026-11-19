@@ -16,4 +16,7 @@ extern int videoModePal;
 
 void FadeToBlack(int frames);
 
+void InitViewContext(void);
+void UpdateViewContext(void);
+
 #endif

@@ -37,6 +37,8 @@ struct fsAABuff {
 extern int GSmemDisplay;
 extern int GSmemDraw;
 extern int GSmemZbuf;
+// Start of free GS memory after the frame and depth buffers.
+extern int GSmemBase;
 extern fsAABuff aaBuff;
 extern fsAABuff *pAAbuff;
 
