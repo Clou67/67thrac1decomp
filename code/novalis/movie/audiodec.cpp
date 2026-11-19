@@ -6,6 +6,8 @@ extern unsigned char *movieAdpcmStagingBuffer;
 
 int snd_InitMovieSound(int block_size, int page_size, int transfer_size, int spu_address, int left_voice, int right_voice);
 
+void snd_CloseMovieSound(void);
+
 enum {
     ADPCM_BLOCK_SIZE = 0x400,
     ADPCM_PAGE_SIZE = 0x1000,
@@ -43,9 +45,13 @@ int audioDecCreate(_AudioDec *decoder, unsigned char *buffer, int buffer_size, u
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecDelete__FP9_AudioDec);
+int audioDecDelete(_AudioDec *decoder)
+{
+    snd_CloseMovieSound();
+    return 1;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", func_0031AB58);
+TEXT_PADDING(0x27BD0010, 0);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecStart);
 

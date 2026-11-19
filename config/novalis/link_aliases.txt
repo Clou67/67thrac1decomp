@@ -266,3 +266,4 @@ PlayInfobotMovie__Fi = 0x002ACF50;
 RegisterHUDCallback__FiiPFv_vN22Pvi = 0x0024AD98;
 mode_movieUnInit__Fi = 0x002AC330;
 snd_InitMovieSound__Fiiiiii = 0x0012F068;
+snd_CloseMovieSound__Fv = 0x0012F0E0;
