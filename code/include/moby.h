@@ -1,12 +1,13 @@
 #ifndef MOBY_H
 #define MOBY_H
 
+// Quadword vector; the VU loads it with lq/sq, so it is 16-byte aligned.
 struct Vec4 {
     float x;
     float y;
     float z;
     float w;
-};
+} __attribute__((aligned(16)));
 
 struct Mtx4 {
     Vec4 v0;
