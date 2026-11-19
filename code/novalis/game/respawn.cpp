@@ -106,10 +106,66 @@ void SetSpawnPoint(Vec4 *position, Vec4 *rotation)
         CheckpointSet.musicTrack = musicTransition.primary_track;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", RestoreCheckpoint);
-
 extern MobyInstance *MobyInstances;
 extern MobyInstance *MobyInstancePermEnd;
+void PostUpdateMoby(MobyInstance *moby);
+void SetHeroType(int type, int state, MobyInstance *moby);
+void FastEulerToMtx(Mtx4 *transform, Vec4 *rotation);
+void Camera_resetToFollow(void);
+
+void RestoreCheckpoint(void)
+{
+    if (!CheckpointSet.set) {
+        FastMemSet(&LiveCheckpoint, 0, sizeof(CheckpointData));
+        return;
+    }
+
+    FastMemCopy32(&LiveCheckpoint, &CheckpointSet, sizeof(CheckpointData));
+
+    CopyVec4Inline(&Hero.position, &CheckpointSet.position);
+    CopyVec4Inline(&Hero.rotation, &CheckpointSet.rotation);
+
+    Hero.moby->color = CheckpointSet.color;
+    Hero.moby->light = CheckpointSet.light;
+    Hero.moby->colorManipulator = CheckpointSet.colorManipulator;
+
+    audioState.reverb_depth = CheckpointSet.reverbDepth;
+    audioState.reverb_type = CheckpointSet.reverbType;
+    audioState.reverb_delay = CheckpointSet.reverbDelay;
+    audioState.reverb_feedback = CheckpointSet.reverbFeedback;
+    audioState.reverb_commands |= 7;
+    musicTransition.primary_track = CheckpointSet.musicTrack;
+    int type = CheckpointSet.heroType;
+
+    if (type != 0 && type != 3) {
+        int oClass = 0;
+        switch (type) {
+        case 1:
+            oClass = 0x57;
+            break;
+        case 2:
+            oClass = 0x1A3;
+            break;
+        default:
+            FastTrap();
+            break;
+        }
+
+        for (int index = 0; &MobyInstances[index] < MobyInstancePermEnd; index++) {
+            MobyInstance *moby = &MobyInstances[index];
+            if ((short)moby->oClass == oClass) {
+                SetHeroType(CheckpointSet.heroType, CheckpointSet.heroState, moby);
+                break;
+            }
+        }
+    }
+
+    PostUpdateMoby(Hero.moby);
+    FastEulerToMtx(&Hero.moby->transform, &Hero.rotation);
+    Camera_resetToFollow();
+    RestoreSavedMobyVars();
+}
+
 
 MobyInstance *FindMobyByUID(int unused, int uid)
 {

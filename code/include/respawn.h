@@ -17,6 +17,7 @@ struct MobyVarList {
 
 struct Vec4;
 void ClearCheckpointData(void);
+void RestoreCheckpoint(void);
 void SetSpawnPoint(Vec4 *position, Vec4 *rotation);
 
 struct MobyInstance;
