@@ -22,7 +22,14 @@ int readBufBeginPut(ReadBuf *buffer, unsigned char **destination)
     return free_space;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufEndPut__FP7ReadBufi);
+void readBufEndPut(ReadBuf *buffer, int size)
+{
+    int free_space = buffer->capacity - buffer->count;
+    int written = size < free_space ? size : free_space;
+
+    buffer->put_pos = (buffer->put_pos + written) % buffer->capacity;
+    buffer->count += written;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufBeginGet__FP7ReadBufPPUc);
 
