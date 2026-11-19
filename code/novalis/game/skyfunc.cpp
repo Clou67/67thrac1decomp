@@ -1,6 +1,7 @@
 #include <stddef.h>
 
 #include "common.h"
+#include "draw.h"
 #include "framebuf.h"
 #include "gameglobals.h"
 #include "gsregs.h"
@@ -15,15 +16,8 @@ struct SkyGifPageMarker {
     DmaTag *tag;
 };
 
-struct DrawConfig {
-    int unk_00;
-    int sky_texture_paging;
-    int sky;
-};
-
 extern SkyGifPageMarker sky_gif_page_markerA;
 extern SkyGifPageMarker sky_gif_page_markerB;
-extern DrawConfig drawConfig;
 extern int GifLoadCnt;
 extern unsigned int skyTexturedSetup[];
 extern unsigned int skyGouraudSetup[];
@@ -36,7 +30,6 @@ int g_SkyVuBuffer = 0;
 
 void FastMtx4Identity(float *matrix);
 void FastEulerToMtx2(Mtx4 *matrix, Vec4 *angles);
-void printf_stub3(const char *format, ...);
 void BuildGifTextureDma(void);
 void SprDmaToSpr_Start(void *source, int quadwords, void *destination);
 void SprDmaToSpr_Wait(void);
