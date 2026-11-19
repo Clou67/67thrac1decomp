@@ -6,7 +6,7 @@
 #include "sound.h"
 #include "respawn.h"
 
-int NAVG_AllocSlot(int level, int uid)
+int FindOrAssignBoltSourceSlot(int level, int uid)
 {
     int index = -1;
 

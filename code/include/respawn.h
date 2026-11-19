@@ -34,6 +34,6 @@ struct BoltSourceStats {
 };
 extern BoltSourceStats BoltSources[][64];
 
-int NAVG_AllocSlot(int level, int uid);
+int FindOrAssignBoltSourceSlot(int level, int uid);
 
 #endif
