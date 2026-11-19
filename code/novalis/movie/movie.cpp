@@ -4,6 +4,7 @@
 int initAll(int sector, int size, int language);
 int readMpeg(VideoDec *decoder, ReadBuf *buffer, StrFile *file);
 void termAll(void);
+void printf_stub(const char *format, ...);
 int videoDecDelete(VideoDec *decoder);
 
 enum {
@@ -62,6 +63,9 @@ void termAll(void)
     *(unsigned int *)DMA_CONTROL_ADDRESS &= ~DMA_CONTROL_RELEASE;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", ErrMessage);
+void ErrMessage(char *message)
+{
+    printf_stub("[ Error ] %s\n", message);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", proceedAudio__Fv);
