@@ -8,6 +8,7 @@
 #define VENDOR_ITEM_AMMO 0x40
 #define VENDOR_ITEM_NONE 0xFF
 
-extern unsigned char PurchasableVendorItems[8]; // fakematch
+// Temporary: marks a core small-data variable until the core has its own build.
+extern unsigned char PurchasableVendorItems[VENDOR_ITEM_COUNT] __attribute__((section(".sdata")));
 
 #endif
