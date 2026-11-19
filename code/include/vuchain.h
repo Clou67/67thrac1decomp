@@ -44,6 +44,11 @@ extern int _dmacHandle[2];
 // Current level (core global).
 extern int Level;
 
+// Level ids.
+#define LEVEL_NOVALIS 1
+#define LEVEL_RILGAR 5
+#define LEVEL_KALEBO_3 0x10
+
 #define LEVEL_COUNT 19
 
 // Per-level size of a VU1 chain buffer.
