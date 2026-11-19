@@ -140,6 +140,7 @@ int sceSifSetDma(SifDmaTransfer *transfer, int count);
 int sceSifDmaStat(int id);
 int DIntr(void);
 int EIntr(void);
+int RotateThreadReadyQueue(int priority);
 int GetThreadId(void);
 int ChangeThreadPriority(int thread, int priority);
 

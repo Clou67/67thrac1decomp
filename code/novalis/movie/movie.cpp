@@ -27,7 +27,10 @@ int playMpegMovie(int sector, int size, unsigned char *decoder_buffer, MoviePlay
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", readMpeg__FP8VideoDecP7ReadBufP7StrFile);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", switchThread);
+void switchThread(void)
+{
+    RotateThreadReadyQueue(MOVIE_THREAD_PRIORITY);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", isAudioOK);
 
