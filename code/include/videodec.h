@@ -95,4 +95,8 @@ void videoDecPutTs(VideoDec *decoder, long pts, long dts, unsigned char *positio
 
 int viBufPutTs(ViBuf *buffer, TimeStamp *timestamp);
 
+int videoDecInputCount(VideoDec *decoder);
+
+int viBufCount(ViBuf *buffer);
+
 #endif

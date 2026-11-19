@@ -60,7 +60,10 @@ void videoDecPutTs(VideoDec *decoder, long pts, long dts, unsigned char *positio
     viBufPutTs(&moviePlayer->video_dec.vibuf, &timestamp);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecInputCount__FP8VideoDec);
+int videoDecInputCount(VideoDec *decoder)
+{
+    return viBufCount(&decoder->vibuf);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CBA8);
 
