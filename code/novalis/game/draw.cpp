@@ -122,7 +122,30 @@ void DisableFontColors(void)
     FontColorsEnabled = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenWithTable);
+struct FontGlyph {
+    unsigned char u;
+    unsigned char v;
+    signed char yOff;
+    signed char width;
+};
+
+int FontLenWithTable(char *text, int length, unsigned char *metrics)
+{
+    const FontGlyph *glyphs = (const FontGlyph *)metrics;
+    int total = 0;
+    int index = 0;
+    if (length != 0 && *(unsigned char *)text != 0) {
+        unsigned char *cursor = (unsigned char *)text;
+        do {
+            int code = *cursor++;
+            int width = glyphs[code].width;
+            if (width)
+                total += width;
+            index++;
+        } while (index != length && *cursor != 0);
+    }
+    return total;
+}
 
 int FontLenWithTable(char *text, int length, unsigned char *metrics);
 extern unsigned char FontNormalMetrics[];

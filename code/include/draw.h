@@ -46,4 +46,6 @@ void DisableFontColors(void);
 
 void CallDrawOverlayIfNoCutscene(void);
 
+int FontLenWithTable(char *text, int length, unsigned char *metrics);
+
 #endif
