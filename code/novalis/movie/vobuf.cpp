@@ -22,7 +22,11 @@ void voBufDelete(VoBuf *buffer)
 {
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufReset__FP5VoBuf);
+void voBufReset(VoBuf *buffer)
+{
+    buffer->count = 0;
+    buffer->write = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIsFull__FP5VoBuf);
 
