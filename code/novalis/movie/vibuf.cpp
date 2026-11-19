@@ -166,6 +166,29 @@ int viBufFlush(ViBuf *buffer)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufModifyPts__FP5ViBufP9TimeStamp);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufPutTs__FP5ViBufP9TimeStamp);
+int viBufModifyPts(ViBuf *buffer, TimeStamp *timestamp);
+
+int viBufPutTs(ViBuf *buffer, TimeStamp *timestamp)
+{
+    int result = 0;
+    WaitSema(buffer->sema);
+
+    if (buffer->count_ts < buffer->n_ts) {
+        viBufModifyPts(buffer, timestamp);
+        if (timestamp->pts >= 0 || timestamp->dts >= 0) {
+            buffer->ts[buffer->wt_ts].pts = timestamp->pts;
+            buffer->ts[buffer->wt_ts].dts = timestamp->dts;
+            buffer->ts[buffer->wt_ts].pos = timestamp->pos;
+            buffer->ts[buffer->wt_ts].len = timestamp->len;
+            buffer->count_ts++;
+            buffer->wt_ts = (buffer->wt_ts + 1) % buffer->n_ts;
+        }
+
+        result = 1;
+    }
+
+    SignalSema(buffer->sema);
+    return result;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufGetTs__FP5ViBufP9TimeStamp);
