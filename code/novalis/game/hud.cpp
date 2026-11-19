@@ -134,7 +134,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawTexQuadF);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawTexQuad4Pt);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawEffectTexLine);
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawRotatedSprite16);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawEffectTexQuadUV);
 
