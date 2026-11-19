@@ -97,7 +97,11 @@ int mpegNodata(sceMpeg *mpeg, sceMpegCbData *data, void *argument)
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CF88);
+int mpegStopVideoDMA(void)
+{
+    viBufStopDMA(&moviePlayer->video_dec.vibuf);
+    return 1;
+}
 
 int mpegRestartVideoDMA(void)
 {

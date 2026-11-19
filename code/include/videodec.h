@@ -109,4 +109,8 @@ int viBufRestartDMA(ViBuf *buffer);
 
 int mpegError(sceMpeg *mpeg, sceMpegCbDataError *data, void *argument);
 
+int mpegStopVideoDMA(void);
+
+int viBufStopDMA(ViBuf *buffer);
+
 #endif
