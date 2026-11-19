@@ -15,6 +15,9 @@
 #define SHRUB_SPR_RESULT_ADDRESS 0x3200
 #define SHRUB_SPR_RESULT_QWORDS 0x40
 
+// A named .data string rather than a literal, so its carve is separate from the labels' .rodata.
+const char ShrubTextureOverflowMessage[] __attribute__((section(".data"))) = "shrub texture overflow\n";
+
 void DmaShrubTextures(void)
 {
     DmaTag *start = vu1_bufPtr.tag++;

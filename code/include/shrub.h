@@ -97,7 +97,6 @@ extern ShrubGsLoc ShrubGsLocStash[SHRUB_GS_LOC_MAX];
 // Class indices whose GS texture addresses need patching, ended by a negative value.
 extern int ShrubGifRectify[SHRUB_GIF_RECTIFY_MAX];
 extern char ShrubSprStash[0x400];
-extern char ShrubTextureOverflowMessage[];
 // Chain packet that opens the shrub DMA stage.
 extern Vu1ChainCursor ShrubVu1Marker;
 extern int ShrubGsMax;
