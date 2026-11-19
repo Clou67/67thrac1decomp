@@ -89,4 +89,6 @@ void videoDecReset(VideoDec *decoder);
 
 int viBufDelete(ViBuf *buffer);
 
+unsigned int videoDecSetState(VideoDec *decoder, unsigned int state);
+
 #endif
