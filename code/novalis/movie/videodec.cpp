@@ -92,6 +92,10 @@ int mpegNodata(sceMpeg *mpeg, sceMpegCbData *data, void *argument)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CF88);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", mpegRestartVideoDMA__Fv);
+int mpegRestartVideoDMA(void)
+{
+    viBufRestartDMA(&moviePlayer->video_dec.vibuf);
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", FUN_0031cfe8);

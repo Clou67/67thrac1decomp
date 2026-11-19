@@ -103,4 +103,8 @@ int mpegNodata(sceMpeg *mpeg, sceMpegCbData *data, void *argument);
 
 int viBufAddDMA(ViBuf *buffer);
 
+int mpegRestartVideoDMA(void);
+
+int viBufRestartDMA(ViBuf *buffer);
+
 #endif
