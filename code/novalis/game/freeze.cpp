@@ -11,12 +11,11 @@
 #include "hud.h"
 #include "memcard.h"
 #include "music.h"
+#include "libc.h"
 #include "pad.h"
 #include "pause.h"
 #include "sound.h"
 #include "vuchain.h"
-
-#define SAVE_DIALOG_MAX_SIZE 0x20000
 
 // Frames the prompt waits before it can be dismissed.
 #define PROMPT_DEFAULT_TIMER 0x78
@@ -40,6 +39,7 @@
 #define FREEZE_DELAYED_FADE_FRAMES 0x5A
 #define FREEZE_DELAYED_CONTINUE_FRAMES 0x78
 
+#define SCRATCHPAD 0x70000000
 #define LEVEL_NOVALIS 1
 #define LEVEL_RILGAR 5
 #define LEVEL_KALEBO_3 0x10
@@ -63,33 +63,31 @@ enum confirm_state {
     CONFIRM_CANCEL
 };
 
-// Level select map.
-#define LEVEL_MARKER_COUNT 20
-#define MAP_WIDTH 0x200
-#define MAP_HEIGHT_NTSC 0x1A0
-#define MAP_HEIGHT_PAL 0x1C0
-#define MAP_TEXTURE 0xE99A
-#define MAP_FRAME_MARKER 0xC
-#define MAP_FRAME_SELECTION 0xD
-#define MAP_FRAME_BACKGROUND 0xE
-#define MAP_FRAME_CLOUDS 0xF
-#define MAP_CLOUD_SCROLL_MASK 0xFFF
-#define MAP_ALPHA_OPAQUE 0x80
-#define MAP_ALPHA_BLEND 0x8000000044UL
-#define MAP_ATEST 0x4B
-#define MAP_BLACK 0x80000000
-#define MAP_LABEL_COLOR 0x80F0F0F0
-#define MAP_BLINK_ON_FRAMES 0x16
-#define MAP_BLINK_OFF_FRAMES 8
-#define MAP_LINE_GAP 8000
+// Layout values and colors (RGBA, 0xAABBGGRR) of the freeze dialogs.
+int FreezeAnsRow2 = 115;
+int FreezeAnsRow1 = 130;
+int FreezeTextColor = 0x00FFA888;
+int FreezeTextColorBlend = 0x80FFA888;
+int FreezeConfirmBoxCenterX = 256;
+int FreezeConfirmBoxCenterY = 185;
+int FreezeConfirmBoxHalfWidth = 100;
+int FreezeConfirmBoxHalfHeight = 50;
+int FreezeConfirmTextY = 150;
+int FreezeStatsBoxCenterX = 256;
+int FreezeStatsBoxCenterY = 205;
+int FreezeStatsBoxHalfWidth = 100;
+int FreezeStatsBoxHalfHeight = 120;
+int FreezeStatsTextY = 110;
+int FreezePulsePeriod = 180;
+int FreezePulseColor = 0x80E08060;
+int FreezePulseColorBlend = 0x80D06050;
+int FreezeSharedTextColor = 0x00FFC0C0;
+int FreezeSharedTextColorBlend = 0x80FFC0C0;
+int FreezeMatchedTextColor = 0x0060EF60;
+int FreezeMatchedTextColorBlend = 0x8060EF60;
+int FreezeUnmatchedTextColor = 0x006060EF;
+int FreezeUnmatchedTextColorBlend = 0x806060EF;
 
-enum map_level_state {
-    MAP_LEVEL_LOCKED,
-    MAP_LEVEL_UNLOCKED = 2,
-    MAP_LEVEL_VISITED
-};
-
-int MediumFontHeight = 17;
 
 int GetLastFreezeDialogType(void)
 {
@@ -155,25 +153,372 @@ void mode_freezeInit(int dialog, int restorePage)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/freeze", DrawDialogText);
 
-// Data DrawDialogText reads (layout rectangles and its jump tables) until the function is matched.
-__asm__(
- ".section .rodata\n"
- ".align 4\n"
- ".word 0x01540050, 0x01A00060, 0x00540100, 0x00000000\n"
- ".word 0x00010010, 0x00000000, 0x012C0064, 0x01A00060\n"
- ".word 0x00680100, 0x00000000, 0x00010010, 0x00000000\n"
- ".word 0x00224150, 0x00224868, 0x002247B0, 0x00223B6C\n"
- ".word 0x00224868, 0x00223848, 0x00223F5C, 0x00000000\n"
- ".word 0x00223C0C, 0x00223CBC, 0x00223CBC, 0x00223D08\n"
- ".word 0x00223BB0, 0x00223BE4, 0x00223BE4, 0x00223D4C\n"
- ".word 0x00223BDC, 0x00223BDC, 0x00223BBC, 0x00223BD0\n"
- ".word 0x00223BEC, 0x00223BEC, 0x00223D4C, 0x00223BF4\n"
- ".word 0x00223C00, 0x00223C2C, 0x00223C84, 0x00223C78\n"
- ".word 0x00223D4C, 0x00223CB4, 0x00223C90, 0x00000000\n"
- ".section .text\n"
-);
+void DrawDialogText(void)
+{
+    static const FontWindow logWindow = {0x50, 0x154, 0x60, 0x1A0, 0x100, 0x54, 0, 0, 0x10, 1, 0, 0};
+    static const FontWindow choiceWindow = {0x64, 0x12C, 0x60, 0x1A0, 0x100, 0x68, 0, 0, 0x10, 1, 0, 0};
+
+    char formattedText[0x200];
+    FontWindow box;
+
+    FlipAndExploreTimersVU1(0);
+
+    switch (Freeze.mode) {
+    case FREEZE_DIALOG_LOG_HELP: {
+        char *cursor;
+        int color;
+        int tint;
+        int mid;
+        int top;
+        int bottom;
+        float alpha;
+        float iconY;
+        float angle;
+        float iconSize;
+
+        alpha = 1.0f - (float)Freeze.countdown / (float)FastScaleRoundInt(30);
+        DrawTextShadow(0x50, 0x154, 0x60, 0x1A0, (int)(alpha * 80.0f));
+        box = logWindow;
+        color = FastTweenColor(FreezeTextColor, FreezeTextColorBlend, alpha);
+        strncpy((char *)SCRATCHPAD, msg_string(0x4E2B), 0x400);
+        cursor = (char *)SCRATCHPAD;
+        while (*(unsigned char *)cursor >= 2) {
+            cursor++;
+        }
+
+        if (*(unsigned char *)cursor == 1) {
+            do {
+                *cursor++ = 0;
+            } while (*(unsigned char *)cursor == 1);
+        }
+
+        FontPrintWindow(&box, color, (char *)SCRATCHPAD, -1, FontSet(1), FontNormalMetrics);
+        iconSize = 272.0f;
+        box.flags |= 4;
+        bottom = box.text_y + box.max_height;
+        FontPrintWindow(&box, color, cursor, -1, FontSet(1), FontNormalMetrics);
+        box.flags ^= 4;
+        box.text_y = 0x136 - box.max_height;
+        FontPrintWindow(&box, color, cursor, -1, FontSet(1), FontNormalMetrics);
+        tint = FastTweenColor(0x20FFFF, 0x8020FFFF, 1.0f - (float)Freeze.updTimers[2] / (float)FastScaleRoundInt(30));
+        FontPrintCenter(0x100, 0x140, tint, msg_string(0x524A), -1);
+        mid = (bottom + box.text_y) >> 1;
+        VU1_addGSregister(GS_REG_TEST_1, 0x3004B);
+        top = mid - 0x20;
+        Hud_DrawTexQuad(HudTex_GetFrame(0x755D, 0), 0xE0, top, 0x40, 0x40, 0x80);
+        iconY = (float)(mid << 4);
+        angle = (float)(gsFrame % 55) * -6.2831855f / 55.0f;
+        Hud_DrawRotatedSprite16(4096.0f, iconY, iconSize, iconSize, angle, 0x40, 0x40, HudTex_Bind(HudTex_GetFrame(0x755D, 1)));
+        break;
+    }
+    case FREEZE_DIALOG_SAVE_FAILED: {
+        char *text;
+        int left;
+        int right;
+        int mid;
+        int tint;
+        int top;
+        int dialogHeight;
+        float alpha;
+
+        text = FreezeEmptyText;
+        left = 0;
+        mid = 0;
+        right = 0;
+        switch (mc_state) {
+        case CS_PROMPT_FORMAT:
+            left = 0x524F;
+            right = 0x524B;
+            text = msg_string(0x4FAF);
+            break;
+        case CS_NOSAVE:
+            if (!(mcstate_flags & MCSTATE_FLAG_SAVE)) {
+                mid = 0x4FA8;
+                text = msg_string(0x4FA7);
+                break;
+            }
+        case CS_PROMPT_CREATE_SAVE:
+            left = 0x524F;
+            right = 0x524B;
+            text = msg_string(0x4FAD);
+            break;
+        case CS_CHECK_SAVE:
+        case CS_CHECKING_SAVE:
+            text = msg_string(0x4FC1);
+            break;
+        case CS_FORMAT_PENDING:
+        case CS_FORMATTING:
+            text = msg_string(0x4FB7);
+            break;
+        case CS_CREATE_SAVE_PENDING:
+        case CS_CREATING_SAVE:
+            text = msg_string(0x4FB8);
+            break;
+        case CS_PROMPT_FORMAT_FAILED:
+            mid = 0x524A;
+            text = msg_string(0x4FBA);
+            break;
+        case CS_PROMPT_CREATE_FAILED:
+            mid = 0x524A;
+            text = msg_string(0x4FBC);
+            break;
+        case CS_GOOD_LOAD:
+            mid = 0x524A;
+            text = msg_string(0x4FA6);
+            if (Freeze.countdown != 0) {
+                mid = 0;
+            }
+            break;
+        case CS_NO_ROOM:
+            if (mcstate_flags & MCSTATE_FLAG_LOAD) {
+                mid = 0x4FA8;
+                text = msg_string(0x4FA7);
+            } else if (InFrontEnd != 0) {
+                left = 0x524E;
+                right = 0x524B;
+                sprintf(formattedText, FreezeFormatPrompt, msg_string(0x4FA9), 1, 1, msg_string(0x4FAA));
+                text = formattedText;
+            } else {
+                mid = 0x4FA8;
+                text = msg_string(0x4FA9);
+            }
+            break;
+        case CS_PROMPT_SAVE_FAILED:
+            mid = 0x524A;
+            text = msg_string(0x4FBD);
+            break;
+        case CS_PROMPT_LOAD_FAILED:
+            mid = 0x524A;
+            text = msg_string(0x4FBB);
+            break;
+        case CS_PROMPT_BEGIN_NOSAVE:
+            left = 0x524E;
+            right = 0x524B;
+            sprintf(formattedText, FreezeFormatPrompt, msg_string(0x4FAE), 1, 1, msg_string(0x4FAA));
+            text = formattedText;
+            break;
+        case CS_PROMPT_BEGIN_UNFORMATTED:
+            left = 0x524E;
+            right = 0x524B;
+            text = msg_string(0x4FB1);
+            break;
+        case CS_NOCARD:
+        case CS_WAIT_FOR_CARD:
+            if (InFrontEnd != 0 && (mcstate_flags & MCSTATE_FLAG_SAVE)) {
+                left = 0x524E;
+                right = 0x524B;
+                text = msg_string(0x4FAB);
+            } else {
+                mid = 0x4FA8;
+                text = msg_string(0x4FAC);
+            }
+            break;
+        case CS_UNFORMATTED:
+            mid = 0x4FA8;
+            sprintf(formattedText, FreezeFormatPrompt, msg_string(0x4FB0), 1, 1, msg_string(0x4FA7));
+            text = formattedText;
+            break;
+        }
+
+        FontWindow initialWindow;
+        memset(&initialWindow, 0, sizeof(initialWindow));
+        initialWindow.win_bot = occlViewParams[1];
+        initialWindow.win_left = 0x60;
+        initialWindow.win_right = 0x1A0;
+        initialWindow.text_x = 0x100;
+        initialWindow.text_y = 0x68;
+        initialWindow.line_spacing = 0x10;
+        initialWindow.flags = 5;
+        box = initialWindow;
+        FontPrintWindowMedium(&box, 0, text, -1);
+        dialogHeight = box.max_height + 0x28;
+        top = (occlViewParams[1] - dialogHeight) >> 1;
+        box.win_bot = top + dialogHeight;
+        box.text_y = top + 4;
+        box.win_top = top;
+        alpha = 1.0f - (float)Freeze.countdown / (float)FastScaleRoundInt(30);
+        DrawTextShadow(box.win_top, box.win_bot, 0x60, 0x1A0, (int)(alpha * 80.0f));
+        box.flags ^= 4;
+        FontPrintWindowMedium(&box, FastTweenColor(FreezeTextColor, FreezeTextColorBlend, alpha), text, -1);
+        tint = FastTweenColor(0x20FFFF, 0x8020FFFF, 1.0f - (float)Freeze.updTimers[2] / (float)FastScaleRoundInt(30));
+        if (left != 0) {
+            FontPrintCenter(0xCA, box.win_bot - 0x14, tint, msg_string(left), -1);
+        }
+
+        if (right != 0) {
+            FontPrintCenter(0x135, box.win_bot - 0x14, tint, msg_string(right), -1);
+        }
+
+        if (mid != 0) {
+            FontPrintCenter(0x100, box.win_bot - 0x14, tint, msg_string(mid), -1);
+        }
+        break;
+    }
+    case FREEZE_MODE_VIDEO_MODE_TEST: {
+        int textColor;
+        int buttonColor;
+        int bodyMessage;
+        float alpha;
+
+        box = choiceWindow;
+        alpha = 1.0f - (float)Freeze.countdown / (float)FastScaleRoundInt(30);
+        DrawTextShadow(0x64, 0x12C, 0x60, 0x1A0, (int)(alpha * 80.0f));
+        textColor = FastTweenColor(FreezeTextColor, FreezeTextColorBlend, alpha);
+        buttonColor = FastTweenColor(0x20FFFF, 0x8020FFFF, alpha);
+        switch (Freeze.updTimers[0]) {
+        case 0:
+        case 1:
+            FontPrintCenter(0xCA, 0x118, buttonColor, msg_string(0x524E), -1);
+            FontPrintCenter(0x135, 0x118, buttonColor, msg_string(0x524B), -1);
+            bodyMessage = 0x522A;
+            break;
+        case 2:
+            FontPrintCenter(0xCA, 0x118, buttonColor, msg_string(0x524E), -1);
+            FontPrintCenter(0x135, 0x118, buttonColor, msg_string(0x524B), -1);
+            bodyMessage = 0x522B;
+            break;
+        case 3:
+            FontPrintCenter(0x100, 0x118, buttonColor, msg_string(0x524A), -1);
+            bodyMessage = 0x522C;
+            break;
+        default:
+            bodyMessage = 0;
+            break;
+        }
+
+        if (bodyMessage != 0) {
+            FontPrintWindow(&box, textColor, msg_string(bodyMessage), -1, FontSet(1), FontNormalMetrics);
+        }
+        break;
+    }
+    case FREEZE_DIALOG_CONFIRM: {
+        char line[0x40];
+        int pulse;
+        int sharedColor;
+        int matchedColor;
+        int unmatchedColor;
+        int best;
+        int scoreReference;
+        int unit;
+        int remainder;
+        int perSecond;
+        int minutes;
+        int seconds;
+        int hundredths;
+        float scale;
+        float blend;
+
+        pulse = FastTweenColor(FreezePulseColor, FreezePulseColorBlend, FastAngleCosF((float)(gsFrame % FreezePulsePeriod) / FastIntToFloat(FreezePulsePeriod) * 6.28318f - 3.14159f) * 0.5f + 0.5f);
+        scale = (float)Freeze.updTimers[1] * 0.125f;
+        if (scale > 1.0f) {
+            scale = 1.0f;
+        } else if (scale < 0.1f) {
+            scale = 0.1f;
+        }
+
+        sharedColor = FreezeSharedTextColor;
+        matchedColor = FreezeMatchedTextColor;
+        unmatchedColor = FreezeUnmatchedTextColor;
+        if (Freeze.updTimers[2] != 0) {
+            blend = (float)Freeze.updTimers[2] * 0.125f;
+            if (blend > 1.0f) {
+                blend = 1.0f;
+            } else if (blend < 0.0f) {
+                blend = 0.0f;
+            }
+
+            sharedColor = FastTweenColor(FreezeSharedTextColor, FreezeSharedTextColorBlend, blend);
+            matchedColor = FastTweenColor(FreezeMatchedTextColor, FreezeMatchedTextColorBlend, blend);
+            unmatchedColor = FastTweenColor(FreezeUnmatchedTextColor, FreezeUnmatchedTextColorBlend, blend);
+        }
+
+        if (Hero.raceLap < 3) {
+            DrawRoundedRect(FreezeConfirmBoxCenterY - FastFloatToInt((float)FreezeConfirmBoxHalfHeight * scale), FreezeConfirmBoxCenterY + FastFloatToInt((float)FreezeConfirmBoxHalfHeight * scale), FreezeConfirmBoxCenterX - FastFloatToInt((float)FreezeConfirmBoxHalfWidth * scale), FreezeConfirmBoxCenterX + FastFloatToInt((float)FreezeConfirmBoxHalfWidth * scale), pulse);
+            FontPrintCenter(0x100, FreezeConfirmTextY, sharedColor, msg_string(0x4F6E), -1);
+            FontPrintCenter(0x100, FreezeConfirmTextY + 0x18, sharedColor, msg_string(0x5249), -1);
+            FontPrintCenter(0x100, FreezeConfirmTextY + 0x30, sharedColor, msg_string(0x5248), -1);
+        } else {
+            DrawRoundedRect(FreezeStatsBoxCenterY - FastFloatToInt((float)FreezeStatsBoxHalfHeight * scale), FreezeStatsBoxCenterY + FastFloatToInt((float)FreezeStatsBoxHalfHeight * scale), FreezeStatsBoxCenterX - FastFloatToInt((float)FreezeStatsBoxHalfWidth * scale), FreezeStatsBoxCenterX + FastFloatToInt((float)FreezeStatsBoxHalfWidth * scale), pulse);
+            sprintf(line, FreezeFormatIndented, msg_string(0x5240));
+            if (Hero.racePosition == 1) {
+                sprintf(line, FreezeFormatFirst, 1);
+            } else if (Hero.racePosition == 2) {
+                sprintf(line, FreezeFormatSecond, 2);
+            } else if (Hero.racePosition == 3) {
+                sprintf(line, FreezeFormatThird, 3);
+            } else {
+                sprintf(line, FreezeFormatNth, Hero.racePosition);
+            }
+
+            line[3] = ' ';
+            if (Hero.racePosition == 1) {
+                FontPrintCenter(0x100, FreezeStatsTextY, matchedColor, line, -1);
+            } else {
+                FontPrintCenter(0x100, FreezeStatsTextY, unmatchedColor, line, -1);
+            }
+
+            best = freezeStatsTimeRefA[(Level ^ 0x10) ? 0 : 1];
+            if (best == Hero.raceTimeFrames) {
+                unit = videoModePal ? 3000 : 3600;
+                perSecond = unit / 60;
+                minutes = best / unit;
+                remainder = best - minutes * unit;
+                seconds = remainder / perSecond;
+                hundredths = (remainder - seconds * perSecond) * 100 / perSecond;
+                sprintf(line, FreezeFormatString, msg_string(0x50A3));
+                FontPrintCenter(0x100, FreezeStatsTextY + 0x26, matchedColor, line, -1);
+                sprintf(line, FreezeFormatTime, minutes, seconds, hundredths);
+                FontPrintCenter(0x100, FreezeStatsTextY + 0x3A, matchedColor, line, -1);
+            } else {
+                sprintf(line, FreezeFormatString, msg_string(0x50A2));
+                FontPrintCenter(0x100, FreezeStatsTextY + 0x30, unmatchedColor, line, -1);
+            }
+
+            scoreReference = freezeStatsScoreRefA[(Level ^ 0x10) ? 0 : 1];
+            if (scoreReference != 0 && scoreReference == Hero.raceScore) {
+                sprintf(line, FreezeFormatString, msg_string(0x50A5));
+                FontPrintCenter(0x100, FreezeStatsTextY + 0x56, matchedColor, line, -1);
+                sprintf(line, FreezeFormatNumber, Hero.raceScore);
+                FontPrintCenter(0x100, FreezeStatsTextY + 0x6A, matchedColor, line, -1);
+            } else {
+                sprintf(line, FreezeFormatString, msg_string(0x50A4));
+                FontPrintCenter(0x100, FreezeStatsTextY + 0x60, unmatchedColor, line, -1);
+            }
+
+            FontPrintCenter(0x100, FreezeStatsTextY + 0x90, sharedColor, msg_string(0x5249), -1);
+            FontPrintCenter(0x100, FreezeStatsTextY + 0xA8, sharedColor, msg_string(0x5248), -1);
+        }
+        break;
+    }
+    case FREEZE_MODE_AWAIT_CROSS:
+        DrawRoundedRect(0x64, 0xA0, 0xB0, 0x150, FastTweenColor(FreezePulseColor, FreezePulseColorBlend, FastAngleCosF((float)(gsFrame % FreezePulsePeriod) / FastIntToFloat(FreezePulsePeriod) * 6.28318f - 3.14159f) * 0.5f + 0.5f));
+        FontPrintCenter(0x100, 0x7A, 0x8000C0C0, Freeze.query, -1);
+        break;
+    default: {
+        freeze_t *dialog = &Freeze;
+        int pulse;
+
+        pulse = FastTweenColor(FreezePulseColor, FreezePulseColorBlend, FastAngleCosF((float)(gsFrame % FreezePulsePeriod) / FastIntToFloat(FreezePulsePeriod) * 6.28318f - 3.14159f) * 0.5f + 0.5f);
+        DrawRoundedRect(0x50, FreezeAnsRow1 + 0x1A, 0xB0, 0x150, pulse);
+        if (dialog->query != 0) {
+            FontPrintCenter(0x100, 0x5A, 0x8000C0C0, dialog->query, -1);
+        }
+
+        if (dialog->ans1 != 0) {
+            FontPrintCenter(0x100, FreezeAnsRow2, 0x80FFA888, dialog->ans1, -1);
+        }
+
+        if (dialog->ans2 != 0) {
+            FontPrintCenter(0x100, FreezeAnsRow1, 0x80FFA888, dialog->ans2, -1);
+        }
+        break;
+    }
+    }
+
+    FinalizeVU1FramePacketChain();
+}
+
 
 void UpdateModeFreeze(void)
 {
@@ -492,113 +837,4 @@ void UpdateModeFreeze(void)
         music_Unpause();
         snd_FlushSoundCommands();
     }
-}
-
-int GetSaveDialogRect(unsigned int size, void **first, void **second)
-{
-    if (size > SAVE_DIALOG_MAX_SIZE) {
-        *first = 0;
-        *second = 0;
-        return -1;
-    }
-
-    *first = MemSlots.vu1_chain[0] + vu1_bufSize - size;
-    *second = MemSlots.vu1_chain[1] + vu1_bufSize - size;
-
-    return 0;
-}
-
-void DrawMessageBox(int left, int right, int top, int bottom)
-{
-    float labelDirection[4];
-    int level;
-    int frame;
-    int availability;
-    int width;
-    int height;
-    int markerX;
-    int markerY;
-    int labelX;
-    int labelY;
-    int lineStartX;
-    int lineStartY;
-    int directionLength;
-    int lineFraction;
-    int textWidth;
-    int lineEndX;
-    int textX;
-    char *label;
-
-    FlipAndExploreTimersVU1(0);
-    VU1_addGSregister(GS_REG_ALPHA_1, MAP_ALPHA_BLEND);
-    VU1_addGSregister(GS_REG_TEST_1, MAP_ATEST);
-    Hud_DrawFlatRectFixed(0, 0, MAP_WIDTH, MAP_HEIGHT_PAL, MAP_BLACK, 0);
-
-    frame = HudTex_GetFrame(MAP_TEXTURE, MAP_FRAME_BACKGROUND);
-    width = (right - left) * 16;
-    height = (bottom - top) * 16;
-    Hud_DrawTexQuadF(frame, 0, 0, width, height, 0, 0, MAP_ALPHA_OPAQUE);
-    VU1_addGSregister(GS_REG_CLAMP_1, GS_CLAMP_REPEAT);
-    Hud_DrawTexQuadF(HudTex_GetFrame(MAP_TEXTURE, MAP_FRAME_CLOUDS), 0, 0, width, height, gsFrame & MAP_CLOUD_SCROLL_MASK, 0, MAP_ALPHA_OPAQUE);
-    VU1_addGSregister(GS_REG_CLAMP_1, GS_CLAMP_CLAMP);
-
-    for (level = 1; level < LEVEL_MARKER_COUNT; level++) {
-        if (LevelMapMarkers[level].x == 0) {
-            continue;
-        }
-
-        if (LevelVisited[level] != 0) {
-            availability = MAP_LEVEL_VISITED;
-        } else if (LevelUnlocked[level] == 0) {
-            availability = MAP_LEVEL_LOCKED;
-        } else {
-            availability = MAP_LEVEL_UNLOCKED;
-        }
-
-        if (availability == MAP_LEVEL_LOCKED) {
-            continue;
-        }
-
-        markerX = LevelMapMarkers[level].x;
-        markerY = LevelMapMarkers[level].y;
-        if (videoModePal != 0) {
-            markerY = markerY * MAP_HEIGHT_PAL / MAP_HEIGHT_NTSC;
-        }
-
-        if (availability == MAP_LEVEL_VISITED || (availability == MAP_LEVEL_UNLOCKED && gsFrame % (FastScaleRoundInt(MAP_BLINK_ON_FRAMES) + FastScaleRoundInt(MAP_BLINK_OFF_FRAMES)) < FastScaleRoundInt(MAP_BLINK_ON_FRAMES))) {
-            Hud_DrawTexQuad(HudTex_GetFrame(MAP_TEXTURE, MAP_FRAME_MARKER), markerX - 5, markerY - 5, 10, 10, MAP_ALPHA_OPAQUE);
-        }
-
-        if (level == MapPage.level) {
-            labelX = markerX + LevelMapMarkers[level].labelOffsetX;
-            labelY = markerY + LevelMapMarkers[level].labelOffsetY;
-            labelDirection[1] = LevelMapMarkers[level].labelOffsetY;
-            labelDirection[0] = LevelMapMarkers[level].labelOffsetX;
-            directionLength = FastVec3Length(labelDirection) * 1000.0f;
-            lineFraction = directionLength - MAP_LINE_GAP;
-            lineStartX = labelX + (markerX - labelX) * lineFraction / directionLength;
-            lineStartY = labelY + (markerY - labelY) * lineFraction / directionLength;
-
-            label = msg_string(LevelSelectTexts[level].labelText);
-            textWidth = FontLen(label, -1);
-            if (LevelMapMarkers[level].labelOffsetX <= -1) {
-                lineEndX = labelX - textWidth;
-            } else {
-                lineEndX = labelX + textWidth;
-            }
-
-            Hud_DrawFlatRect(lineStartX + 1, lineStartY + 1, labelX + 1, labelY + 1, MAP_BLACK, 0);
-            Hud_DrawFlatRect(labelX + 1, labelY + 1, lineEndX + 1, labelY + 1, MAP_BLACK, 0);
-            textX = (lineEndX < labelX) ? lineEndX : labelX;
-            FontPrintMediumLeft(textX + 1, labelY - MediumFontHeight + 1, MAP_BLACK, label, -1);
-
-            Hud_DrawFlatRect(lineStartX, lineStartY, labelX, labelY, MAP_LABEL_COLOR, 0);
-            Hud_DrawFlatRect(labelX, labelY, lineEndX, labelY, MAP_LABEL_COLOR, 0);
-            FontPrintMediumLeft(textX, labelY - MediumFontHeight, MAP_LABEL_COLOR, label, -1);
-
-            Hud_DrawTexQuad(HudTex_GetFrame(MAP_TEXTURE, MAP_FRAME_SELECTION), markerX - 10, markerY - 10, 20, 20, MAP_ALPHA_OPAQUE);
-        }
-    }
-
-    FinalizeVU1FramePacketChain();
 }
