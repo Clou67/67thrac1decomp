@@ -1,5 +1,6 @@
 #include "common.h"
 #include "fastfunc.h"
+#include "moby.h"
 #include "respawn.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", NAVG_AllocSlot);
@@ -28,7 +29,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", SetSpawnPoint);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", RestoreCheckpoint);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", FindMobyByUID);
+extern MobyInstance *MobyInstances;
+extern MobyInstance *MobyInstancePermEnd;
+
+MobyInstance *FindMobyByUID(int unused, int uid)
+{
+    for (MobyInstance *moby = MobyInstances; moby != MobyInstancePermEnd; moby++) {
+        if ((short)moby->uid == uid)
+            return moby;
+    }
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", RestoreMobyVarList);
 

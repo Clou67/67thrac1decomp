@@ -17,4 +17,7 @@ struct MobyVarList {
 
 void ClearCheckpointData(void);
 
+struct MobyInstance;
+MobyInstance *FindMobyByUID(int unused, int uid);
+
 #endif
