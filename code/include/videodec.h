@@ -137,4 +137,6 @@ int viBufModifyPts(ViBuf *buffer, TimeStamp *timestamp);
 
 void setD3_CHCR(unsigned int value);
 
+void setD4_CHCR(unsigned int value);
+
 #endif

@@ -48,7 +48,16 @@ void setD3_CHCR(unsigned int value)
     EIntr();
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", setD4_CHCR__FUi);
+void setD4_CHCR(unsigned int value)
+{
+    DIntr();
+    *(volatile unsigned int *)DMAC_ENABLE_WRITE =
+        *(volatile unsigned int *)DMAC_ENABLE_READ | DMAC_ENABLE_CHANNEL_WRITE;
+    *(volatile unsigned int *)IPU_OUTPUT_DMA_CHCR = value;
+    *(volatile unsigned int *)DMAC_ENABLE_WRITE =
+        *(volatile unsigned int *)DMAC_ENABLE_READ & ~DMAC_ENABLE_CHANNEL_WRITE;
+    EIntr();
+}
 
 void scTag2(unsigned long *tag, unsigned int address, unsigned int id, unsigned int count)
 {
