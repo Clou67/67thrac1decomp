@@ -32,7 +32,7 @@ void STUB_RET_2525f0(void)
 {
 }
 
-int CreatePointLight3(Vec4 *pos, float radius, float intensity, int rgb)
+int CreatePointLightRGB(Vec4 &pos, float radius, float backlight, int rgb)
 {
     PointLight *light;
     PL_Data *data;
@@ -55,12 +55,12 @@ int CreatePointLight3(Vec4 *pos, float radius, float intensity, int rgb)
     light = &PointLights[index];
     data = &PointLightData[index];
 
-    CopyVec4Inline(&light->pos, pos);
+    CopyVec4Inline(&light->pos, &pos);
     light->pos.w = radius;
     light->color.x = FastIntToFloat(rgb & 0xFF) * COLOR_CHANNEL_SCALE;
     light->color.y = FastIntToFloat((rgb >> 8) & 0xFF) * COLOR_CHANNEL_SCALE;
     light->color.z = FastIntToFloat((rgb >> 16) & 0xFF) * COLOR_CHANNEL_SCALE;
-    light->color.w = intensity;
+    light->color.w = backlight;
 
     FastMemSetZero(data, sizeof(PL_Data));
     data->state = POINT_LIGHT_CREATED;
@@ -69,7 +69,7 @@ int CreatePointLight3(Vec4 *pos, float radius, float intensity, int rgb)
     return index;
 }
 
-int CreatePointLight2(Vec4 *pos, float radius, float intensity, float red, float green, float blue)
+int CreatePointLight(Vec4 &pos, float radius, float backlight, float red, float green, float blue)
 {
     PointLight *light;
     PL_Data *data;
@@ -92,12 +92,12 @@ int CreatePointLight2(Vec4 *pos, float radius, float intensity, float red, float
     light = &PointLights[index];
     data = &PointLightData[index];
 
-    CopyVec4Inline(&light->pos, pos);
+    CopyVec4Inline(&light->pos, &pos);
     light->pos.w = radius;
     light->color.x = red;
     light->color.y = green;
     light->color.z = blue;
-    light->color.w = intensity;
+    light->color.w = backlight;
 
     FastMemSetZero(data, sizeof(PL_Data));
     data->state = POINT_LIGHT_CREATED;
@@ -143,7 +143,7 @@ void UpdatePointLights(void)
         if (FastVec3Dist(&light->pos, &data->update_pos) > POINT_LIGHT_MARGIN) {
             CopyVec4Inline(&data->update_pos, &light->pos);
             if (data->state == POINT_LIGHT_CREATED) {
-                CreatePointLight(index);
+                AttachPointLight(index);
                 data->state = POINT_LIGHT_ATTACHED;
             } else if (data->state == POINT_LIGHT_ATTACHED) {
                 RefreshPointLight(index);
@@ -152,12 +152,12 @@ void UpdatePointLights(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", CreatePointLight);
+INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", AttachPointLight);
 
 void RefreshPointLight(int light)
 {
     DetachPointLight(light);
-    CreatePointLight(light);
+    AttachPointLight(light);
 }
 
 void DetachPointLight(int light)

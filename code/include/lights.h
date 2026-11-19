@@ -6,7 +6,7 @@
 #define MAX_POINT_LIGHTS 8
 #define POINT_LIGHT_LIST_LENGTH 512
 
-// One point light: its colour (w is the intensity) and position (w is the radius).
+// One point light: its colour (w is the backlight) and position (w is the radius).
 struct PointLight {
     Vec4 color;
     Vec4 pos;
@@ -81,11 +81,13 @@ extern int TfragsCnt;
 extern float PerfLoad;
 
 void STUB_RET_2525f0(void);
-int CreatePointLight3(Vec4 *pos, float radius, float intensity, int rgb);
-int CreatePointLight2(Vec4 *pos, float radius, float intensity, float red, float green, float blue);
+// Packed colour 0xBBGGRR, 0x80 = 1.0.
+int CreatePointLightRGB(Vec4 &pos, float radius, float backlight, int rgb);
+int CreatePointLight(Vec4 &pos, float radius, float backlight, float red, float green, float blue);
 void DeletePointLight(int light);
 void UpdatePointLights(void);
-void CreatePointLight(int light);
+// Builds the light's lists of the ties, tfrags and shrubs it touches.
+void AttachPointLight(int light);
 void RefreshPointLight(int light);
 void DetachPointLight(int light);
 
