@@ -1,0 +1,29 @@
+#ifndef INITLEVEL_H
+#define INITLEVEL_H
+
+// Item each level adds to the vendor list when it is reached (0 for none).
+extern int LevelVendorItems[];
+
+// Per-level class tables: the index of each moby, tie and shrub class in the level's
+// class list (-1 when the level has no such class), its texture lookup and its mip distances.
+extern char CollJointCacheKeys[0x10];
+extern char MobyClassLookup[0x800];
+extern char MobyTexLookup[0xE00];
+extern char MobyMipDists[0xE0];
+extern char TieClassLookup[0xC00];
+extern char TieTexLookup[0x800];
+extern char TieMipDists[0x80];
+extern char ShrubClassLookup[0x400];
+extern char ShrubTexLookup[0x400];
+extern char ShrubMipDists[0x40];
+
+extern int textureCursor;
+extern int textureCursorEnd;
+
+void ResetParticles(void);
+
+void InitLevel(void);
+void UnlockPurchasableItems(void);
+void AddToUnlockedList(int level);
+
+#endif

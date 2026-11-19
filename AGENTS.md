@@ -24,6 +24,7 @@ The goal is C++ source that compiles to the original bytes and is also good code
 - Generated `.s` files (data, handwritten asm files) are assembled with GNU as: `-EL -march=r5900 -mabi=eabi -no-pad-sections -Icode/include`.
 - What these choices imply for your code:
   - ps2eeas commits to an addressing mode at the first reference. A small extern global is loaded with `lui`/`lw`; a global defined earlier in the same file (with an initializer) is loaded `$gp`-relative. Inside delay slots the compiler itself emits `$gp`-relative stores. So where retail uses `$gp` for a load, the global is probably defined in that file.
+  - A core global (address below 0x15EF00) that retail treats as small data even though it is bigger than 8 bytes (macro addressing, `$gp` in delay slots) is declared with its true size and `__attribute__((section(".sdata")))` on the extern declaration. That is where it really lives, and GCC treats anything in `.sdata` as small data. Use this only for such core externs; never to move an overlay definition. This is a stopgap while the core has no build of its own: once it does, these variables get real definitions there and the attribute should be removed.
   - Whether an extern array is declared with or without a size matters: an unsized array (`extern T x[];`) is addressed through its base address, a sized small one (`extern int x[2];`) through `symbol+offset`. Match the declaration to how retail addresses it.
   - Globals shared with interrupt handlers are `volatile` (stores stay out of delay slots).
   - `-O2` reorders and schedules instructions, including delay slots. Statement order matters less than data flow, but it still matters.
@@ -123,3 +124,4 @@ Rules:
 - Supporting changes (new headers, struct fields, global names, symbol renames) go in the same commit as the function that needs them, or in their own short commit (`add framebuf header`, `rename currentLevelId to Level`).
 - Never commit a symbol rename for a function that is still `INCLUDE_ASM`; the split depends on those names.
 - Work on one branch per source file. Pull requests are opened by the maintainer, not by agents.
+- At the end of every session, before the maintainer merges, run `python3 tools/progress.py` (after `make split-novalis`) and commit the updated `README.md` as `update progress`.

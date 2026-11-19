@@ -12,5 +12,6 @@ float FastAngleCosF(float angle);
 int FastDecTimer(int &timer);
 float FastVec3Length(float *vec);
 void FastMemCopy32(void *destination, void *source, int size);
+void FastMemSet(void *destination, int value, int size);
 
 #endif

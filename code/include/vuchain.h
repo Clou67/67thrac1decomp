@@ -58,6 +58,8 @@ struct MEMSLOTS {
 
 extern MEMSLOTS MemSlots;
 
+void InitMemSlots(void);
+
 // The two VU1 DMA chain buffers, built and sent in turn.
 extern unsigned char *vu1_DmaBuffers[];
 // Which of vu1_DmaBuffers is being built.
