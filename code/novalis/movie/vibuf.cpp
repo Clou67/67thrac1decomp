@@ -248,4 +248,36 @@ int viBufPutTs(ViBuf *buffer, TimeStamp *timestamp)
     return result;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufGetTs__FP5ViBufP9TimeStamp);
+int viBufGetTs(ViBuf *buffer, TimeStamp *timestamp)
+{
+    unsigned int address = *(volatile unsigned int *)IPU_OUTPUT_DMA_MADR;
+    unsigned int top = *(volatile unsigned int *)IPU_TOP;
+    int bits = buffer->ipubp & 0x7F;
+    int capacity = buffer->n << VIBUF_BLOCK_SHIFT;
+    int found = 0;
+
+    address -= (((top >> 16) & 3) + ((top >> 8) & 0xF)) << 4;
+    WaitSema(buffer->sema);
+    timestamp->pts = -1;
+    timestamp->dts = -1;
+    address += bits >> 3;
+    address += capacity;
+
+    int position = (address - (unsigned int)buffer->data) % capacity;
+    int count = buffer->count_ts;
+    int next = buffer->wt_ts;
+    for (int index = 0; index < count && !found; index++) {
+        int slot = (next - count + buffer->n_ts + index) % buffer->n_ts;
+        if (ringPosition(position + capacity - buffer->ts[slot].pos, capacity) < buffer->ts[slot].len) {
+            found = 1;
+            timestamp->pts = buffer->ts[slot].pts;
+            timestamp->dts = buffer->ts[slot].dts;
+            buffer->ts[slot].pts = -1;
+            buffer->ts[slot].dts = -1;
+            buffer->count_ts -= (buffer->count_ts < 2) ? buffer->count_ts : 1;
+        }
+    }
+
+    SignalSema(buffer->sema);
+    return 1;
+}
