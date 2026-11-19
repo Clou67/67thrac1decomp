@@ -2,8 +2,10 @@
 
 #include "common.h"
 #include "framebuf.h"
+#include "gameglobals.h"
 #include "gsregs.h"
 #include "initlevel.h"
+#include "mathfunc_inline.h"
 #include "moby.h"
 #include "sce.h"
 #include "sky.h"
@@ -52,6 +54,7 @@ unsigned char *skyScratchBuffers[2] = {
 int skyScratchBufferIndex = 0;
 
 void FastMtx4Identity(float *matrix);
+void FastEulerToMtx2(Mtx4 *matrix, Vec4 *angles);
 void printf_stub3(const char *format, ...);
 void BuildGifTextureDma(void);
 void SkyBsphereCheck(SkyCluster *clusters, int cluster_count, unsigned char *visible);
@@ -69,7 +72,42 @@ void SkyLevelNone(void)
         SkyDrawShell(shell_index);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkyLevel_01);
+void SkyLevel_01(void)
+{
+    const float pi = 3.14159265358979323846f;
+    const int slow_rotation_period = 0x40000;
+    const int medium_rotation_period = 0x20000;
+    const int fast_rotation_period = 0x10000;
+    Vec4 rotation;
+
+    Sky->clear_screen = 0;
+    ClearVec4Inline(&rotation);
+
+    for (int shell_index = 0; shell_index < Sky->shell_cnt; shell_index++) {
+        switch (shell_index) {
+        case 2:
+            rotation.z = (worldUpdateTime & (slow_rotation_period - 1)) * (2.0f * pi / slow_rotation_period) - pi;
+            FastEulerToMtx2(&outMatrix, &rotation);
+            break;
+
+        case 3:
+            rotation.z = (worldUpdateTime & (medium_rotation_period - 1)) * (2.0f * pi / medium_rotation_period) - pi;
+            FastEulerToMtx2(&outMatrix, &rotation);
+            break;
+
+        case 4:
+            rotation.z = (worldUpdateTime & (fast_rotation_period - 1)) * (2.0f * pi / fast_rotation_period) - pi;
+            FastEulerToMtx2(&outMatrix, &rotation);
+            break;
+
+        default:
+            FastMtx4Identity(&outMatrix.v0.x);
+            break;
+        }
+
+        SkyDrawShell(shell_index);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", func_0029EF90);
 
