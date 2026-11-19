@@ -87,4 +87,6 @@ void viBufEndPut(ViBuf *buffer, int size);
 
 void videoDecReset(VideoDec *decoder);
 
+int viBufDelete(ViBuf *buffer);
+
 #endif

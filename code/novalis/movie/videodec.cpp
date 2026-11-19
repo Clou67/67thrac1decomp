@@ -26,7 +26,12 @@ void videoDecReset(VideoDec *decoder)
     decoder->state = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecDelete__FP8VideoDec);
+int videoDecDelete(VideoDec *decoder)
+{
+    viBufDelete(&decoder->vibuf);
+    videoDecRelease(&decoder->mpeg);
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecAbort__FP8VideoDec);
 
