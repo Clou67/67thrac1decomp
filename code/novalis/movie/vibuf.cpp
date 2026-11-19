@@ -1,6 +1,8 @@
 #include "common.h"
 #include "videodec.h"
 
+void setD4_CHCR(unsigned int value);
+
 enum {
     VIBUF_BLOCK_SHIFT = 11,
     VIBUF_BLOCK_SIZE = 1 << VIBUF_BLOCK_SHIFT,
@@ -48,7 +50,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufStopDMA__FP
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufRestartDMA__FP5ViBuf);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufDelete__FP5ViBuf);
+int viBufDelete(ViBuf *buffer)
+{
+    setD4_CHCR(IPU_OUTPUT_DMA_IDLE_CHCR);
+    *(volatile unsigned int *)IPU_OUTPUT_DMA_QWC = 0;
+    *(volatile unsigned int *)IPU_OUTPUT_DMA_MADR = 0;
+    *(volatile unsigned int *)IPU_OUTPUT_DMA_TADR = 0;
+    DeleteSema(buffer->sema);
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufCount__FP5ViBuf);
 

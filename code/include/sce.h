@@ -168,6 +168,7 @@ struct sceGifTag {
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
 extern "C" {
+int DeleteSema(int semaphore);
 int SignalSema(int semaphore);
 int WaitSema(int semaphore);
 int sceMpegIsEnd(sceMpeg *mpeg);
