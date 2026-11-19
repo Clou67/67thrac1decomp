@@ -43,7 +43,13 @@ void voBufIncCount(VoBuf *buffer)
     EIntr();
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufGetData__FP5VoBuf);
+VoData *voBufGetData(VoBuf *buffer)
+{
+    if (voBufIsFull(buffer))
+        return 0;
+
+    return &buffer->data[buffer->write];
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIsEmpty);
 
