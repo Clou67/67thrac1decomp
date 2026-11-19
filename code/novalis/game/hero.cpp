@@ -1,4 +1,5 @@
 #include "common.h"
+#include "hero.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ResetHero);
 
@@ -394,7 +395,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetPolarOffse
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetHeroRelativePos);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SubGravity);
+void Hero_AddGravity(float amount, float *out, float *in);
+
+void Hero_SubGravity(float amount, float *out, float *in)
+{
+    Hero_AddGravity(-amount, out, in);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ToWorldVector);
 

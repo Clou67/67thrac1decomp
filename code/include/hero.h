@@ -350,4 +350,6 @@ extern int QuickSelectItems[QUICK_SELECT_SLOT_COUNT];
 void Hero_RevertToRatchet(void);
 void Hero_Warp(float *position, float *rotation, int flags, int snap);
 
+void Hero_SubGravity(float amount, float *out, float *in);
+
 #endif
