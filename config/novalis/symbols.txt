@@ -875,7 +875,7 @@ MB_UpdateLightAngle = 0x00264988; // type:func size:0x90
 DrawMobyShadows = 0x00264A18; // type:func size:0x144
 ProcessMobyAnimData = 0x00264B60; // type:func size:0x44
 InitMobyClassDists__Fv = 0x00264BA8; // type:func size:0x28
-StashMobyClassDists = 0x00264BD0; // type:func size:0x2C
+StashMobyClassDists__Fv = 0x00264BD0; // type:func size:0x2C
 RestoreMobyClassDists = 0x00264C00; // type:func size:0x2C
 DrawMobysSetup = 0x00264C30; // type:func size:0xB8
 DrawMobyListProc = 0x00264CE8; // type:func size:0x80
@@ -2220,3 +2220,5 @@ movieDisplayActive = 0x00161320; // size:0x4
 movieVblankCount = 0x00161324; // size:0x4
 
 inactiveVideoDmaMessage = 0x0020A790;
+
+StashedMobyClassDists = 0x00197400; // size:0x380

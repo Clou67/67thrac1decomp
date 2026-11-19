@@ -111,6 +111,10 @@ struct MobyInstance {
 
 void SetLevelFlag(int flag);
 
+extern int StashedMobyClassDists[];
+
 void InitMobyClassDists(void);
+
+void StashMobyClassDists(void);
 
 #endif

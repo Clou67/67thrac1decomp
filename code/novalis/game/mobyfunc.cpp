@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 #include "fastfunc.h"
 #include "moby.h"
 
@@ -73,7 +74,10 @@ void InitMobyClassDists(void)
     FastMemSet(MobyClassDists, DEFAULT_MOBY_CLASS_DISTANCE, MOBY_CLASS_DISTS_SIZE);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", StashMobyClassDists);
+void StashMobyClassDists(void)
+{
+    FastMemCopy16(StashedMobyClassDists, MobyClassDists, MOBY_CLASS_DISTS_SIZE);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", RestoreMobyClassDists);
 
