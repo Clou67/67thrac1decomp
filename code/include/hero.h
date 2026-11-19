@@ -10,7 +10,11 @@
 
 // Only the fields the freeze mode touches are known so far.
 struct HeroState {
-    char unk0[0x19C];
+    char unk0[0x80];
+    Vec4 pos;
+    // z is the yaw.
+    Vec4 rot;
+    char unkA0[0xFC];
     int controlModeTimer;
     char unk1A0[0x6E0];
     int trickHudHandle;
@@ -29,7 +33,13 @@ struct HeroState {
     float savedPosRot[8];
     char unk1D20[0x360];
     MobyInstance *moby;
+    int state;
+    char unk2088[0x220];
+    int health;
 };
+
+// Hero states.
+#define HERO_STATE_VISIBOMB_CONTROL 29
 
 extern HeroState Hero;
 

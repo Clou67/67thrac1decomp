@@ -13,6 +13,8 @@ float FastIntToFloat(int value);
 float FastAngleCosF(float angle);
 float FastAngleSinF(float angle);
 float FastAddRots(float angle, float delta);
+float FastArcTan(float x, float y);
+float FastDiffRots(float first, float second);
 float FastVec3Dist(Vec4 *first, Vec4 *second);
 // Nonzero when the sphere (w is its radius) overlaps the bounding sphere.
 int FastVec3AddSubLen(Vec4 *sphere, BSphere *bounds);
