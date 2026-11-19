@@ -63,7 +63,7 @@ void PatchShrubGifs(void)
     int drawIndex;
     ShrubDrawList *list;
     ShrubDraw *draw;
-    ShrubGsLoc *location;
+    GsTextureLoc *location;
 
     for (rectify = ShrubGifRectify; *rectify >= 0; rectify++) {
         shrubClass = ShrubClasses[*rectify];

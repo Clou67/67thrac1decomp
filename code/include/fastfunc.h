@@ -2,6 +2,7 @@
 #define FASTFUNC_H
 
 struct Vec4;
+struct Mtx4;
 struct BSphere;
 
 // Stops in the debugger; used when a save is bigger than its buffer.
@@ -23,6 +24,10 @@ void FastScaleVec4(Vec4 *out, Vec4 *in, float scale);
 int FastDecTimer(int &timer);
 float FastVec3Length(float *vec);
 void FastMemCopy32(void *destination, void *source, int size);
+// Writes the scaled xyz of in to out.
+void FastVec3Scale(Vec4 *out, Vec4 *in, float scale);
+void FastMtx4Identity(float *matrix);
+void FastMtxTransform(Mtx4 *left, Mtx4 *right, Mtx4 *result);
 void FastMemSet(void *destination, int value, int size);
 // DMAs quadwords from the scratchpad at spr_address into main memory.
 void FastFromSpr(void *destination, int spr_address, int quadwords);

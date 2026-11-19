@@ -79,12 +79,6 @@ struct ShrubDraw {
     unsigned char pad_34[0xC];
 };
 
-// Where a texture was placed in GS memory this frame; zero when it was not.
-struct ShrubGsLoc {
-    short base;
-    short mip;
-};
-
 #define SHRUB_CLASS_MAX 96
 #define SHRUB_GS_LOC_MAX 256
 #define SHRUB_GIF_RECTIFY_MAX 64
@@ -93,7 +87,7 @@ extern ShrubInstance *ShrubInstances;
 extern ShrubInstance *ShrubInstanceEnd;
 
 extern ShrubClass *ShrubClasses[SHRUB_CLASS_MAX];
-extern ShrubGsLoc ShrubGsLocStash[SHRUB_GS_LOC_MAX];
+extern GsTextureLoc ShrubGsLocStash[SHRUB_GS_LOC_MAX];
 // Class indices whose GS texture addresses need patching, ended by a negative value.
 extern int ShrubGifRectify[SHRUB_GIF_RECTIFY_MAX];
 extern char ShrubSprStash[0x400];

@@ -79,6 +79,8 @@ segments:
     - [0x25d8, lit4]
     - [0x2610, .rodata, game/skyfunc]  # sky texture label; trailing zero fill includes Sky at 0x16051c
     - [0x2620, lit4]
+    - [0x3030, .rodata, game/tfragfunc]  # tfrag texs, tfrag draw labels
+    - [0x3050, lit4]
     - [0x32a0, .sdata, game/vuchain]  # VifChainFlags
     - [0x32a4, lit4]
     - [0x3438, .rodata, movie/movie]  # movie error format
@@ -112,6 +114,8 @@ segments:
     - [0xac2c0, data]
     - [0xac4d0, .data, game/shrubfunc]  # texture overflow message
     - [0xac4e8, data]
+    - [0xac5b0, .data, game/tfragfunc]  # texture overflow message
+    - [0xac5c8, data]
     - [0xac690, .rodata, game/vuchain]
     - [0xac718, data]
 

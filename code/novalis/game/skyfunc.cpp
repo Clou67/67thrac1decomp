@@ -2,6 +2,7 @@
 
 #include "common.h"
 #include "draw.h"
+#include "fastfunc.h"
 #include "framebuf.h"
 #include "gameglobals.h"
 #include "gsregs.h"
@@ -28,7 +29,6 @@ unsigned char *g_SkyVuBufferAddrs[2] = {
 };
 int g_SkyVuBuffer = 0;
 
-void FastMtx4Identity(float *matrix);
 void FastEulerToMtx2(Mtx4 *matrix, Vec4 *angles);
 void BuildGifTextureDma(void);
 void SprDmaToSpr_Start(void *source, int quadwords, void *destination);
