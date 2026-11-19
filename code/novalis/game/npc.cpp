@@ -146,7 +146,14 @@ int InfobotHint_FindEntry(MobyInstance *moby)
     return -1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/npc", InfobotHint_SetEntryState);
+void InfobotHint_SetEntryState(MobyInstance *moby, int state)
+{
+    int index;
+
+    index = InfobotHint_FindEntry(moby);
+    if (index != -1)
+        LevelObjectStates[index].state = state;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/npc", InfobotHint_InitInstance);
 
