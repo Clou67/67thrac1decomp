@@ -196,7 +196,6 @@ FastDecTimer__FRi = 0x00220E78;
 DrawTextShadow__Fiiiii = 0x0021C958;
 DrawSprite__FiiiiiiiiUlUl = 0x0021BE90;
 FontSet__Fi = 0x0021AE98;
-SetFontWindow__FP10FontWindowiiiiiiii = 0x0021E120;
 FontPrintWindowSmall__FP10FontWindowUlPci = 0x0021E0A8;
 MB_RequestHelpMessage__Fii = 0x00279000;
 music_PlayPreseekedSpeech__Fv = 0x00279E78;

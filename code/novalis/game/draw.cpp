@@ -1,4 +1,5 @@
 #include "common.h"
+#include "font.h"
 #include "framebuf.h"
 #include "draw.h"
 
@@ -208,7 +209,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindowSma
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021E118);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetFontWindow);
+void SetFontWindow(FontWindow *window, int win_top, int win_bot, int win_left, int win_right, int text_x, int text_y, int line_spacing, int flags)
+{
+    window->win_top = win_top;
+    window->win_bot = win_bot;
+    window->win_left = win_left;
+    window->win_right = win_right;
+    window->text_x = text_x;
+    window->text_y = text_y;
+    window->line_spacing = line_spacing;
+    window->flags = flags;
+
+    window->max_width = 0;
+    window->max_height = 0;
+    window->sub_pixel_x = 0;
+    window->sub_pixel_y = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawScreenCopyToVU1);
 
