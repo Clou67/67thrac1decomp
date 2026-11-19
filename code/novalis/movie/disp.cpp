@@ -20,4 +20,7 @@ void startDisplay(int field)
     movieVblankCount = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/disp", endDisplay__Fv);
+void endDisplay(void)
+{
+    movieDisplayActive = 0;
+}
