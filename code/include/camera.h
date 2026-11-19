@@ -158,4 +158,6 @@ struct GAMECAMERA {
 
 extern GAMECAMERA GameCamera;
 
+void Camera_ClearPolar(float *polar);
+
 #endif

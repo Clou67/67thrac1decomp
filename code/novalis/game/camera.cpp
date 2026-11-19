@@ -1,6 +1,14 @@
 #include "common.h"
+#include "camera.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_ClearPolar);
+void Camera_ClearPolar(float *polar)
+{
+    polar[0] = 0.0f;
+    polar[1] = 0.0f;
+    polar[2] = 0.0f;
+    polar[3] = 0.0f;
+    polar[4] = 0.0f;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Cam_CopyRotWrapped);
 
