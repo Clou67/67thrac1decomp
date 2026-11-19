@@ -51,7 +51,10 @@ VoData *voBufGetData(VoBuf *buffer)
     return &buffer->data[buffer->write];
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIsEmpty);
+int voBufIsEmpty(VoBuf *buffer)
+{
+    return buffer->count == 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufGetTag__FP5VoBuf);
 
