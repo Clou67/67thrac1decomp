@@ -38,7 +38,7 @@ int InfobotHint_Update(MobyInstance *moby, InfobotHint *hint)
     int index;
     int handle;
 
-    if (hero->state == HERO_STATE_VISIBOMB_CONTROL)
+    if (hero->state == PLAYER_STATE_VISIBOMB_CONTROL)
         return 0;
 
     if (hero->health == 0)
@@ -59,17 +59,17 @@ int InfobotHint_Update(MobyInstance *moby, InfobotHint *hint)
     if (hint->anyDirection == INFOBOT_HINT_DISABLED)
         return 0;
 
-    if (FastVec3Dist(&moby->pos, &hero->pos) > hint->radius + hint->radius)
+    if (FastVec3Dist(&moby->pos, &hero->position) > hint->radius + hint->radius)
         return 0;
 
     InfobotHint_SetState(moby, hint, 0);
 
     // The moby must face the hero, and the hero the moby.
     if (hint->anyDirection == 0) {
-        if (FastDiffRots(FastArcTan(hero->pos.x - moby->pos.x, hero->pos.y - moby->pos.y), moby->rotation.z) > hint->radius)
+        if (FastDiffRots(FastArcTan(hero->position.x - moby->pos.x, hero->position.y - moby->pos.y), moby->rotation.z) > hint->radius)
             return 0;
 
-        if (FastDiffRots(FastArcTan(moby->pos.x - hero->pos.x, moby->pos.y - hero->pos.y), hero->rot.z) > INFOBOT_HINT_HERO_FACING)
+        if (FastDiffRots(FastArcTan(moby->pos.x - hero->position.x, moby->pos.y - hero->position.y), hero->rotation.z) > INFOBOT_HINT_HERO_FACING)
             return 0;
     }
 

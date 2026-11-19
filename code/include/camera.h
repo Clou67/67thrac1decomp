@@ -3,14 +3,131 @@
 
 #include "moby.h"
 
-// Camera rotation as the PS3 project names it; radius holds the yaw.
+// Camera types from the PS3 project (game/camera.h); RC1 PS2 uses the same layout.
+
+struct UpdateCam;
+
+struct Vec3 {
+    float x;
+    float y;
+    float z;
+};
+
 struct PolarSm {
     float azimuth;
     float elevation;
     float radius;
 };
 
-// The game camera (field names from the PS3 project; only the fields known so far).
+// A blend around the hero in polar coordinates (DL's CamBlenderPolarQuat).
+struct CamBlenderPolarQuat {
+    // Where the last camera was, around the hero.
+    PolarSm orgPol;
+    int interpFrames;
+    float interpMaxInv;
+    int reqInterpFrames;
+    unsigned char pad18[8];
+    // The hero's axes at the start.
+    Vec4 fwd;
+    Vec4 up;
+    Vec4 orgQuat;
+    Vec4 pos;
+    Vec4 q;
+};
+
+// A blend of the camera's position and rotation from where the last camera left off
+// (DL's CamBlenderPosQuat).
+struct CamBlenderPosQuat {
+    // 0 to 1, and the step per frame.
+    float quatInterpFac;
+    float quatInterpAdd;
+    // The next blend's step.
+    float reqQuatInterpAdd;
+    float posInterpFac;
+    float posInterpAdd;
+    float reqPosInterpAdd;
+    unsigned char pad18[8];
+    // The last camera's rotation and position.
+    Vec4 orgQuat;
+    Vec4 orgPos;
+    // The blended camera's.
+    Vec4 pos;
+    Vec4 q;
+};
+
+struct CamBlenderData {
+    CamBlenderPosQuat posData;
+    CamBlenderPolarQuat polarData;
+};
+
+// Blends a camera switch in (GameCamera.blender).
+struct CamBlender {
+    // 0 off, 1 starting, 2 starting over a running blend, then running.
+    short state;
+    // 0 position/rotation, else polar.
+    unsigned char type;
+    // The next blend's type.
+    unsigned char reqType;
+    unsigned char pad04[12];
+    CamBlenderData blendData;
+};
+
+struct CameraMatrix {
+    Vec4 forward;
+    Vec4 right;
+    Vec4 up;
+    Vec4 position;
+};
+
+// A camera shake (DL's CameraShake): strength fades out with the square of the time left.
+struct CamOffsetRec {
+    float strength;
+    // This frame's offset.
+    float adjust;
+    // Frames left, and the longest time it was set to.
+    int time;
+    int div;
+};
+
+// The camera's per-frame hero tracking and screen fade state (DL's CameraStatics up to
+// fadeTimer; RC1 then tracks the moby the hero stands on).
+struct CameraStatics {
+    // The hero's position, its z held while jumping.
+    Vec3 heroNoJump;
+    float heroLastZ;
+    float heroLastZSpeed;
+    unsigned char pad14[12];
+    // heroUpActual, smoothed.
+    Vec4 heroUp;
+    // Minus the hero's gravity direction.
+    Vec4 heroUpActual;
+    Vec4 heroUpLast;
+    // Interpolation speeds for heroUp.
+    Vec4 heroUpSpeed;
+    Vec4 heroLastPos;
+    // This frame's move, its part off heroUpActual and its part along it.
+    Vec4 heroMoveVec;
+    Vec4 heroMoveVec2D;
+    Vec4 heroMoveVecUp;
+    float heroSpeed;
+    float heroSpeed2D;
+    float heroSpeedUp;
+    float heroLastRotZ[5];
+    int hotspot;
+    // The moby that keeps the hero's collision off the camera.
+    MobyInstance *pCamColl;
+    float fadeSpeed;
+    float fadeIdeal;
+    int fadeTimer;
+    // The moby the hero stands on (not a train).
+    MobyInstance *pGroundMoby;
+    float groundMobyZ;
+    // How far it rose this frame (0 under 0.001).
+    float groundMobyDeltaZ;
+};
+
+// The game camera. From 0x140 on it follows DL's GAMECAMERA, with two shakes instead of
+// three and a shorter CameraStatics.
 struct GAMECAMERA {
     Mtx4 mtx0;
     Mtx4 matrix;
@@ -21,9 +138,22 @@ struct GAMECAMERA {
     float posY;
     float posZ;
     float posW;
+    // radius holds the yaw.
     PolarSm rot;
     float rotW;
-    char unk160[0x23C];
+    // Up and down, and back and forth.
+    CamOffsetRec shake;
+    CamOffsetRec shakeFwd;
+    UpdateCam *pCurrentUpdCam;
+    UpdateCam *pLastUpdCam;
+    unsigned char pad188[8];
+    CameraStatics camStatics;
+    CamBlender blender;
+    CameraMatrix orientMtx;
+    // Run by the follow camera (CamZoomOfs_Update).
+    void (*ofsUpdate)(void);
+    unsigned int camUnderWater;
+    unsigned int camTimer;
 };
 
 extern GAMECAMERA GameCamera;
