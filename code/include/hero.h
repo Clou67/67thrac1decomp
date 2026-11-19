@@ -360,4 +360,6 @@ void Hero_ClearNextAnim(void);
 
 void Hero_HideHeroMoby(void);
 
+void Hero_ShowHeroMoby(void);
+
 #endif

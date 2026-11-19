@@ -388,7 +388,10 @@ void Hero_HideHeroMoby(void)
     Hero.moby->modeBits |= HERO_MOBY_HIDDEN;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ShowHeroMoby);
+void Hero_ShowHeroMoby(void)
+{
+    Hero.moby->modeBits &= ~HERO_MOBY_HIDDEN;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", func_00248918);
 
