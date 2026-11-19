@@ -358,4 +358,6 @@ void Hero_SubGravity(float amount, float *out, float *in);
 
 void Hero_ClearNextAnim(void);
 
+void Hero_HideHeroMoby(void);
+
 #endif

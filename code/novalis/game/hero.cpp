@@ -381,7 +381,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_MakeInvisible
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_MakeVisible);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HideHeroMoby);
+enum { HERO_MOBY_HIDDEN = 1 };
+
+void Hero_HideHeroMoby(void)
+{
+    Hero.moby->modeBits |= HERO_MOBY_HIDDEN;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ShowHeroMoby);
 
