@@ -28,6 +28,9 @@ for index, (start, kind, name) in enumerate(segments):
     end = segments[index + 1][0]
     source = open(os.path.join(SOURCE, name + '.cpp')).read()
 
+    # A function guarded by ALLOW_NON_MATCHING is not done until it matches.
+    source = re.sub(r'#ifdef ALLOW_NON_MATCHING\n.*?#else\n(.*?)#endif\n', r'\1', source, flags=re.S)
+
     left = re.findall(r'INCLUDE_ASM\("[^"]+", (\w+)\);', source)
     left_bytes = 0
     for function in left:
