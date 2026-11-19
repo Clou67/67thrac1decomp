@@ -56,6 +56,13 @@ int voBufIsEmpty(VoBuf *buffer)
     return buffer->count == 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufGetTag__FP5VoBuf);
+VoTag *voBufGetTag(VoBuf *buffer)
+{
+    if (voBufIsEmpty(buffer))
+        return 0;
+
+    int slot = (buffer->write - buffer->count + buffer->size) % buffer->size;
+    return &buffer->tag[slot];
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufDecCount__FP5VoBuf);
