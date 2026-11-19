@@ -1,4 +1,5 @@
 #include "common.h"
+#include "moby.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
 
@@ -78,7 +79,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobys);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_SetLightsFromEnvSample);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", SetLevelFlag);
+extern int Level;
+extern unsigned char occlCharTable[][16];
+
+void SetLevelFlag(int flag)
+{
+    if (flag != 0xFF)
+        occlCharTable[Level][flag] = 0xFF;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", SetColorOfMoby);
 

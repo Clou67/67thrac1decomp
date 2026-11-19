@@ -109,4 +109,6 @@ struct MobyInstance {
     Mtx4 transform;
 };
 
+void SetLevelFlag(int flag);
+
 #endif
