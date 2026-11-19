@@ -4,6 +4,16 @@
 void setD4_CHCR(unsigned int value);
 
 enum {
+    IPU_INPUT_DMA_MADR = 0x1000B010,
+    IPU_INPUT_DMA_QWC = 0x1000B020,
+    IPU_INPUT_DMA_CHCR = 0x1000B000,
+    IPU_OUTPUT_DMA_CHCR = 0x1000B400,
+    IPU_CONTROL = 0x10002010,
+    IPU_TOP = 0x10002020,
+    IPU_CONTROL_FIFO_MASK = 0xF0
+};
+
+enum {
     VIBUF_BLOCK_SHIFT = 11,
     VIBUF_BLOCK_SIZE = 1 << VIBUF_BLOCK_SHIFT,
     VIBUF_PHYSICAL_ADDRESS_MASK = 0x0FFFFFFF,
@@ -21,7 +31,22 @@ unsigned int getFIFOindex(ViBuf *buffer, void *position)
     return ((unsigned int)position - (unsigned int)buffer->data) >> VIBUF_BLOCK_SHIFT;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", setD3_CHCR__FUi);
+enum {
+    DMAC_ENABLE_READ = 0x1000F520,
+    DMAC_ENABLE_WRITE = 0x1000F590,
+    DMAC_ENABLE_CHANNEL_WRITE = 0x10000
+};
+
+void setD3_CHCR(unsigned int value)
+{
+    DIntr();
+    *(volatile unsigned int *)DMAC_ENABLE_WRITE =
+        *(volatile unsigned int *)DMAC_ENABLE_READ | DMAC_ENABLE_CHANNEL_WRITE;
+    *(volatile unsigned int *)IPU_INPUT_DMA_CHCR = value;
+    *(volatile unsigned int *)DMAC_ENABLE_WRITE =
+        *(volatile unsigned int *)DMAC_ENABLE_READ & ~DMAC_ENABLE_CHANNEL_WRITE;
+    EIntr();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", setD4_CHCR__FUi);
 
@@ -115,16 +140,6 @@ void viBufEndPut(ViBuf *buffer, int size)
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufAddDMA__FP5ViBuf);
 
 void setD3_CHCR(unsigned int value);
-
-enum {
-    IPU_INPUT_DMA_MADR = 0x1000B010,
-    IPU_INPUT_DMA_QWC = 0x1000B020,
-    IPU_INPUT_DMA_CHCR = 0x1000B000,
-    IPU_OUTPUT_DMA_CHCR = 0x1000B400,
-    IPU_CONTROL = 0x10002010,
-    IPU_TOP = 0x10002020,
-    IPU_CONTROL_FIFO_MASK = 0xF0
-};
 
 int viBufStopDMA(ViBuf *buffer)
 {

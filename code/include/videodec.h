@@ -135,4 +135,6 @@ void scTag2(unsigned long *tag, unsigned int address, unsigned int id, unsigned 
 
 int viBufModifyPts(ViBuf *buffer, TimeStamp *timestamp);
 
+void setD3_CHCR(unsigned int value);
+
 #endif
