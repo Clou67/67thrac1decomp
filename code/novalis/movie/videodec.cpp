@@ -38,7 +38,10 @@ void videoDecAbort(VideoDec *decoder)
     decoder->state = 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecGetState);
+unsigned int videoDecGetState(VideoDec *decoder)
+{
+    return decoder->state;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecSetState__FP8VideoDecUi);
 
