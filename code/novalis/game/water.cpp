@@ -1,4 +1,5 @@
 #include "common.h"
+#include "water.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_InitAll);
 
@@ -28,7 +29,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_DrawCel
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_DrawAll);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterSheet_Prepare);
+void SetupVU1WorldDraw(void);
+
+void WaterSheet_Prepare(void)
+{
+    SetupVU1WorldDraw();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterSheet_DrawAll);
 

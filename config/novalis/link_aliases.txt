@@ -302,3 +302,5 @@ viBufCreate__FP5ViBufPUxT1iP9TimeStampi = 0x0031BAF0;
 setImageTag__FPA1_UiP6VoDataii = 0x0031B0B8;
 
 FontLenWithTable__FPciPUc = 0x0021CC40;
+
+SetupVU1WorldDraw__Fv = 0x0021E340;
