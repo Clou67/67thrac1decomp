@@ -32,7 +32,36 @@ void scTag2(unsigned long *tag, unsigned int address, unsigned int id, unsigned 
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufCreate);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufReset__FP5ViBuf);
+int viBufReset(ViBuf *buffer)
+{
+    int index;
+
+    buffer->isActive = 1;
+    buffer->dmaStart = 0;
+    buffer->dmaN = 0;
+    buffer->readBytes = 0;
+    buffer->count_ts = 0;
+    buffer->wt_ts = 0;
+
+    for (index = 0; index < buffer->n_ts; index++) {
+        buffer->ts[index].pts = -1;
+        buffer->ts[index].dts = -1;
+        buffer->ts[index].pos = 0;
+        buffer->ts[index].len = 0;
+    }
+
+    for (index = 0; index < buffer->n; index++) {
+        unsigned int address = ((index << VIBUF_BLOCK_SHIFT) + (unsigned int)buffer->data) & VIBUF_PHYSICAL_ADDRESS_MASK;
+        scTag2((unsigned long *)&buffer->tag[index], address, 3, VIBUF_BLOCK_SIZE / 16);
+    }
+    scTag2((unsigned long *)&buffer->tag[index], (unsigned int)buffer->tag & VIBUF_PHYSICAL_ADDRESS_MASK, 2, 0);
+
+    *(volatile unsigned int *)IPU_OUTPUT_DMA_QWC = 0;
+    *(volatile unsigned int *)IPU_OUTPUT_DMA_MADR = (unsigned int)buffer->data & VIBUF_PHYSICAL_ADDRESS_MASK;
+    *(volatile unsigned int *)IPU_OUTPUT_DMA_TADR = (unsigned int)buffer->tag & VIBUF_PHYSICAL_ADDRESS_MASK;
+    setD4_CHCR(IPU_OUTPUT_DMA_IDLE_CHCR);
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufBeginPut__FP5ViBufPPUcPiT1T2);
 
