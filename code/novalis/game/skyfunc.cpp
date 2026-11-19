@@ -9,11 +9,25 @@ struct sky_shell {
     int gouraud;
 };
 
+struct SkyGifPageMarker {
+    DmaTag *tag;
+};
+
+struct DrawConfig {
+    int unk_00;
+    int sky_texture_paging;
+    int sky;
+};
+
+extern SkyGifPageMarker sky_gif_page_markerA;
+extern SkyGifPageMarker sky_gif_page_markerB;
+extern DrawConfig drawConfig;
 extern char skyGifPageLabel[];
 extern int GifLoadCnt;
 
 void FastMtx4Identity(float *matrix);
 void printf_stub3(const char *format, ...);
+void BuildGifTextureDma(void);
 
 void SkyLevelNone(void)
 {
@@ -33,7 +47,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkySpace);
 
 void SetupSkyGifPaging(void)
 {
-    sky_gif_page_markerA = vu1_bufPtr.tag++;
+    sky_gif_page_markerA.tag = vu1_bufPtr.tag++;
     printf_stub3(skyGifPageLabel, 1);
 
     textureCursor = textureCursorEnd;
@@ -43,7 +57,36 @@ void SetupSkyGifPaging(void)
         Sky->tex_defs[texture_index].tex0 = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", DoSkyGifPaging);
+void DoSkyGifPaging(void)
+{
+    // The first link jumps to the optional upload packets.
+    sky_gif_page_markerB.tag = vu1_bufPtr.tag++;
+    sky_gif_page_markerA.tag->tag = DMA_TAG_NEXT;
+    sky_gif_page_markerA.tag->addr = (unsigned int)vu1_bufPtr.tag;
+    sky_gif_page_markerA.tag->vif0 = 0;
+    sky_gif_page_markerA.tag->vif1 = 0;
+
+    if (drawConfig.sky_texture_paging != 0) {
+        BuildGifTextureDma();
+        VU1_texFlush();
+    }
+
+    // Return from the uploads to the sky packets after the opening marker.
+    DmaTag *page_link = vu1_bufPtr.tag;
+    page_link->tag = DMA_TAG_NEXT;
+    vu1_bufPtr.tag->addr = (unsigned int)(sky_gif_page_markerA.tag + 1);
+    vu1_bufPtr.tag->vif0 = 0;
+    vu1_bufPtr.tag->vif1 = 0;
+
+    // The bypass link rejoins the chain after this return link.
+    vu1_bufPtr.tag++;
+    sky_gif_page_markerB.tag->tag = DMA_TAG_NEXT;
+    sky_gif_page_markerB.tag->addr = (unsigned int)vu1_bufPtr.tag;
+    sky_gif_page_markerB.tag->vif0 = 0;
+    sky_gif_page_markerB.tag->vif1 = 0;
+
+    gsTextureAllocation.cursor = gsTextureAllocation.start;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", func_0029F660);
 

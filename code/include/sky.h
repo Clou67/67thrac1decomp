@@ -2,7 +2,6 @@
 #define SKY_H
 
 struct Mtx4;
-struct DmaTag;
 struct sky_shell;
 struct sky_sprite;
 
@@ -28,7 +27,6 @@ struct SKY {
 
 extern SKY *Sky;
 extern Mtx4 outMatrix;
-extern DmaTag *sky_gif_page_markerA;
 
 void SkyDrawShell(int shell_index);
 void SkyDrawShellTextured(sky_shell *shell);

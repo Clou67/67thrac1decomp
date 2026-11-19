@@ -20,6 +20,13 @@ extern char ShrubMipDists[0x40];
 extern int textureCursor;
 extern int textureCursorEnd;
 
+struct GsTextureAllocation {
+    int cursor;
+    int start;
+};
+
+extern GsTextureAllocation gsTextureAllocation;
+
 void ResetParticles(void);
 
 void InitLevel(void);
