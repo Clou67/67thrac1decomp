@@ -111,4 +111,6 @@ struct MobyInstance {
 
 void SetLevelFlag(int flag);
 
+void InitMobyClassDists(void);
+
 #endif

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "fastfunc.h"
 #include "moby.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
@@ -63,7 +64,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobyShadow
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", ProcessMobyAnimData);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", InitMobyClassDists);
+enum { DEFAULT_MOBY_CLASS_DISTANCE = 0x40000000, MOBY_CLASS_DISTS_SIZE = 0x380 };
+
+static int *const MobyClassDists = (int *)0x70003A00;
+
+void InitMobyClassDists(void)
+{
+    FastMemSet(MobyClassDists, DEFAULT_MOBY_CLASS_DISTANCE, MOBY_CLASS_DISTS_SIZE);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", StashMobyClassDists);
 
