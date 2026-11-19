@@ -129,6 +129,15 @@ Rules:
 - Some overlay files are identical to boot files (for example `movie/*` and `shadowproc`). Reuse the boot source rather than decompiling twice.
 - Moby update code is one file per class (`game/update/moby<oClass>.cpp`). Helpers before an `UpdateMoby_<N>` belong to that file and are named `M<oClass>_<Behavior>`, e.g. `M773_HandleStepping`.
 
+## Known shortcomings
+
+- **String placement (possible `-G16`).** Some original string literals sit in the small-data zone while longer ones from the same file sit in normal `.rodata`. At `-G8` every string over 8 bytes lands in `.rodata`, so the build cannot reproduce that layout from literals alone. The cases so far:
+  - `freeze`: its strings are extern data symbols carved as raw data.
+  - `initlevel`: a 12-byte array that also matches at `-G12`.
+  - `shrubfunc`: "shrub texs" and "shrub draw" (11 bytes each) sit in the small-data zone, the 24-byte overflow message in `.rodata`. The labels stay literals in a `.rodata` carve, and the overflow message is a named `const char` array with `section(".data")` so it can have its own carve. Named arrays for the labels break `DrawShrub`: the compiler shares the high half of the address between them.
+  
+  All of this fits a threshold between 12 and 23 bytes, but the labels are reached with `lui`/`addiu` and not gp-relative, which does not fit cleanly. A whole-overlay `-G15` or `-G16` build broke other files, and per-file flags are not allowed, so the flag stays at `-G8`. Treat the workarounds as temporary and collect more evidence before changing the flag.
+
 ## Commits
 
 - One commit per matched function, with the message `match FunctionName` (the plain, unmangled name). Nothing else in the message: no description, no trailers, no attribution.
