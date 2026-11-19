@@ -207,7 +207,6 @@ music_Pause__Fi = 0x0027A408;
 FadeToBlack__Fi = 0x0021B438;
 Hud_SetEntryValueById__Fii = 0x0024B090;
 HudStub__Fv = 0x0024FB38;
-ChangeLevel__Fi = 0x002A29A0;
 Hero_RevertToRatchet__Fv = 0x00231450;
 Hero_Warp__FPfT0ii = 0x002368E0;
 sound_Update__Fv = 0x002A0638;

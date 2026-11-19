@@ -1458,7 +1458,7 @@ Space_EnableShip = 0x002A2480; // type:func size:0x34
 space_PlayCutscene = 0x002A24B8; // type:func size:0x310
 Space_StartTakeoffCutscene = 0x002A27C8; // type:func size:0x7C
 StartLeaveLevelCutscene = 0x002A2848; // type:func size:0x158
-ChangeLevel = 0x002A29A0; // type:func size:0x1C
+ChangeLevel__Fi = 0x002A29A0; // type:func size:0x1C
 space_StartLevelArrival = 0x002A29C0; // type:func size:0xF4
 Space_DrawShipEngineGlow = 0x002A2AB8; // type:func size:0x270
 Space_DrawShipEffects = 0x002A2D28; // type:func size:0x4A4
@@ -2212,3 +2212,6 @@ FontLargeMetrics = 0x001C3D10;
 FontColorsEnabled = 0x0015F45C; // size:0x4
 
 ptsOverflowMessage = 0x0020A778;
+
+RequestedLevel = 0x0015F5C0; // size:0x4
+LevelLoadRequested = 0x0015F570; // size:0x4

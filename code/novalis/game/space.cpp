@@ -1,4 +1,5 @@
 #include "common.h"
+#include "freeze.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/space", UpdateMoby_Spaceship);
 
@@ -18,7 +19,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/space", Space_StartTakeof
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/space", StartLeaveLevelCutscene);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/space", ChangeLevel);
+extern int RequestedLevel;
+extern int CutscenePlaying;
+extern int LevelLoadRequested;
+
+void ChangeLevel(int level)
+{
+    RequestedLevel = level;
+    LevelLoadRequested = 1;
+    CutscenePlaying = 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/space", space_StartLevelArrival);
 
