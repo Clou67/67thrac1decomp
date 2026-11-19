@@ -34,7 +34,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufReset__FP5V
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufBeginPut__FP5ViBufPPUcPiT1T2);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufEndPut__FP5ViBufi);
+void viBufEndPut(ViBuf *buffer, int size)
+{
+    WaitSema(buffer->sema);
+    buffer->readBytes += size;
+    buffer->totalBytes += size;
+    SignalSema(buffer->sema);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufAddDMA__FP5ViBuf);
 
