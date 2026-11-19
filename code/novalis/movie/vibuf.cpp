@@ -63,7 +63,29 @@ int viBufReset(ViBuf *buffer)
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufBeginPut__FP5ViBufPPUcPiT1T2);
+int viBufBeginPut(ViBuf *buffer, unsigned char **first, int *firstSize, unsigned char **second, int *secondSize)
+{
+    WaitSema(buffer->sema);
+
+    int tagIndex = buffer->dmaN + 2;
+    int position = ((buffer->dmaStart + buffer->dmaN) << VIBUF_BLOCK_SHIFT) + buffer->readBytes;
+    int available = ((buffer->n - tagIndex) << VIBUF_BLOCK_SHIFT) - buffer->readBytes;
+    position %= buffer->buffSize;
+
+    if (buffer->buffSize - position >= available) {
+        *first = (unsigned char *)buffer->data + position;
+        *firstSize = available;
+        *second = 0;
+        *secondSize = 0;
+    } else {
+        *first = (unsigned char *)buffer->data + position;
+        *firstSize = buffer->buffSize - position;
+        *second = (unsigned char *)buffer->data;
+        *secondSize = available - (buffer->buffSize - position);
+    }
+
+    return SignalSema(buffer->sema);
+}
 
 void viBufEndPut(ViBuf *buffer, int size)
 {
