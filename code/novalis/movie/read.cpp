@@ -37,4 +37,27 @@ int videoCallback(sceMpeg *mpeg, sceMpegCbData *data, void *argument)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/read", pcmCallback__FP7sceMpegP16sceMpegCbDataStrPv);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/read", cpy2area__FPUciT0iT0iT0i);
+void *LibcMemcpy(void *destination, const void *source, unsigned int size);
+
+int cpy2area(unsigned char *first, int firstSize, unsigned char *second, int secondSize,
+             unsigned char *source, int sourceSize, unsigned char *wrapped, int wrappedSize)
+{
+    if (firstSize + secondSize < sourceSize + wrappedSize)
+        return 0;
+    if (sourceSize >= firstSize) {
+        LibcMemcpy(first, source, firstSize);
+        LibcMemcpy(second, source + firstSize, sourceSize - firstSize);
+        LibcMemcpy(second + sourceSize - firstSize, wrapped, wrappedSize);
+    } else {
+        int remaining = firstSize - sourceSize;
+        if (wrappedSize >= remaining) {
+            LibcMemcpy(first, source, sourceSize);
+            LibcMemcpy(first + sourceSize, wrapped, remaining);
+            LibcMemcpy(second, wrapped + firstSize - sourceSize, wrappedSize - remaining);
+        } else {
+            LibcMemcpy(first, source, sourceSize);
+            LibcMemcpy(first + sourceSize, wrapped, wrappedSize);
+        }
+    }
+    return sourceSize + wrappedSize;
+}
