@@ -64,7 +64,10 @@ segments:
     align: 4
     subsegments:
     - [0x1000, lit4]
-    - [0x1750, .sdata, game/freeze]  # MediumFontHeight
+    - [0x15a8, .sdata, game/freeze]  # layout values
+    - [0x1604, data]
+    - [0x1668, lit4]
+    - [0x1750, .sdata, game/galaxymap]  # MediumFontHeight
     - [0x1754, lit4]
     - [0x2028, .sdata, game/memcard]  # g_loaderr
     - [0x202c, lit4]
@@ -88,6 +91,7 @@ segments:
     - [0x8580, data]
     - [0x1b990, .data, game/help]  # Help, HelpPairs, not_found
     - [0x1bc50, data]
+    - [0xaab90, .rodata, game/freeze]  # jump tables
     - [0xaace0, .rodata, game/help]  # jump tables
     - [0xaad50, data]
     - [0xabde0, .rodata, game/memcard]
@@ -138,6 +142,7 @@ segments:
     - [0xc2f20, asm, game/fastfunc]
     - [0xc45f8, cpp, game/framebuf]
     - [0xc5730, cpp, game/freeze]
+    - [0xc7368, cpp, game/galaxymap]
     - [0xc7890, cpp, game/help]
     - [0xc8c70, cpp, game/hero]
     - [0xec630, cpp, game/hud]

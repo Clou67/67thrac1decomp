@@ -188,7 +188,7 @@ extern mc_data mc_gamedata[];
 extern mc_data mc_leveldata[];
 extern int g_loaderr;
 
-// What GetSaveDialogRect hands back for the boot WAD's memory card file: the
+// What GetSaveBuffers hands back for the boot WAD's memory card file: the
 // icon.sys, the static icon and a blank whole save, each found by offset.
 struct mc_resource {
     int iconSysOffset;

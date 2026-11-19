@@ -23,6 +23,8 @@ struct MusicTransition {
 extern MusicTransition musicTransition;
 
 void music_Sync(int wait);
+void music_Pause(int fade);
+void music_Unpause(void);
 void music_PlayPreseekedSpeech(void);
 // Nonzero while a music_LoadFile read is still streaming in.
 extern short CdReadActive[];
