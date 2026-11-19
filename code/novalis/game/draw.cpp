@@ -110,7 +110,10 @@ void EnableFontColors(void)
     FontColorsEnabled = 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DisableFontColors);
+void DisableFontColors(void)
+{
+    FontColorsEnabled = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenWithTable);
 

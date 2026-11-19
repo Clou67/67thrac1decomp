@@ -42,4 +42,6 @@ int FontLenLarge(char *text, int length);
 
 void EnableFontColors(void);
 
+void DisableFontColors(void);
+
 #endif
