@@ -7,4 +7,6 @@ int Stash_SendData(void *source, int transferQwords, int reserveQwords, int comm
 
 int Stash_Upload(void *source, unsigned int slot, int offset, int qwords);
 
+int Stash_GetSize(unsigned int slot);
+
 #endif

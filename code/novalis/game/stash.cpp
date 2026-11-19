@@ -74,4 +74,11 @@ int Stash_Upload(void *source, unsigned int slot, int offset, int qwords)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", Stash_Copy);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", Stash_GetSize);
+int Stash_GetSize(unsigned int slot)
+{
+    if (slot >= STASH_SLOT_COUNT)
+        return -3;
+    return StashBlocks[slot].qwords;
+}
+
+TEXT_PADDING(0x00000000, 0x00000000);
