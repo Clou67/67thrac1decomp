@@ -3,7 +3,7 @@
 #include "camera.h"
 #include "fastfunc.h"
 #include "framebuf.h"
-#include "mathinline.h"
+#include "mathfunc_inline.h"
 #include "vuchain.h"
 
 // Each light lists the ties, tfrags and shrubs its sphere (radius + POINT_LIGHT_MARGIN)
@@ -55,7 +55,7 @@ int CreatePointLight3(Vec4 *pos, float radius, float intensity, int rgb)
     light = &PointLights[index];
     data = &PointLightData[index];
 
-    CopyVec4(&light->pos, pos);
+    CopyVec4Inline(&light->pos, pos);
     light->pos.w = radius;
     light->color.x = FastIntToFloat(rgb & 0xFF) * COLOR_CHANNEL_SCALE;
     light->color.y = FastIntToFloat((rgb >> 8) & 0xFF) * COLOR_CHANNEL_SCALE;
@@ -92,7 +92,7 @@ int CreatePointLight2(Vec4 *pos, float radius, float intensity, float red, float
     light = &PointLights[index];
     data = &PointLightData[index];
 
-    CopyVec4(&light->pos, pos);
+    CopyVec4Inline(&light->pos, pos);
     light->pos.w = radius;
     light->color.x = red;
     light->color.y = green;
@@ -141,7 +141,7 @@ void UpdatePointLights(void)
         }
 
         if (FastVec3Dist(&light->pos, &data->update_pos) > POINT_LIGHT_MARGIN) {
-            CopyVec4(&data->update_pos, &light->pos);
+            CopyVec4Inline(&data->update_pos, &light->pos);
             if (data->state == POINT_LIGHT_CREATED) {
                 CreatePointLight(index);
                 data->state = POINT_LIGHT_ATTACHED;
