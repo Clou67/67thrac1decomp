@@ -1,4 +1,5 @@
 #include "common.h"
+#include "mobyutil.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DropAmmo);
 
@@ -144,7 +145,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_updateJump)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_002705A0);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", Lerp);
+float Lerp(float from, float to, float weight)
+{
+    return from + (to - from) * weight;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", Lerp_vec4);
 
