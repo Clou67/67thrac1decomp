@@ -1,4 +1,5 @@
 #include "common.h"
+#include "draw.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ScreenPosFromWorldSpace);
 
@@ -108,7 +109,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DisableFontColors)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenWithTable);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLen);
+int FontLenWithTable(char *text, int length, unsigned char *metrics);
+extern unsigned char FontNormalMetrics[];
+
+int FontLen(char *text, int length)
+{
+    return FontLenWithTable(text, length, FontNormalMetrics);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenSmall);
 

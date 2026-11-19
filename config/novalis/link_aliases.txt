@@ -186,7 +186,6 @@ FastScaleRoundInt__Fi = 0x00220E30;
 FastVec3Length__FPf = 0x00221318;
 FlipAndExploreTimersVU1__Fi = 0x0021AC60;
 FinalizeVU1FramePacketChain__Fv = 0x0021AD78;
-FontLen__FPci = 0x0021CC90;
 FontPrintMediumLeft__FiiUlPci = 0x0021CF70;
 HudTex_GetFrame__Fii = 0x0024FE10;
 Hud_DrawTexQuad__Fiiiiii = 0x002500E0;
@@ -301,3 +300,5 @@ Camera_resetToFollow__Fv = 0x0020EE80;
 viBufCreate__FP5ViBufPUxT1iP9TimeStampi = 0x0031BAF0;
 
 setImageTag__FPA1_UiP6VoDataii = 0x0031B0B8;
+
+FontLenWithTable__FPciPUc = 0x0021CC40;

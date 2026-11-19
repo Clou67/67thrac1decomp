@@ -34,4 +34,6 @@ extern DrawConfig drawConfig;
 void InitViewContext(void);
 void UpdateViewContext(void);
 
+int FontLen(char *text, int length);
+
 #endif
