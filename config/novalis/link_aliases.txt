@@ -238,7 +238,6 @@ printf_stub3__FPCce = 0x002189A0;
 BuildGifTextureDma__Fv = 0x00261778;
 gsTextureAllocation = 0x0015EE74;
 FastMtx4Identity__FPf = 0x002218F8;
-FastVecZero__FP4Vec4 = 0x00221170;
 SkyBsphereCheck__FP10SkyClusteriPUc = 0x002A00B0;
 SprDmaToSpr_Start__FPviT0 = 0x00261690;
 SprDmaToSpr_Wait__Fv = 0x002616B0;

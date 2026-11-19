@@ -38,7 +38,6 @@ void DoSkyGifPaging(void);
 // Per-level sky setup.
 void SkyLevelNone(void);
 void SkyLevel_01(void);
-void SkySpace(void);
 
 void InitSky(void);
 
