@@ -1,13 +1,49 @@
-#include "common.h"
+#include "readbuf.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufCreate__FP7ReadBuf);
+void readBufCreate(ReadBuf *buffer)
+{
+    buffer->capacity = READ_BUF_CAPACITY;
+    buffer->put_pos = 0;
+    buffer->count = 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufDelete__FP7ReadBuf);
+void readBufDelete(ReadBuf *buffer)
+{
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufBeginPut__FP7ReadBufPPUc);
+int readBufBeginPut(ReadBuf *buffer, unsigned char **destination)
+{
+    int free_space = buffer->capacity - buffer->count;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufEndPut__FP7ReadBufi);
+    if (free_space != 0)
+        *destination = buffer->data + buffer->put_pos;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufBeginGet__FP7ReadBufPPUc);
+    return free_space;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufEndGet__FP7ReadBufi);
+void readBufEndPut(ReadBuf *buffer, int size)
+{
+    int free_space = buffer->capacity - buffer->count;
+    int written = size < free_space ? size : free_space;
+
+    buffer->put_pos = (buffer->put_pos + written) % buffer->capacity;
+    buffer->count += written;
+}
+
+int readBufBeginGet(ReadBuf *buffer, unsigned char **source)
+{
+    if (buffer->count != 0) {
+        int get_pos = (buffer->put_pos - buffer->count + buffer->capacity) % buffer->capacity;
+        *source = buffer->data + get_pos;
+    }
+
+    return buffer->count;
+}
+
+int readBufEndGet(ReadBuf *buffer, int size)
+{
+    int consumed = size < buffer->count ? size : buffer->count;
+    buffer->count -= consumed;
+
+    return consumed;
+}
