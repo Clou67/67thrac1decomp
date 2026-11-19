@@ -89,7 +89,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_LoadFileSyn
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Sync);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_LoadBankCB);
+int snd_StreamSafeCdGetError(void);
+enum { MUSIC_READ_COMPLETE = 1, MUSIC_READ_IDLE = 0, MUSIC_READ_FAILED = 2 };
+
+void music_LoadBankCB(int reason)
+{
+    if (reason == MUSIC_READ_COMPLETE) {
+        musicTransition.read_state = MUSIC_READ_IDLE;
+        if (snd_StreamSafeCdGetError() != 0)
+            musicTransition.read_state = MUSIC_READ_FAILED;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AD88);
 
