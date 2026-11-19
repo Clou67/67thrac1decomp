@@ -123,3 +123,4 @@ Rules:
 - Supporting changes (new headers, struct fields, global names, symbol renames) go in the same commit as the function that needs them, or in their own short commit (`add framebuf header`, `rename currentLevelId to Level`).
 - Never commit a symbol rename for a function that is still `INCLUDE_ASM`; the split depends on those names.
 - Work on one branch per source file. Pull requests are opened by the maintainer, not by agents.
+- At the end of every session, before the maintainer merges, run `python3 tools/progress.py` (after `make split-novalis`) and commit the updated `README.md` as `update progress`.
