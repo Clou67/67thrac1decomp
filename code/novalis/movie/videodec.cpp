@@ -81,7 +81,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecMain_
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", decBs0__FP8VideoDec);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", mpegError__FP7sceMpegP18sceMpegCbDataErrorPv);
+extern const char videoErrorMessage[];
+void printf_stub(const char *format, ...);
+
+int mpegError(sceMpeg *mpeg, sceMpegCbDataError *data, void *argument)
+{
+    printf_stub(videoErrorMessage, data->message);
+    return 1;
+}
 
 int mpegNodata(sceMpeg *mpeg, sceMpegCbData *data, void *argument)
 {

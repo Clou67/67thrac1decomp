@@ -7,6 +7,11 @@ struct ReadBuf;
 struct sceMpeg;
 struct sceMpegCbData;
 
+struct sceMpegCbDataError {
+    int type;
+    char *message;
+};
+
 struct sceDmaChan {
     unsigned int chcr;
 };

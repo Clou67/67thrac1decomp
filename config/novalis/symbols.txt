@@ -2198,3 +2198,5 @@ LiveMobyVars = 0x001BAAA0;
 StashState = 0x001C1720;
 StashBlocks = 0x001C1758;
 StashClient = 0x001C1728;
+
+videoErrorMessage = 0x00161360;
