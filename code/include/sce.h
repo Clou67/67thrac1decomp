@@ -19,6 +19,13 @@ struct sceGsStoreImage {
 // libgraph register images (Sony libgraph.h layouts).
 typedef unsigned int u_long128 __attribute__((mode(TI)));
 
+struct SifDmaTransfer {
+    void *source;
+    void *destination;
+    int size;
+    int attributes;
+};
+
 struct sceCdRMode {
     unsigned char trycount;
     unsigned char spindlctrl;
@@ -129,6 +136,8 @@ int sceCdSync(int mode);
 int sceCdReadClock(sceCdCLOCK *clock);
 int sceScfGetLocalTimefromRTC(sceCdCLOCK *clock);
 void FlushCache(int operation);
+int sceSifSetDma(SifDmaTransfer *transfer, int count);
+int sceSifDmaStat(int id);
 int DIntr(void);
 int EIntr(void);
 

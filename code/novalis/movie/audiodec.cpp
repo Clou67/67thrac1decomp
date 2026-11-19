@@ -1,6 +1,7 @@
 #include "audiodec.h"
 #include "common.h"
 #include "framebuf.h"
+#include "sce.h"
 
 extern unsigned char *movieAdpcmStagingBuffer;
 
@@ -13,6 +14,8 @@ void snd_StartMovieSound(int iop_buffer, int buffer_size, int iop_offset, int ra
 void snd_ResetMovieSound(void);
 
 void sendADPCM(_AudioDec *decoder);
+
+void snd_UpdateMovieADPCM(int size, int offset);
 
 enum {
     ADPCM_BLOCK_SIZE = 0x400,
@@ -152,6 +155,25 @@ void audioDecSend(_AudioDec *decoder)
         sendADPCM(decoder);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", sendToSPU__FP9_AudioDecPUcii);
+void sendToSPU(_AudioDec *decoder, unsigned char *source, int size, int offset)
+{
+    SifDmaTransfer transfer;
+    int dma_id;
+
+    FlushCache(0);
+    transfer.source = source;
+    transfer.destination = (void *)decoder->iopBuff;
+    transfer.size = size;
+    transfer.attributes = 0;
+
+    do {
+        dma_id = sceSifSetDma(&transfer, 1);
+    } while (dma_id == 0);
+
+    while (sceSifDmaStat(dma_id) >= 0) {
+    }
+
+    snd_UpdateMovieADPCM(size, offset);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", sendADPCM__FP9_AudioDec);
