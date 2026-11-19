@@ -97,7 +97,40 @@ void viBufEndPut(ViBuf *buffer, int size)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufAddDMA__FP5ViBuf);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufStopDMA__FP5ViBuf);
+void setD3_CHCR(unsigned int value);
+
+enum {
+    IPU_INPUT_DMA_MADR = 0x1000B010,
+    IPU_INPUT_DMA_QWC = 0x1000B020,
+    IPU_INPUT_DMA_CHCR = 0x1000B000,
+    IPU_OUTPUT_DMA_CHCR = 0x1000B400,
+    IPU_CONTROL = 0x10002010,
+    IPU_TOP = 0x10002020,
+    IPU_CONTROL_FIFO_MASK = 0xF0
+};
+
+int viBufStopDMA(ViBuf *buffer)
+{
+    WaitSema(buffer->sema);
+    buffer->isActive = 0;
+
+    setD4_CHCR(IPU_OUTPUT_DMA_IDLE_CHCR);
+    buffer->d4madr = *(volatile unsigned int *)IPU_OUTPUT_DMA_MADR;
+    buffer->d4tadr = *(volatile unsigned int *)IPU_OUTPUT_DMA_TADR;
+    buffer->d4qwc = *(volatile unsigned int *)IPU_OUTPUT_DMA_QWC;
+    buffer->d4chcr = *(volatile unsigned int *)IPU_OUTPUT_DMA_CHCR;
+    while (*(volatile unsigned int *)IPU_CONTROL & IPU_CONTROL_FIFO_MASK) {
+    }
+
+    setD3_CHCR(0);
+    buffer->d3madr = *(volatile unsigned int *)IPU_INPUT_DMA_MADR;
+    buffer->d3qwc = *(volatile unsigned int *)IPU_INPUT_DMA_QWC;
+    buffer->d3chcr = *(volatile unsigned int *)IPU_INPUT_DMA_CHCR;
+    buffer->ipubp = *(volatile unsigned int *)IPU_TOP;
+    buffer->ipuctrl = *(volatile unsigned int *)IPU_CONTROL;
+    SignalSema(buffer->sema);
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufRestartDMA__FP5ViBuf);
 
