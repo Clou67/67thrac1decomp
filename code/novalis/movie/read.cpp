@@ -35,7 +35,29 @@ int videoCallback(sceMpeg *mpeg, sceMpegCbData *data, void *argument)
     return copied > 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/read", pcmCallback__FP7sceMpegP16sceMpegCbDataStrPv);
+int pcmCallback(sceMpeg *mpeg, sceMpegCbDataStr *stream, void *argument)
+{
+    const int prefixSize = 4;
+    ReadBuf *buffer = (ReadBuf *)argument;
+    unsigned char *first;
+    int firstLength;
+    unsigned char *second;
+    int secondLength;
+    int total = stream->length - prefixSize;
+    unsigned char *source = stream->data + prefixSize;
+    unsigned char *end = buffer->data + buffer->capacity;
+    if (source >= end)
+        source -= buffer->capacity;
+    int firstSize = end - source;
+    if (total < firstSize)
+        firstSize = total;
+    int remaining = total - firstSize;
+    audioDecBeginPut(&moviePlayer->audio_dec, &first, &firstLength, &second, &secondLength);
+    int copied = cpy2area(first, firstLength, second, secondLength,
+                         source, firstSize, buffer->data, remaining);
+    audioDecEndPut(&moviePlayer->audio_dec, copied);
+    return copied > 0;
+}
 
 void *LibcMemcpy(void *destination, const void *source, unsigned int size);
 
