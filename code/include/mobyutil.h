@@ -8,4 +8,8 @@ void MB_UnlockItem(int item, char equip);
 
 float Lerp(float from, float to, float weight);
 
+struct MobyInstance;
+
+void MB_SetZBoundsFromPos(MobyInstance *moby, float z);
+
 #endif

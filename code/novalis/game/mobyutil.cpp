@@ -1,4 +1,5 @@
 #include "common.h"
+#include "moby.h"
 #include "mobyutil.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DropAmmo);
@@ -117,7 +118,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RegisterLam
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026EFF0);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetZBoundsFromPos);
+void MB_SetZBoundsFromPos(MobyInstance *moby, float z)
+{
+    const float padding = 0.2f;
+    moby->zMin = z - padding;
+    moby->zMax = z + padding;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetZBoundsFromGround);
 

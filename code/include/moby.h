@@ -85,8 +85,8 @@ struct MobyInstance {
     char trigsCnt;
     char shadow;
     int colorManipulator;
-    int unk84;
-    int unk88;
+    float zMin;
+    float zMax;
     char unk8C[4];
     unsigned int glowRgba;
     unsigned short *collision;
