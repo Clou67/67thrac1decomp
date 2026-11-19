@@ -5,65 +5,8 @@
 #include "readbuf.h"
 #include "sce.h"
 #include "strfile.h"
+#include "videodec.h"
 #include "vobuf.h"
-
-struct MpegDecoder;
-struct sceMpegCbData;
-
-struct sceMpeg {
-    int width;
-    int height;
-    int frameCount;
-    long long pts;
-    long long dts;
-    unsigned long flags;
-    long long pts2nd;
-    long long dts2nd;
-    unsigned long flags2nd;
-    MpegDecoder *sys;
-};
-
-struct TimeStamp {
-    long long pts;
-    long long dts;
-    int pos;
-    int len;
-};
-
-struct ViBuf {
-    u_long128 *data;
-    u_long128 *tag;
-    int n;
-    int dmaStart;
-    int dmaN;
-    int readBytes;
-    int buffSize;
-    unsigned int d4madr;
-    unsigned int d4tadr;
-    unsigned int d4qwc;
-    unsigned int d4chcr;
-    unsigned int d3madr;
-    unsigned int d3qwc;
-    unsigned int d3chcr;
-    unsigned int ipubp;
-    unsigned int ipuctrl;
-    int sema;
-    int isActive;
-    long long totalBytes;
-    TimeStamp *ts;
-    int n_ts;
-    int count_ts;
-    int wt_ts;
-};
-
-struct VideoDec {
-    sceMpeg mpeg;
-    ViBuf vibuf;
-    unsigned int state;
-    int sema;
-    int hid_endimage;
-    int hid_vblank;
-};
 
 enum {
     MOVIE_INPUT_SECTOR_SIZE = 0x800,
@@ -87,10 +30,33 @@ struct MoviePlayer {
     VoBuf vo_buf;
 };
 
+// Layout of the decoder buffer passed to playMpegMovie.
+struct MovieDecoderMemory {
+    VoData output_frames[2];
+    VoTag output_tags[2];
+    u_long128 input_tags[MOVIE_INPUT_SECTORS + 1];
+    unsigned char adpcm_staging[0x400];
+    unsigned char unk_1c8590[0x30];
+    unsigned char mpeg_work[0xEB768];
+};
+
 extern MoviePlayer *moviePlayer;
 extern unsigned char *movieDecoderBuffer;
 extern int movieDecoderThread;
 
+// How the movie can be skipped: MOVIE_SKIP_DISABLED, 0 for Start only, or MOVIE_SKIP_ANY_BUTTON.
+// Sampled again when checking whether Start is allowed.
+extern volatile int decodeMode;
+extern int movieSkipEnabled;
+extern const char movieOpenError[];
+
 int playMpegMovie(int sector, int size, unsigned char *decoder_buffer, MoviePlayer *player, int language);
+int readMpeg(VideoDec *decoder, ReadBuf *buffer, StrFile *file);
+void switchThread(void);
+int isAudioOK(void);
+int initAll(int sector, int size, int language);
+void termAll(void);
+void ErrMessage(char *message);
+void proceedAudio(void);
 
 #endif

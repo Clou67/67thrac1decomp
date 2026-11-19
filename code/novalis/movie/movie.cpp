@@ -1,21 +1,49 @@
 #include "common.h"
 #include "movie.h"
+#include "disp.h"
+#include "memcard.h"
 #include "pad.h"
+#include "read.h"
 #include "sound.h"
+#include "vuchain.h"
 
-int initAll(int sector, int size, int language);
-int readMpeg(VideoDec *decoder, ReadBuf *buffer, StrFile *file);
-void termAll(void);
-void printf_stub(const char *format, ...);
-int videoDecDelete(VideoDec *decoder);
+#define MOVIE_THREAD_PRIORITY 1
+#define MOVIE_VBLANK_INTERRUPT 2
+#define MOVIE_GIF_DMA_CHANNEL 2
 
-enum {
-    MOVIE_THREAD_PRIORITY = 1,
-    MOVIE_VBLANK_INTERRUPT = 2,
-    MOVIE_GIF_DMA_CHANNEL = 2,
-    DMA_CONTROL_ADDRESS = 0x1000E000,
-    DMA_CONTROL_RELEASE = 2
-};
+// DMA controller registers: D_CTRL (bit 0 enables DMA, DMA_CONTROL_RELEASE releases the
+// cycle-stealing hold) and D_STAT (writing a channel's bit acknowledges it).
+#define DMA_CONTROL_ADDRESS 0x1000E000
+#define DMA_STATUS_ADDRESS 0x1000E010
+#define DMA_CONTROL_RELEASE 2
+
+#define MOVIE_SKIP_DISABLED -1
+#define MOVIE_SKIP_ANY_BUTTON 2
+#define MOVIE_DECODER_END 3
+#define MOVIE_READ_SIZE 0x10000
+#define MOVIE_MIN_DEMUX_SIZE 5
+#define MOVIE_SOUND_GROUP 5
+
+// The decoder buffer, re-read from the global each time it is used.
+#define DECODER_MEMORY ((MovieDecoderMemory *)movieDecoderBuffer)
+
+// Address of the same memory through the uncached segment.
+#define UNCACHED_ADDRESS(address) (((unsigned int)(address) & 0x0FFFFFFF) | 0x20000000)
+
+static inline int movieButtonPressed(PAD *pad, int mask)
+{
+    return pad->bitsOn & mask;
+}
+
+// Reads bits and bitsOn as one 64-bit word: the held buttons in the low half and the
+// newly pressed ones in the high half, so the chord is "hold L1+L2+R1+R2, press Start".
+static inline int movieSkipChord(PAD *pad, unsigned long mask)
+{
+    if ((*(unsigned long *)&pad->bits & mask) != mask)
+        return 0;
+
+    return 1;
+}
 
 int playMpegMovie(int sector, int size, unsigned char *decoder_buffer, MoviePlayer *player, int language)
 {
@@ -31,52 +59,6 @@ int playMpegMovie(int sector, int size, unsigned char *decoder_buffer, MoviePlay
     moviePlayer = 0;
 
     return 0;
-}
-
-enum {
-    MOVIE_SKIP_DISABLED = -1,
-    MOVIE_SKIP_ANY_BUTTON = 2,
-    MOVIE_DECODER_END = 3,
-    MOVIE_READ_SIZE = 0x10000,
-    MOVIE_MIN_DEMUX_SIZE = 5,
-    MOVIE_SOUND_GROUP = 5
-};
-
-// The skip mode is sampled again when checking whether Start is allowed.
-extern volatile int decodeMode;
-extern int movieSkipEnabled;
-extern int ChallengeMode;
-extern int Level;
-
-struct MovieAudioState {
-    unsigned char unk_00[0x48];
-    int group_volume[6];
-};
-extern MovieAudioState audioState;
-
-void UpdatePad(void);
-void switchThread(void);
-int isAudioOK(void);
-void proceedAudio(void);
-int videoDecAbort(VideoDec *decoder);
-unsigned int videoDecGetState(VideoDec *decoder);
-int videoDecFlush(VideoDec *decoder);
-int videoDecIsFlushed(VideoDec *decoder);
-void startDisplay(int wait);
-void endDisplay(void);
-void snd_SetMasterVolume(int group, int volume);
-
-static inline int movieButtonPressed(PAD *pad, int mask)
-{
-    return pad->bitsOn & mask;
-}
-
-static inline int movieSkipChord(PAD *pad, unsigned long mask)
-{
-    if ((*(unsigned long *)&pad->bits & mask) != mask)
-        return 0;
-
-    return 1;
 }
 
 int readMpeg(VideoDec *decoder, ReadBuf *buffer, StrFile *file)
@@ -171,57 +153,34 @@ int isAudioOK(void)
     return audioDecIsPageFull(&moviePlayer->audio_dec);
 }
 
-struct MovieDecoderMemory {
-    VoData output_frames[2];
-    VoTag output_tags[2];
-    u_long128 input_tags[MOVIE_INPUT_SECTORS + 1];
-    unsigned char adpcm_staging[0x400];
-    unsigned char unk_1c8590[0x30];
-    unsigned char mpeg_work[0xEB768];
-};
-
-struct sceMpegCbDataStr;
-typedef int (*MpegStreamCallback)(sceMpeg *, sceMpegCbData *, void *);
-
-int videoDecCreate(VideoDec *decoder, unsigned char *work, int work_size, unsigned long long *input,
-                   unsigned long long *tags, int sectors, TimeStamp *timestamps, int timestamp_count);
-int videoDecSetStream(VideoDec *decoder, int type, int channel, MpegStreamCallback callback, void *argument);
-int videoCallback(sceMpeg *mpeg, sceMpegCbData *event, void *argument);
-int pcmCallback(sceMpeg *mpeg, sceMpegCbDataStr *event, void *argument);
-void videoDecMain(void *argument);
-int vblankHandler(int cause);
-int handler_endimage(int channel);
-extern int _gp;
-extern const char movieOpenError[];
-
 int initAll(int sector, int size, int language)
 {
     const unsigned int dma_enable = 1;
     const unsigned int gif_acknowledge = 1 << MOVIE_GIF_DMA_CHANNEL;
     volatile unsigned int *const dma_control = (volatile unsigned int *)DMA_CONTROL_ADDRESS;
-    volatile unsigned int *const dma_status = (volatile unsigned int *)0x1000E010;
+    volatile unsigned int *const dma_status = (volatile unsigned int *)DMA_STATUS_ADDRESS;
     EeThreadParams thread;
     int opened;
 
     *dma_control |= dma_enable | DMA_CONTROL_RELEASE;
     *dma_status = gif_acknowledge;
+
     readBufCreate(&moviePlayer->read_buf);
     sceMpegInit();
 
-    videoDecCreate(&moviePlayer->video_dec, ((MovieDecoderMemory *)movieDecoderBuffer)->mpeg_work,
-                   sizeof(((MovieDecoderMemory *)movieDecoderBuffer)->mpeg_work),
+    videoDecCreate(&moviePlayer->video_dec, DECODER_MEMORY->mpeg_work,
+                   sizeof(DECODER_MEMORY->mpeg_work),
                    (unsigned long long *)moviePlayer->vi_buf_data,
-                   (unsigned long long *)((MovieDecoderMemory *)movieDecoderBuffer)->input_tags, MOVIE_INPUT_SECTORS,
+                   (unsigned long long *)DECODER_MEMORY->input_tags, MOVIE_INPUT_SECTORS,
                    moviePlayer->vi_buf_ts, MOVIE_TIMESTAMP_COUNT);
     audioDecCreate(&moviePlayer->audio_dec, moviePlayer->audio_buf, MOVIE_AUDIO_BUFFER_SIZE,
-                   ((MovieDecoderMemory *)movieDecoderBuffer)->adpcm_staging);
+                   DECODER_MEMORY->adpcm_staging);
     videoDecSetStream(&moviePlayer->video_dec, sceMpegStrM2V, 0, videoCallback, &moviePlayer->read_buf);
     videoDecSetStream(&moviePlayer->video_dec, sceMpegStrADPCM, language,
                       (MpegStreamCallback)pcmCallback, &moviePlayer->read_buf);
 
-    voBufCreate(&moviePlayer->vo_buf,
-                (VoData *)(((unsigned int)((MovieDecoderMemory *)movieDecoderBuffer)->output_frames & 0x0FFFFFFF) | 0x20000000),
-                ((MovieDecoderMemory *)movieDecoderBuffer)->output_tags, sizeof(((MovieDecoderMemory *)movieDecoderBuffer)->output_frames) / sizeof(VoData));
+    voBufCreate(&moviePlayer->vo_buf, (VoData *)UNCACHED_ADDRESS(DECODER_MEMORY->output_frames),
+                DECODER_MEMORY->output_tags, sizeof(DECODER_MEMORY->output_frames) / sizeof(VoData));
 
     thread.stack = moviePlayer->decoder_stack;
     thread.entry = videoDecMain;
@@ -229,6 +188,7 @@ int initAll(int sector, int size, int language)
     thread.priority = MOVIE_THREAD_PRIORITY;
     thread.gp = &_gp;
     thread.option = 0;
+
     int thread_id = CreateThread(&thread);
     movieDecoderThread = thread_id;
     _StartThread(thread_id, &moviePlayer->video_dec);
@@ -236,9 +196,7 @@ int initAll(int sector, int size, int language)
     if (!strFileBegin(&moviePlayer->str_file, sector, size)) {
         opened = 0;
         printf_stub(movieOpenError);
-    }
-
-    else {
+    } else {
         opened = 1;
     }
 

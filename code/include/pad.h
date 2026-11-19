@@ -10,6 +10,8 @@ struct PAD {
 
 extern PAD padState;
 
+void UpdatePad(void);
+
 #define PAD_L2 0x0001
 #define PAD_R2 0x0002
 #define PAD_L1 0x0004

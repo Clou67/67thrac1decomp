@@ -171,6 +171,9 @@ int EnableDmac(int channel);
 int DisableDmac(int channel);
 }
 
+// Global pointer value, set by the linker.
+extern int _gp;
+
 // EE kernel thread descriptor.
 struct EeThreadParams {
     int status;
