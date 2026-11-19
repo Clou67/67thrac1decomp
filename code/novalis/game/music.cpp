@@ -3,7 +3,13 @@
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Init);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_RegisterBankCB);
+void snd_StreamSafeCdCallback(void (*callback)(int reason));
+void music_LoadBankCB(int reason);
+
+void music_RegisterBankCB(void)
+{
+    snd_StreamSafeCdCallback(music_LoadBankCB);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StartSpeech_Helpgirl);
 
