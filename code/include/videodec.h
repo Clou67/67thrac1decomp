@@ -113,4 +113,8 @@ int mpegStopVideoDMA(void);
 
 int viBufStopDMA(ViBuf *buffer);
 
+int mpegTimeStamp(sceMpeg *mpeg, sceMpegCbDataTimeStamp *data, void *argument);
+
+int viBufGetTs(ViBuf *buffer, TimeStamp *timestamp);
+
 #endif

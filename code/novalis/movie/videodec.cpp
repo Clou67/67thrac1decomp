@@ -109,4 +109,11 @@ int mpegRestartVideoDMA(void)
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", FUN_0031cfe8);
+int mpegTimeStamp(sceMpeg *mpeg, sceMpegCbDataTimeStamp *data, void *argument)
+{
+    TimeStamp timestamp;
+    viBufGetTs(&moviePlayer->video_dec.vibuf, &timestamp);
+    data->pts = timestamp.pts;
+    data->dts = timestamp.dts;
+    return 1;
+}

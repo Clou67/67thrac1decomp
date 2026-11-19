@@ -7,6 +7,12 @@ struct ReadBuf;
 struct sceMpeg;
 struct sceMpegCbData;
 
+struct sceMpegCbDataTimeStamp {
+    int type;
+    long pts;
+    long dts;
+};
+
 struct sceMpegCbDataError {
     int type;
     char *message;
