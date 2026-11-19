@@ -19,6 +19,13 @@ struct sceGsStoreImage {
 // libgraph register images (Sony libgraph.h layouts).
 typedef unsigned int u_long128 __attribute__((mode(TI)));
 
+struct sceCdRMode {
+    unsigned char trycount;
+    unsigned char spindlctrl;
+    unsigned char datapattern;
+    unsigned char pad;
+};
+
 struct sceCdCLOCK {
     unsigned char stat;
     unsigned char second;
@@ -117,6 +124,8 @@ struct sceGifTag {
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
 extern "C" {
+int sceCdRead(unsigned int sector, unsigned int sectors, void *destination, sceCdRMode *mode);
+int sceCdSync(int mode);
 int sceCdReadClock(sceCdCLOCK *clock);
 int sceScfGetLocalTimefromRTC(sceCdCLOCK *clock);
 void FlushCache(int operation);
