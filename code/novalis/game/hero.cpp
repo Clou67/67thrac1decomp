@@ -205,7 +205,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetPadMagnitu
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_AnimFrameInWindow);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ZeroThrustVars);
+void Hero_ZeroThrustVars(void)
+{
+    Hero.idealSpeed = 0.0f;
+    Hero.storedNeutralSpeed = 0.0f;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetIdealThrustFromPad);
 

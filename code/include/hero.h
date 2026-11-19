@@ -362,4 +362,6 @@ void Hero_HideHeroMoby(void);
 
 void Hero_ShowHeroMoby(void);
 
+void Hero_ZeroThrustVars(void);
+
 #endif
