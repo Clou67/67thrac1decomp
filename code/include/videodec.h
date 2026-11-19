@@ -123,4 +123,10 @@ int viBufReset(ViBuf *buffer);
 
 int decBs0(VideoDec *decoder);
 
+int viBufFlush(ViBuf *buffer);
+
+// Copies the source bytes into the free space of a two-part ring buffer, returning the number of bytes written.
+int cpy2area(unsigned char *first, int firstSize, unsigned char *second, int secondSize,
+             unsigned char *source, int sourceSize, unsigned char *unused, int unusedSize);
+
 #endif

@@ -87,7 +87,40 @@ int videoDecInputCount(VideoDec *decoder)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CBA8);
 
+#ifdef ALLOW_NON_MATCHING
+enum {
+    MPEG_PHYSICAL_ADDRESS_MASK = 0x0FFFFFFF,
+    MPEG_UNCACHED_ACCELERATED_BASE = 0x20000000,
+    VIDEO_DECODER_FLUSHING = 2
+};
+
+int videoDecFlush(VideoDec *decoder)
+{
+    unsigned char sequenceEnd[4] = { 0x00, 0x00, 0x01, 0xB7 };
+    unsigned char *first;
+    int firstSize;
+    unsigned char *second;
+    int secondSize;
+
+    videoDecBeginPut(decoder, &first, &firstSize, &second, &secondSize);
+
+    if (firstSize + secondSize < (int)sizeof(sequenceEnd))
+        return 0;
+
+    int copied = cpy2area((unsigned char *)(((unsigned int)first & MPEG_PHYSICAL_ADDRESS_MASK) | MPEG_UNCACHED_ACCELERATED_BASE),
+                          firstSize,
+                          (unsigned char *)(((unsigned int)second & MPEG_PHYSICAL_ADDRESS_MASK) | MPEG_UNCACHED_ACCELERATED_BASE),
+                          secondSize, sequenceEnd, sizeof(sequenceEnd), 0, 0);
+    videoDecEndPut(&moviePlayer->video_dec, copied);
+    viBufFlush(&decoder->vibuf);
+
+    if (decoder->state == 0)
+        decoder->state = VIDEO_DECODER_FLUSHING;
+    return 1;
+}
+#else
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecFlush__FP8VideoDec);
+#endif
 
 int videoDecIsFlushed(VideoDec *decoder)
 {
