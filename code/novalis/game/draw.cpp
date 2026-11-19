@@ -103,7 +103,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawTextShadow);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawRoundedRect);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", EnableFontColors);
+extern int FontColorsEnabled;
+
+void EnableFontColors(void)
+{
+    FontColorsEnabled = 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DisableFontColors);
 

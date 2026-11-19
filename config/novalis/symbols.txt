@@ -253,7 +253,7 @@ DrawSpriteFont = 0x0021C248; // type:func size:0x2A8
 Sprite_DrawRotated = 0x0021C4F0; // type:func size:0x45C
 DrawTextShadow = 0x0021C958; // type:func size:0x144
 DrawRoundedRect = 0x0021CAA0; // type:func size:0x184
-EnableFontColors = 0x0021CC28; // type:func size:0xC
+EnableFontColors__Fv = 0x0021CC28; // type:func size:0xC
 DisableFontColors = 0x0021CC38; // type:func size:0x8
 FontLenWithTable = 0x0021CC40; // type:func size:0x50
 FontLen__FPci = 0x0021CC90; // type:func size:0x20
@@ -2208,3 +2208,5 @@ decodePictureErrorMessage = 0x0020A7C0;
 FontSmallMetrics = 0x001C3970;
 
 FontLargeMetrics = 0x001C3D10;
+
+FontColorsEnabled = 0x0015F45C; // size:0x4

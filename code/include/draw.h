@@ -40,4 +40,6 @@ int FontLenSmall(char *text, int length);
 
 int FontLenLarge(char *text, int length);
 
+void EnableFontColors(void);
+
 #endif
