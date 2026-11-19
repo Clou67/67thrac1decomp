@@ -115,7 +115,29 @@ void audioDecBeginPut(_AudioDec *decoder, unsigned char **first, int *first_size
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecEndPut__FP9_AudioDeci);
+void audioDecEndPut(_AudioDec *decoder, int size)
+{
+    if (decoder->state == AUDIO_DEC_HEADER_PENDING) {
+        if (decoder->type != sceMpegStrDATA) {
+            int header_space = STREAM_HEADER_SIZE - decoder->hdrCount;
+            int header_bytes = header_space < size ? header_space : size;
+            decoder->hdrCount += header_bytes;
+            if (decoder->hdrCount >= STREAM_HEADER_SIZE)
+                decoder->state = AUDIO_DEC_PRESET;
+
+            size -= header_bytes;
+        }
+
+        else {
+            decoder->state = AUDIO_DEC_PRESET;
+        }
+    }
+
+    decoder->size = decoder->size / ADPCM_BLOCK_SIZE * ADPCM_BLOCK_SIZE;
+    decoder->put = (decoder->put + size) % decoder->size;
+    decoder->count += size;
+    decoder->totalBytes += size;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecIsPageFull);
 
