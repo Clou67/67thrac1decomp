@@ -667,3 +667,7 @@ LevelObjectStates = 0x0013D5B0;
 ItemFlags = 0x0013D388;
 skyGouraudSetup = 0x0013D0F0; // size:0x70
 skyTexturedSetup = 0x0013D160; // size:0x70
+
+BoltSources = 0x0014D590;
+
+LevelCheckpointBits = 0x0014C190;

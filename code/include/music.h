@@ -4,7 +4,11 @@
 struct MusicTransition {
     char unk0[0x1C];
     int unk1C;
-    char unk20[0x30];
+    char unk20[2];
+    signed char requested_track;
+    char unk23[0x15];
+    short primary_track;
+    char unk3A[0x16];
     int unk50;
     short speechId;
     short unk56;

@@ -10,6 +10,12 @@ void snd_SetMasterVolume(int group, int volume);
 struct SoundAudioState {
     unsigned char unk_00[0x48];
     int group_volume[6];
+    int reverb_owner;
+    int reverb_depth;
+    unsigned char reverb_type;
+    unsigned char reverb_delay;
+    unsigned char reverb_feedback;
+    unsigned char reverb_commands;
 };
 
 extern SoundAudioState audioState;
