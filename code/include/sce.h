@@ -129,6 +129,8 @@ int sceCdSync(int mode);
 int sceCdReadClock(sceCdCLOCK *clock);
 int sceScfGetLocalTimefromRTC(sceCdCLOCK *clock);
 void FlushCache(int operation);
+int DIntr(void);
+int EIntr(void);
 
 sceDmaChan *sceDmaGetChan(int channel);
 void sceDmaSend(sceDmaChan *channel, void *tag);

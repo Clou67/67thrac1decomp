@@ -1,19 +1,71 @@
-#include "common.h"
+#include "sce.h"
+#include "vobuf.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufCreate__FP5VoBufP6VoDataP5VoTagi);
+enum {
+    VO_TAG_EMPTY = 0,
+    VO_TAG_FILLED = 2
+};
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufDelete__FP5VoBuf);
+void voBufCreate(VoBuf *buffer, VoData *data, VoTag *tag, int size)
+{
+    buffer->count = 0;
+    buffer->data = data;
+    buffer->tag = tag;
+    buffer->size = size;
+    buffer->write = 0;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufReset__FP5VoBuf);
+    for (int slot = 0; slot < size; slot++)
+        buffer->tag[slot].status = VO_TAG_EMPTY;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIsFull__FP5VoBuf);
+void voBufDelete(VoBuf *buffer)
+{
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIncCount__FP5VoBuf);
+void voBufReset(VoBuf *buffer)
+{
+    buffer->count = 0;
+    buffer->write = 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufGetData__FP5VoBuf);
+int voBufIsFull(VoBuf *buffer)
+{
+    return buffer->count == buffer->size;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIsEmpty);
+void voBufIncCount(VoBuf *buffer)
+{
+    DIntr();
+    buffer->tag[buffer->write].status = VO_TAG_FILLED;
+    buffer->count++;
+    buffer->write = (buffer->write + 1) % buffer->size;
+    EIntr();
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufGetTag__FP5VoBuf);
+VoData *voBufGetData(VoBuf *buffer)
+{
+    if (voBufIsFull(buffer))
+        return 0;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufDecCount__FP5VoBuf);
+    return &buffer->data[buffer->write];
+}
+
+int voBufIsEmpty(VoBuf *buffer)
+{
+    return buffer->count == 0;
+}
+
+VoTag *voBufGetTag(VoBuf *buffer)
+{
+    if (voBufIsEmpty(buffer))
+        return 0;
+
+    int slot = (buffer->write - buffer->count + buffer->size) % buffer->size;
+    return &buffer->tag[slot];
+}
+
+void voBufDecCount(VoBuf *buffer)
+{
+    if (buffer->count > 0)
+        buffer->count--;
+}
