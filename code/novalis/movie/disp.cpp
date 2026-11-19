@@ -1,4 +1,9 @@
 #include "common.h"
+#include "movie.h"
+
+// The vblank handler reads and updates these display flags.
+extern volatile int movieDisplayActive;
+extern volatile int movieVblankCount;
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/disp", setImageTag);
 
@@ -6,6 +11,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/disp", vblankHandler);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/disp", handler_endimage);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/disp", startDisplay__Fi);
+void startDisplay(int field)
+{
+    while (sceGsSyncV(0) == field) {
+    }
+
+    movieDisplayActive = 1;
+    movieVblankCount = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/disp", endDisplay__Fv);
