@@ -1,6 +1,12 @@
 #include "common.h"
+#include "readbuf.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufCreate__FP7ReadBuf);
+void readBufCreate(ReadBuf *buffer)
+{
+    buffer->capacity = READ_BUF_CAPACITY;
+    buffer->put_pos = 0;
+    buffer->count = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufDelete__FP7ReadBuf);
 
