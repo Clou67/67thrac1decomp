@@ -154,6 +154,10 @@ void UpdatePointLights(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", CreatePointLight);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", RefreshPointLight);
+void RefreshPointLight(int light)
+{
+    DetachPointLight(light);
+    CreatePointLight(light);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", DetachPointLight);
