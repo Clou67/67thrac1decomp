@@ -83,12 +83,22 @@ Rules:
       blender->activeCamera = NULL;
       blender->blendTime = 0.0f;
 
-      if (camera->exitFunc != NULL) {
+      if (camera->exitFunc != NULL)
           camera->exitFunc(camera);
-      }
 
       ResetCameraShake();
   }
+  ```
+- **Braces:** an `if`/`else` branch with a single statement has no braces, and each branch of an `if`/`else if`/`else` chain is separated by a blank line. Branches with more than one statement keep their braces.
+  ```cpp
+  if (slots == POINT_LIGHT_SLOTS_EMPTY)
+      tie->point_lights = light | 0xFFF0;
+
+  else if ((slots & 0xFFF0) == 0xFFF0)
+      tie->point_lights = (slots & 0xFF0F) | (light << 4);
+
+  else
+      entry--;
   ```
 - **Control flow:** write it naturally, with early returns where the original logic has them, `for` loops with real bounds and `switch` for jump tables. No `goto` unless the original control flow really needs it.
 - **Comments:** short, and say why rather than what. Note anything non-obvious, such as a field whose meaning is a guess.

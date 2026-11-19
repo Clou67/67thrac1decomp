@@ -38,19 +38,16 @@ int CreatePointLightRGB(Vec4 &pos, float radius, float backlight, int rgb)
     PL_Data *data;
     int index;
 
-    if (PerfLoad > POINT_LIGHT_MAX_LOAD) {
+    if (PerfLoad > POINT_LIGHT_MAX_LOAD)
         return -1;
-    }
 
     for (index = 0; index < MAX_POINT_LIGHTS; index++) {
-        if (PointLightData[index].state == POINT_LIGHT_FREE) {
+        if (PointLightData[index].state == POINT_LIGHT_FREE)
             break;
-        }
     }
 
-    if (index == MAX_POINT_LIGHTS) {
+    if (index == MAX_POINT_LIGHTS)
         return -1;
-    }
 
     light = &PointLights[index];
     data = &PointLightData[index];
@@ -75,19 +72,16 @@ int CreatePointLight(Vec4 &pos, float radius, float backlight, float red, float 
     PL_Data *data;
     int index;
 
-    if (PerfLoad > POINT_LIGHT_MAX_LOAD) {
+    if (PerfLoad > POINT_LIGHT_MAX_LOAD)
         return -1;
-    }
 
     for (index = 0; index < MAX_POINT_LIGHTS; index++) {
-        if (PointLightData[index].state == POINT_LIGHT_FREE) {
+        if (PointLightData[index].state == POINT_LIGHT_FREE)
             break;
-        }
     }
 
-    if (index == MAX_POINT_LIGHTS) {
+    if (index == MAX_POINT_LIGHTS)
         return -1;
-    }
 
     light = &PointLights[index];
     data = &PointLightData[index];
@@ -136,9 +130,8 @@ void UpdatePointLights(void)
         PointLight *light = &PointLights[index];
         PL_Data *data = &PointLightData[index];
 
-        if (data->state == POINT_LIGHT_FREE) {
+        if (data->state == POINT_LIGHT_FREE)
             continue;
-        }
 
         if (FastVec3Dist(&light->pos, &data->update_pos) > POINT_LIGHT_MARGIN) {
             CopyVec4Inline(&data->update_pos, &light->pos);
@@ -182,21 +175,23 @@ void AttachPointLight(int light)
             if (FastVec3AddSubLen(&sphere, &tie->bsphere)) {
                 *entry++ = tieIndex;
                 slots = tie->point_lights;
-                if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                if (slots == POINT_LIGHT_SLOTS_EMPTY)
                     tie->point_lights = light | 0xFFF0;
-                } else if ((slots & 0xFFF0) == 0xFFF0) {
-                    tie->point_lights = (slots & 0xFF0F) | (light << 4);
-                } else if ((slots & 0xFF00) == 0xFF00) {
-                    tie->point_lights = (slots & 0xF0FF) | (light << 8);
-                } else if ((slots & 0xF000) == 0xF000) {
-                    tie->point_lights = (slots & 0x0FFF) | (light << 12);
-                } else {
-                    entry--;
-                }
 
-                if (entry >= end) {
+                else if ((slots & 0xFFF0) == 0xFFF0)
+                    tie->point_lights = (slots & 0xFF0F) | (light << 4);
+
+                else if ((slots & 0xFF00) == 0xFF00)
+                    tie->point_lights = (slots & 0xF0FF) | (light << 8);
+
+                else if ((slots & 0xF000) == 0xF000)
+                    tie->point_lights = (slots & 0x0FFF) | (light << 12);
+
+                else
+                    entry--;
+
+                if (entry >= end)
                     break;
-                }
             }
         }
 
@@ -212,21 +207,23 @@ void AttachPointLight(int light)
             if (FastVec3AddSubLen(&sphere, &tfrag->bsphere)) {
                 *entry++ = tfragIndex;
                 slots = tfrag->point_lights;
-                if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                if (slots == POINT_LIGHT_SLOTS_EMPTY)
                     tfrag->point_lights = light | 0xFFF0;
-                } else if ((slots & 0xFFF0) == 0xFFF0) {
-                    tfrag->point_lights = (slots & 0xFF0F) | (light << 4);
-                } else if ((slots & 0xFF00) == 0xFF00) {
-                    tfrag->point_lights = (slots & 0xF0FF) | (light << 8);
-                } else if ((slots & 0xF000) == 0xF000) {
-                    tfrag->point_lights = (slots & 0x0FFF) | (light << 12);
-                } else {
-                    entry--;
-                }
 
-                if (entry >= end) {
+                else if ((slots & 0xFFF0) == 0xFFF0)
+                    tfrag->point_lights = (slots & 0xFF0F) | (light << 4);
+
+                else if ((slots & 0xFF00) == 0xFF00)
+                    tfrag->point_lights = (slots & 0xF0FF) | (light << 8);
+
+                else if ((slots & 0xF000) == 0xF000)
+                    tfrag->point_lights = (slots & 0x0FFF) | (light << 12);
+
+                else
+                    entry--;
+
+                if (entry >= end)
                     break;
-                }
             }
         }
 
@@ -240,21 +237,23 @@ void AttachPointLight(int light)
             if (FastVec3AddSubLen(&sphere, &shrub->bsphere)) {
                 *entry++ = shrubIndex;
                 slots = shrub->point_lights;
-                if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                if (slots == POINT_LIGHT_SLOTS_EMPTY)
                     shrub->point_lights = light | 0xFFF0;
-                } else if ((slots & 0xFFF0) == 0xFFF0) {
-                    shrub->point_lights = (slots & 0xFF0F) | (light << 4);
-                } else if ((slots & 0xFF00) == 0xFF00) {
-                    shrub->point_lights = (slots & 0xF0FF) | (light << 8);
-                } else if ((slots & 0xF000) == 0xF000) {
-                    shrub->point_lights = (slots & 0x0FFF) | (light << 12);
-                } else {
-                    entry--;
-                }
 
-                if (entry >= end) {
+                else if ((slots & 0xFFF0) == 0xFFF0)
+                    shrub->point_lights = (slots & 0xFF0F) | (light << 4);
+
+                else if ((slots & 0xFF00) == 0xFF00)
+                    shrub->point_lights = (slots & 0xF0FF) | (light << 8);
+
+                else if ((slots & 0xF000) == 0xF000)
+                    shrub->point_lights = (slots & 0x0FFF) | (light << 12);
+
+                else
+                    entry--;
+
+                if (entry >= end)
                     break;
-                }
             }
         }
 
@@ -295,21 +294,23 @@ void DetachPointLight(int light)
             TieInstance *tie = &TieInstances[*entry];
 
             slots = tie->point_lights;
-            if ((slots & 0x000F) == slot0) {
+            if ((slots & 0x000F) == slot0)
                 slots = (slots >> 4) | 0xF000;
-            } else if ((slots & 0x00F0) == slot1) {
-                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
-            } else if ((slots & 0x0F00) == slot2) {
-                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
-            } else if ((slots & 0xF000) == slot3) {
-                slots |= 0xF000;
-            } else {
-                printf_stub("screwed up point light on tie\n");
-            }
 
-            if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+            else if ((slots & 0x00F0) == slot1)
+                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
+
+            else if ((slots & 0x0F00) == slot2)
+                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
+
+            else if ((slots & 0xF000) == slot3)
+                slots |= 0xF000;
+
+            else
+                printf_stub("screwed up point light on tie\n");
+
+            if (slots == POINT_LIGHT_SLOTS_EMPTY)
                 tie->dir_lights_upd = 1;
-            }
 
             tie->point_lights = slots;
         }
@@ -326,21 +327,23 @@ void DetachPointLight(int light)
             Tfrag *tfrag = &Tfrags[*entry];
 
             slots = tfrag->point_lights;
-            if ((slots & 0x000F) == slot0) {
+            if ((slots & 0x000F) == slot0)
                 slots = (slots >> 4) | 0xF000;
-            } else if ((slots & 0x00F0) == slot1) {
-                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
-            } else if ((slots & 0x0F00) == slot2) {
-                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
-            } else if ((slots & 0xF000) == slot3) {
-                slots |= 0xF000;
-            } else {
-                printf_stub("screwed up point light on tfrag\n");
-            }
 
-            if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+            else if ((slots & 0x00F0) == slot1)
+                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
+
+            else if ((slots & 0x0F00) == slot2)
+                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
+
+            else if ((slots & 0xF000) == slot3)
+                slots |= 0xF000;
+
+            else
+                printf_stub("screwed up point light on tfrag\n");
+
+            if (slots == POINT_LIGHT_SLOTS_EMPTY)
                 tfrag->dir_lights_upd = 1;
-            }
 
             tfrag->point_lights = slots;
         }
@@ -357,21 +360,23 @@ void DetachPointLight(int light)
             ShrubInstance *shrub = &ShrubInstances[*entry];
 
             slots = shrub->point_lights;
-            if ((slots & 0x000F) == slot0) {
+            if ((slots & 0x000F) == slot0)
                 slots = (slots >> 4) | 0xF000;
-            } else if ((slots & 0x00F0) == slot1) {
-                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
-            } else if ((slots & 0x0F00) == slot2) {
-                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
-            } else if ((slots & 0xF000) == slot3) {
-                slots |= 0xF000;
-            } else {
-                printf_stub("screwed up point light on shrub\n");
-            }
 
-            if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+            else if ((slots & 0x00F0) == slot1)
+                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
+
+            else if ((slots & 0x0F00) == slot2)
+                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
+
+            else if ((slots & 0xF000) == slot3)
+                slots |= 0xF000;
+
+            else
+                printf_stub("screwed up point light on shrub\n");
+
+            if (slots == POINT_LIGHT_SLOTS_EMPTY)
                 shrub->dir_lights_upd = 1;
-            }
 
             shrub->point_lights = slots;
         }
