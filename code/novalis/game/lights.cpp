@@ -32,7 +32,42 @@ void STUB_RET_2525f0(void)
 {
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", CreatePointLight3);
+int CreatePointLight3(Vec4 *pos, float radius, float intensity, int rgb)
+{
+    PointLight *light;
+    PL_Data *data;
+    int index;
+
+    if (PerfLoad > POINT_LIGHT_MAX_LOAD) {
+        return -1;
+    }
+
+    for (index = 0; index < MAX_POINT_LIGHTS; index++) {
+        if (PointLightData[index].state == POINT_LIGHT_FREE) {
+            break;
+        }
+    }
+
+    if (index == MAX_POINT_LIGHTS) {
+        return -1;
+    }
+
+    light = &PointLights[index];
+    data = &PointLightData[index];
+
+    CopyVec4(&light->pos, pos);
+    light->pos.w = radius;
+    light->color.x = FastIntToFloat(rgb & 0xFF) * COLOR_CHANNEL_SCALE;
+    light->color.y = FastIntToFloat((rgb >> 8) & 0xFF) * COLOR_CHANNEL_SCALE;
+    light->color.z = FastIntToFloat((rgb >> 16) & 0xFF) * COLOR_CHANNEL_SCALE;
+    light->color.w = intensity;
+
+    FastMemSetZero(data, sizeof(PL_Data));
+    data->state = POINT_LIGHT_CREATED;
+    data->list = PointLightLists[index];
+
+    return index;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", CreatePointLight2);
 
