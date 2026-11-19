@@ -139,7 +139,10 @@ void audioDecEndPut(_AudioDec *decoder, int size)
     decoder->totalBytes += size;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecIsPageFull);
+int audioDecIsPageFull(_AudioDec *decoder)
+{
+    return decoder->iopLastPos >= ADPCM_PAGE_SIZE;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecSend);
 
