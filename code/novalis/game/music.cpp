@@ -1,4 +1,5 @@
 #include "common.h"
+#include "music.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Init);
 
@@ -34,7 +35,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Stop);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Pause);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Unpause);
+enum { MUSIC_COMMAND_RESUME = 4 };
+
+void music_Unpause(void)
+{
+    musicTransition.primary_command = MUSIC_COMMAND_RESUME;
+    musicTransition.transition_command = MUSIC_COMMAND_RESUME;
+    musicTransition.secondary_command = MUSIC_COMMAND_RESUME;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_UnpauseDelay);
 

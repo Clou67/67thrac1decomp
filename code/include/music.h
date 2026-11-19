@@ -8,12 +8,17 @@ struct MusicTransition {
     signed char requested_track;
     char unk23[0x15];
     short primary_track;
-    char unk3A[0x16];
+    char unk3A[6];
+    short primary_command;
+    char unk42[0xE];
     int unk50;
     short speechId;
     short unk56;
     short unk58;
     short state;
+    short secondary_command;
+    char unk5E[0x1A];
+    short transition_command;
 };
 
 // Speech ids are offset by this much from the ids stored in the help messages.

@@ -210,7 +210,6 @@ HudStub__Fv = 0x0024FB38;
 ChangeLevel__Fi = 0x002A29A0;
 Hero_RevertToRatchet__Fv = 0x00231450;
 Hero_Warp__FPfT0ii = 0x002368E0;
-music_Unpause__Fv = 0x0027A440;
 sound_Update__Fv = 0x002A0638;
 snd_ContinueAllSoundsInGroup__Fi = 0x0012E418;
 snd_FlushSoundCommands__Fv = 0x0012DC80;
