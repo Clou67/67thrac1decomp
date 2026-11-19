@@ -15,7 +15,9 @@ struct MobyVarList {
     MobyVarEntry entries[64];
 };
 
+struct Vec4;
 void ClearCheckpointData(void);
+void SetSpawnPoint(Vec4 *position, Vec4 *rotation);
 
 struct MobyInstance;
 MobyInstance *FindMobyByUID(int unused, int uid);

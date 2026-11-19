@@ -1,6 +1,9 @@
 #include "common.h"
 #include "fastfunc.h"
-#include "moby.h"
+#include "hero.h"
+#include "mathfunc_inline.h"
+#include "music.h"
+#include "sound.h"
 #include "respawn.h"
 
 int NAVG_AllocSlot(int level, int uid)
@@ -24,16 +27,34 @@ int NAVG_AllocSlot(int level, int uid)
 
 struct CheckpointData {
     int set;
-    unsigned char spawnState[0x4C];
+    unsigned char padding[12];
+    Vec4 position;
+    Vec4 rotation;
+    unsigned int color;
+    unsigned int light;
+    int colorManipulator;
+    int reverbDepth;
+    unsigned char reverbType;
+    unsigned char reverbDelay;
+    unsigned char reverbFeedback;
+    unsigned char unk_43;
+    int heroType;
+    MobyInstance *hero;
+    int heroState;
     MobyVarList vars;
     unsigned char objectState[0x800];
     int musicTrack;
-    unsigned char padding[8];
+    unsigned char trailingPadding[8];
 };
 
 extern CheckpointData LiveCheckpoint;
 extern CheckpointData CheckpointSet;
 extern unsigned int CheckpointBits[64];
+extern unsigned int LevelCheckpointBits[][64];
+extern unsigned char occlCharTable[][16];
+extern MobyVarList LiveMobyVars;
+extern MobyVarList SavedMobyVars;
+extern int Level;
 
 void ClearCheckpointData(void)
 {
@@ -42,7 +63,48 @@ void ClearCheckpointData(void)
     FastMemSet(CheckpointBits, 0, sizeof(CheckpointBits));
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", SetSpawnPoint);
+void SetSpawnPoint(Vec4 *position, Vec4 *rotation)
+{
+    MobyVarList *savedVars = &SavedMobyVars;
+    MobyVarList *liveVars = &LiveMobyVars;
+    FastMemCopy32(savedVars, liveVars, sizeof(MobyVarList));
+
+    int level = Level;
+    unsigned char *source = (unsigned char *)(liveVars + 1);
+    unsigned char *destination = (unsigned char *)(savedVars + 1);
+
+    for (int index = 0; index < 0x7FF; index++, source++) {
+        int state = *source;
+        unsigned char objectState = state;
+        if (objectState != 0 && (objectState == 1 || occlCharTable[level][objectState - 2] == 0xFF)) {
+            unsigned int mask = 1 << (index & 31);
+            *((unsigned char *)(index + (unsigned int)destination)) = state;
+            LevelCheckpointBits[level][index >> 5] |= mask;
+            CheckpointBits[index >> 5] |= mask;
+        }
+    }
+
+    CheckpointSet.set = 1;
+    CopyVec4Inline(&CheckpointSet.position, position);
+    CopyVec4Inline(&CheckpointSet.rotation, rotation);
+
+    MobyInstance *moby = Hero.moby;
+    CheckpointSet.color = moby->color;
+    CheckpointSet.light = moby->light;
+    CheckpointSet.colorManipulator = moby->colorManipulator;
+    CheckpointSet.heroType = Hero.type;
+    CheckpointSet.hero = moby;
+    CheckpointSet.heroState = Hero.requestedState;
+    CheckpointSet.reverbDepth = audioState.reverb_depth;
+    CheckpointSet.reverbType = audioState.reverb_type;
+    CheckpointSet.reverbDelay = audioState.reverb_delay;
+    CheckpointSet.reverbFeedback = audioState.reverb_feedback;
+
+    if (musicTransition.requested_track != -1)
+        CheckpointSet.musicTrack = musicTransition.requested_track;
+    else
+        CheckpointSet.musicTrack = musicTransition.primary_track;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", RestoreCheckpoint);
 
@@ -74,8 +136,6 @@ void RestoreMobyVarList(MobyVarList *list)
         }
     }
 }
-
-extern MobyVarList SavedMobyVars;
 
 void RestoreSavedMobyVars(void)
 {

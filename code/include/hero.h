@@ -153,7 +153,9 @@ struct HeroState {
     char unk22B0[0x10];
     // The command picked on the Clank command ring.
     int clankCommand;
-    char unk22C4[0x14];
+    char unk22C4[0x8];
+    short requestedState;
+    char unk22CE[0xA];
     short hasClank;
     char unk22DA[0x36];
 };

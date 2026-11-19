@@ -1392,7 +1392,7 @@ Respawn_IncCounter = 0x0029AA10; // type:func size:0x50
 BeginMenu_InitHudTables = 0x0029AA60; // type:func size:0xEC
 NAVG_AllocSlot__Fii = 0x0029AB50; // type:func size:0x6C
 ClearCheckpointData__Fv = 0x0029ABC0; // type:func size:0x50
-SetSpawnPoint = 0x0029AC10; // type:func size:0x1B8
+SetSpawnPoint__FP4Vec4T0 = 0x0029AC10; // type:func size:0x1B8
 RestoreCheckpoint = 0x0029ADC8; // type:func size:0x1B4
 FindMobyByUID__Fii = 0x0029AF80; // type:func size:0x44
 RestoreMobyVarList__FP11MobyVarList = 0x0029AFC8; // type:func size:0xB4
@@ -2192,3 +2192,5 @@ LiveCheckpoint = 0x001BAA50;
 CheckpointBits = 0x001BA950;
 
 SavedMobyVars = 0x001BB700;
+
+LiveMobyVars = 0x001BAAA0;
