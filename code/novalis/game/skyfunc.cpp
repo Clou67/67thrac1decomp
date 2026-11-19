@@ -1,13 +1,19 @@
 #include "common.h"
+#include "initlevel.h"
 #include "moby.h"
 #include "sky.h"
+#include "vuchain.h"
 
 struct sky_shell {
     int cluster_cnt;
     int gouraud;
 };
 
+extern char skyGifPageLabel[];
+extern int GifLoadCnt;
+
 void FastMtx4Identity(float *matrix);
+void printf_stub3(const char *format, ...);
 
 void SkyLevelNone(void)
 {
@@ -25,7 +31,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", func_0029F258);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkySpace);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SetupSkyGifPaging);
+void SetupSkyGifPaging(void)
+{
+    sky_gif_page_markerA = vu1_bufPtr.tag++;
+    printf_stub3(skyGifPageLabel, 1);
+
+    textureCursor = textureCursorEnd;
+    GifLoadCnt = 0;
+
+    for (int texture_index = 0; texture_index < Sky->tex_cnt; texture_index++)
+        Sky->tex_defs[texture_index].tex0 = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", DoSkyGifPaging);
 
