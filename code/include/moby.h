@@ -117,4 +117,6 @@ void InitMobyClassDists(void);
 
 void StashMobyClassDists(void);
 
+void RestoreMobyClassDists(void);
+
 #endif

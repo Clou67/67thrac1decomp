@@ -79,7 +79,10 @@ void StashMobyClassDists(void)
     FastMemCopy16(StashedMobyClassDists, MobyClassDists, MOBY_CLASS_DISTS_SIZE);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", RestoreMobyClassDists);
+void RestoreMobyClassDists(void)
+{
+    FastMemCopy16(MobyClassDists, StashedMobyClassDists, MOBY_CLASS_DISTS_SIZE);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobysSetup);
 
