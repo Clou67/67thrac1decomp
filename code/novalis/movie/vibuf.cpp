@@ -23,7 +23,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", setD3_CHCR__FUi)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", setD4_CHCR__FUi);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", scTag2);
+void scTag2(unsigned long *tag, unsigned int address, unsigned int id, unsigned int count)
+{
+    *tag = ((unsigned long)address << 32) | (((unsigned long)id << 32) >> 4) | (unsigned long)count;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufCreate);
 

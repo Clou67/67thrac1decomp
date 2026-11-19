@@ -131,4 +131,6 @@ int cpy2area(unsigned char *first, int firstSize, unsigned char *second, int sec
 
 unsigned int getFIFOindex(ViBuf *buffer, void *position);
 
+void scTag2(unsigned long *tag, unsigned int address, unsigned int id, unsigned int count);
+
 #endif
