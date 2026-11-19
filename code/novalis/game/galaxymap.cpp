@@ -1,20 +1,13 @@
 #include "common.h"
-#include "freeze.h"
-#include "mcstate.h"
+#include "galaxymap.h"
 #include "draw.h"
 #include "fastfunc.h"
 #include "font.h"
-#include "gameglobals.h"
-#include "hero.h"
 #include "gsregs.h"
 #include "help.h"
 #include "hud.h"
 #include "memcard.h"
-#include "music.h"
-#include "libc.h"
-#include "pad.h"
 #include "pause.h"
-#include "sound.h"
 #include "vuchain.h"
 
 #define SAVE_DIALOG_MAX_SIZE 0x20000
@@ -47,7 +40,7 @@ enum map_level_state {
 
 int MediumFontHeight = 17;
 
-int GetSaveDialogRect(unsigned int size, void **first, void **second)
+int GetSaveBuffers(unsigned int size, void **first, void **second)
 {
     if (size > SAVE_DIALOG_MAX_SIZE) {
         *first = 0;
@@ -61,7 +54,7 @@ int GetSaveDialogRect(unsigned int size, void **first, void **second)
     return 0;
 }
 
-void DrawMessageBox(int left, int right, int top, int bottom)
+void DrawGalaxyMap(int left, int right, int top, int bottom)
 {
     float labelDirection[4];
     int level;

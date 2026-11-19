@@ -4,6 +4,7 @@
 #include "libc.h"
 #include "wad.h"
 #include "freeze.h"
+#include "galaxymap.h"
 #include "music.h"
 #include "vuchain.h"
 #include "mcstate.h"
@@ -71,7 +72,7 @@ void memcard_ResetGame(void)
     void *saveBuffer;
     void *secondBuffer;
 
-    GetSaveDialogRect(bootAssets.savegame.length << 11, &saveBuffer, &secondBuffer);
+    GetSaveBuffers(bootAssets.savegame.length << 11, &saveBuffer, &secondBuffer);
     music_Sync(1);
     music_LoadFileSync(saveBuffer, bootAssets.savegame.offset, bootAssets.savegame.length);
     memcard_RestoreGame((char *)saveBuffer + *(int *)((char *)saveBuffer + 0x10));
@@ -335,7 +336,7 @@ void memcard_Update(void)
             mc_resource *chunk;
             int      size;
 
-            GetSaveDialogRect(bootAssets.savegame.length << 11, (void **)&chunk, (void **)&size);
+            GetSaveBuffers(bootAssets.savegame.length << 11, (void **)&chunk, (void **)&size);
             music_LoadFile(
                 chunk, bootAssets.savegame.offset, bootAssets.savegame.length);
             g_memcard.substage = 4;
@@ -382,7 +383,7 @@ void memcard_Update(void)
                 if (g_memcard.file < 0) {
                     g_memcard.file = g_memcard.res;
                 }
-                GetSaveDialogRect(bootAssets.savegame.length << 11, (void **)&chunk, (void **)&size);
+                GetSaveBuffers(bootAssets.savegame.length << 11, (void **)&chunk, (void **)&size);
                 switch (g_memcard.substage) {
                 case MC_CREATE_WRITE_ICON_SYS:
                     g_memcard.size = 0x3C4;
@@ -927,7 +928,7 @@ void memcard_Update(void)
         mc_resource *chunk;
         int      size;
 
-        GetSaveDialogRect(bootAssets.savegame.length << 11, (void **)&chunk, (void **)&size);
+        GetSaveBuffers(bootAssets.savegame.length << 11, (void **)&chunk, (void **)&size);
         music_LoadFile(
             chunk, bootAssets.savegame.offset, bootAssets.savegame.length);
         g_memcard.substage = 18;
@@ -940,7 +941,7 @@ void memcard_Update(void)
             mc_resource *chunk;
             int      size;
 
-            GetSaveDialogRect(bootAssets.savegame.length << 11, (void **)&chunk, (void **)&size);
+            GetSaveBuffers(bootAssets.savegame.length << 11, (void **)&chunk, (void **)&size);
             g_memcard.substage = 19;
             g_memcard.addr = (char *)chunk + chunk->saveDataOffset;
         }
