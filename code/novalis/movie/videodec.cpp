@@ -11,7 +11,10 @@ int videoDecSetStream(VideoDec *decoder, int type, int channel, MpegStreamCallba
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecBeginPut__FP8VideoDecPPUcPiT1T2);
+int videoDecBeginPut(VideoDec *decoder, unsigned char **first, int *firstSize, unsigned char **second, int *secondSize)
+{
+    return viBufBeginPut(&decoder->vibuf, first, firstSize, second, secondSize);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecEndPut__FP8VideoDec);
 

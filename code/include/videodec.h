@@ -77,4 +77,8 @@ int videoDecDelete(VideoDec *decoder);
 // Entry point of the decoder thread.
 void videoDecMain(void *argument);
 
+int videoDecBeginPut(VideoDec *decoder, unsigned char **first, int *firstSize, unsigned char **second, int *secondSize);
+
+int viBufBeginPut(ViBuf *buffer, unsigned char **first, int *firstSize, unsigned char **second, int *secondSize);
+
 #endif
