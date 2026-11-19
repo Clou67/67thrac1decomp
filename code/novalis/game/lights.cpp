@@ -119,7 +119,7 @@ void UpdatePointLights(void)
     DirectionalLights[CAMERA_LIGHT].color1.z = 0.8f;
     DirectionalLights[CAMERA_LIGHT].color1.w = -0.3f;
 
-    yaw = FastAddRots(GameCamera.rot.z, -0.8f);
+    yaw = FastAddRots(GameCamera.rot.radius, -0.8f);
     DirectionalLights[CAMERA_LIGHT].direction1.x = FastAngleSinF(yaw) * 0.866f;
     DirectionalLights[CAMERA_LIGHT].direction1.y = FastAngleCosF(yaw) * 0.866f;
     DirectionalLights[CAMERA_LIGHT].direction1.z = -0.5f;
@@ -172,7 +172,7 @@ void AttachPointLight(int light)
         data->tie_offset = 0;
         tieIndex = 0;
         for (tie = TieInstances; tie != TieInstanceEnd; tie++, tieIndex++) {
-            if (FastVec3AddSubLen(&sphere, &tie->bsphere)) {
+            if (FastVec3AddSubLen(&sphere, &tie->bSphere)) {
                 *entry++ = tieIndex;
                 slots = tie->point_lights;
                 if (slots == POINT_LIGHT_SLOTS_EMPTY)
@@ -204,7 +204,7 @@ void AttachPointLight(int light)
 
         tfrag = Tfrags;
         for (tfragIndex = 0; tfragIndex < TfragsCnt; tfragIndex++, tfrag++) {
-            if (FastVec3AddSubLen(&sphere, &tfrag->bsphere)) {
+            if (FastVec3AddSubLen(&sphere, &tfrag->bSphere)) {
                 *entry++ = tfragIndex;
                 slots = tfrag->point_lights;
                 if (slots == POINT_LIGHT_SLOTS_EMPTY)
@@ -234,7 +234,7 @@ void AttachPointLight(int light)
         data->shrub_offset = entry - data->list;
         shrubIndex = 0;
         for (shrub = ShrubInstances; shrub != ShrubInstanceEnd; shrub++, shrubIndex++) {
-            if (FastVec3AddSubLen(&sphere, &shrub->bsphere)) {
+            if (FastVec3AddSubLen(&sphere, &shrub->bSphere)) {
                 *entry++ = shrubIndex;
                 slots = shrub->point_lights;
                 if (slots == POINT_LIGHT_SLOTS_EMPTY)
