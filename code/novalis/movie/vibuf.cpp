@@ -68,7 +68,17 @@ int viBufCount(ViBuf *buffer)
     return count;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufFlush__FP5ViBuf);
+int viBufFlush(ViBuf *buffer)
+{
+    WaitSema(buffer->sema);
+    int rounded = buffer->readBytes + (VIBUF_BLOCK_SIZE - 1);
+    int adjusted = buffer->readBytes + (2 * VIBUF_BLOCK_SIZE - 2);
+    int limit = -1;
+    if (limit < rounded)
+        adjusted = rounded;
+    buffer->readBytes = (adjusted >> VIBUF_BLOCK_SHIFT) << VIBUF_BLOCK_SHIFT;
+    return SignalSema(buffer->sema);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufModifyPts__FP5ViBufP9TimeStamp);
 
