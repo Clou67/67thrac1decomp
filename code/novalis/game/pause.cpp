@@ -1,4 +1,5 @@
 #include "common.h"
+#include "pause.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", LoadHudSeqs);
 
@@ -64,7 +65,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002904A0);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002904D0);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MenuText_OnEnterResetBuffers);
+void Menu_InitStreamBuffers(int reset);
+
+int MenuText_OnEnterResetBuffers(void)
+{
+    Menu_InitStreamBuffers(1);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00290508);
 

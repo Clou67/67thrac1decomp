@@ -12,4 +12,6 @@ struct MapPageState {
 extern MapPageState MapPage;
 extern int pauseActionList[];
 
+int MenuText_OnEnterResetBuffers(void);
+
 #endif
