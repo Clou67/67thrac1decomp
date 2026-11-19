@@ -69,7 +69,7 @@ typedef int (*MpegStreamCallback)(sceMpeg *, sceMpegCbData *, void *);
 int videoDecCreate(VideoDec *decoder, unsigned char *work, int work_size, unsigned long long *input,
                    unsigned long long *tags, int sectors, TimeStamp *timestamps, int timestamp_count);
 int videoDecSetStream(VideoDec *decoder, int type, int channel, MpegStreamCallback callback, void *argument);
-int videoDecAbort(VideoDec *decoder);
+void videoDecAbort(VideoDec *decoder);
 unsigned int videoDecGetState(VideoDec *decoder);
 int videoDecFlush(VideoDec *decoder);
 int videoDecIsFlushed(VideoDec *decoder);
