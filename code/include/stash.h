@@ -3,4 +3,6 @@
 
 void Stash_Init(void);
 
+int Stash_SendData(void *source, int transferQwords, int reserveQwords, int comment);
+
 #endif
