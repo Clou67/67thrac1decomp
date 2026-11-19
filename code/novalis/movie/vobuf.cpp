@@ -1,6 +1,22 @@
 #include "common.h"
+#include "vobuf.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufCreate__FP5VoBufP6VoDataP5VoTagi);
+enum {
+    VO_TAG_EMPTY = 0,
+    VO_TAG_FILLED = 2
+};
+
+void voBufCreate(VoBuf *buffer, VoData *data, VoTag *tag, int size)
+{
+    buffer->count = 0;
+    buffer->data = data;
+    buffer->tag = tag;
+    buffer->size = size;
+    buffer->write = 0;
+
+    for (int slot = 0; slot < size; slot++)
+        buffer->tag[slot].status = VO_TAG_EMPTY;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufDelete__FP5VoBuf);
 
