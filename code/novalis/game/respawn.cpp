@@ -1,8 +1,28 @@
 #include "common.h"
+#include "fastfunc.h"
+#include "respawn.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", NAVG_AllocSlot);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", ClearCheckpointData);
+struct CheckpointData {
+    int set;
+    unsigned char spawnState[0x4C];
+    MobyVarList vars;
+    unsigned char objectState[0x800];
+    int musicTrack;
+    unsigned char padding[8];
+};
+
+extern CheckpointData LiveCheckpoint;
+extern CheckpointData CheckpointSet;
+extern unsigned int CheckpointBits[64];
+
+void ClearCheckpointData(void)
+{
+    FastMemSet(&LiveCheckpoint, 0, sizeof(LiveCheckpoint));
+    FastMemSet(&CheckpointSet, 0, sizeof(CheckpointSet));
+    FastMemSet(CheckpointBits, 0, sizeof(CheckpointBits));
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", SetSpawnPoint);
 
