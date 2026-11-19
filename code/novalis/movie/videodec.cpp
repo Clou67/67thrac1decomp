@@ -69,7 +69,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CBA8
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecFlush__FP8VideoDec);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecIsFlushed__FP8VideoDec);
+int videoDecIsFlushed(VideoDec *decoder)
+{
+    int flushed = 0;
+    if (videoDecInputCount(decoder) == 0)
+        flushed = videoDecIsDecoderEmpty(&decoder->mpeg) > 0;
+    return flushed;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecMain__FPv);
 
