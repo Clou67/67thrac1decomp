@@ -128,7 +128,23 @@ int InfobotHint_Update(MobyInstance *moby, InfobotHint *hint)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/npc", InfobotHint_FindEntry);
+int InfobotHint_FindEntry(MobyInstance *moby)
+{
+    int index;
+    int end;
+
+    if ((unsigned int)Level >= LEVEL_COUNT)
+        return 0;
+
+    index = LevelObjectStart[Level];
+    end = LevelObjectStart[Level + 1];
+    for (; index < end; index++) {
+        if (LevelObjectMobys[index] == moby)
+            return index;
+    }
+
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/npc", InfobotHint_SetEntryState);
 
