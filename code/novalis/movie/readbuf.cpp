@@ -31,6 +31,14 @@ void readBufEndPut(ReadBuf *buffer, int size)
     buffer->count += written;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufBeginGet__FP7ReadBufPPUc);
+int readBufBeginGet(ReadBuf *buffer, unsigned char **source)
+{
+    if (buffer->count != 0) {
+        int get_pos = (buffer->put_pos - buffer->count + buffer->capacity) % buffer->capacity;
+        *source = buffer->data + get_pos;
+    }
+
+    return buffer->count;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufEndGet__FP7ReadBufi);
