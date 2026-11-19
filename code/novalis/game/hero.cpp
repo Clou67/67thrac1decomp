@@ -212,7 +212,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HandleDamage)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", HandleHeroDeath);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_isMobyWrench);
+enum { WRENCH_CLASS = 0x47 };
+
+int Hero_isMobyWrench(MobyInstance *moby)
+{
+    if (!moby)
+        return 0;
+
+    return (short)moby->oClass == WRENCH_CLASS;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateCollisionSize);
 

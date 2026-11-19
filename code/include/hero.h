@@ -375,4 +375,6 @@ int Hero_IsWearingBoots(int slot);
 
 void Hero_UpdateAnimLayers(void);
 
+int Hero_isMobyWrench(MobyInstance *moby);
+
 #endif
