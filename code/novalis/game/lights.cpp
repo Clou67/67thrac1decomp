@@ -28,7 +28,9 @@ enum point_light_state {
     POINT_LIGHT_ATTACHED
 };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", STUB_RET_2525f0);
+void STUB_RET_2525f0(void)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", CreatePointLight3);
 
