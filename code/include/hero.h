@@ -373,4 +373,6 @@ int Hero_IsWeaponGroupA(int slot);
 
 int Hero_IsWearingBoots(int slot);
 
+void Hero_UpdateAnimLayers(void);
+
 #endif

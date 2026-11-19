@@ -169,7 +169,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_PlayBackpackI
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateFiringAnimLayer);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateAnimLayers);
+void Hero_UpdateGadgetAnimLayers(void);
+void Hero_UpdateFiringAnimLayer(void);
+void Hero_UpdateOverlayAnimLayer(void);
+
+void Hero_UpdateAnimLayers(void)
+{
+    Hero_UpdateGadgetAnimLayers();
+    Hero_UpdateFiringAnimLayer();
+    Hero_UpdateOverlayAnimLayer();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", EquipItem);
 

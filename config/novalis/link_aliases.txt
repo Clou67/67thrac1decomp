@@ -313,3 +313,7 @@ snd_StreamSafeCdGetError__Fv = 0x0012EEF0;
 WaterTile_PutDrop__FP9WaterTileiffffi = 0x002B82A8;
 
 Menu_InitStreamBuffers__Fi = 0x002996C8;
+
+Hero_UpdateGadgetAnimLayers__Fv = 0x0022E660;
+Hero_UpdateFiringAnimLayer__Fv = 0x0022F068;
+Hero_UpdateOverlayAnimLayer__Fv = 0x0022E3A8;
