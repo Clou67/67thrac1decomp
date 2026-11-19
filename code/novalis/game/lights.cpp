@@ -114,7 +114,43 @@ void DeletePointLight(int light)
     FastMemSetZero(&PointLightData[light], sizeof(PL_Data));
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", UpdatePointLights);
+void UpdatePointLights(void)
+{
+    float yaw;
+    int index;
+
+    // Grey light from above that turns with the camera.
+    DirectionalLights[CAMERA_LIGHT].color1.x = 0.8f;
+    DirectionalLights[CAMERA_LIGHT].color1.y = 0.8f;
+    DirectionalLights[CAMERA_LIGHT].color1.z = 0.8f;
+    DirectionalLights[CAMERA_LIGHT].color1.w = -0.3f;
+
+    yaw = FastAddRots(GameCamera.rot.z, -0.8f);
+    DirectionalLights[CAMERA_LIGHT].direction1.x = FastAngleSinF(yaw) * 0.866f;
+    DirectionalLights[CAMERA_LIGHT].direction1.y = FastAngleCosF(yaw) * 0.866f;
+    DirectionalLights[CAMERA_LIGHT].direction1.z = -0.5f;
+    DirectionalLights[CAMERA_LIGHT].direction1.w = 0.0f;
+
+    // Rebuild the lists of lights that moved more than the margin since they were built.
+    for (index = 0; index < MAX_POINT_LIGHTS; index++) {
+        PointLight *light = &PointLights[index];
+        PL_Data *data = &PointLightData[index];
+
+        if (data->state == POINT_LIGHT_FREE) {
+            continue;
+        }
+
+        if (FastVec3Dist(&light->pos, &data->update_pos) > POINT_LIGHT_MARGIN) {
+            CopyVec4(&data->update_pos, &light->pos);
+            if (data->state == POINT_LIGHT_CREATED) {
+                CreatePointLight(index);
+                data->state = POINT_LIGHT_ATTACHED;
+            } else if (data->state == POINT_LIGHT_ATTACHED) {
+                RefreshPointLight(index);
+            }
+        }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", CreatePointLight);
 
