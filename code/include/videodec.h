@@ -133,4 +133,6 @@ unsigned int getFIFOindex(ViBuf *buffer, void *position);
 
 void scTag2(unsigned long *tag, unsigned int address, unsigned int id, unsigned int count);
 
+int viBufModifyPts(ViBuf *buffer, TimeStamp *timestamp);
+
 #endif

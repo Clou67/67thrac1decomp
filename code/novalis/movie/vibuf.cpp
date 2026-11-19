@@ -181,7 +181,47 @@ int viBufFlush(ViBuf *buffer)
     return SignalSema(buffer->sema);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufModifyPts__FP5ViBufP9TimeStamp);
+static inline int ringPosition(int position, int capacity)
+{
+    return position % capacity;
+}
+
+int viBufModifyPts(ViBuf *buffer, TimeStamp *timestamp)
+{
+    int index = (buffer->wt_ts - buffer->count_ts + buffer->n_ts) % buffer->n_ts;
+    int capacity = buffer->n << VIBUF_BLOCK_SHIFT;
+    int keepScanning = 1;
+    TimeStamp *entry;
+
+    if (buffer->count_ts > 0) {
+        while (keepScanning && (entry = &buffer->ts[index])->len != 0 && timestamp->len != 0) {
+            if (ringPosition(entry->pos + capacity - timestamp->pos, capacity) < timestamp->len) {
+                int overlap = timestamp->pos + timestamp->len - entry->pos;
+                if (entry->len < overlap)
+                    overlap = entry->len;
+
+                entry->pos = (entry->pos + overlap) % capacity;
+                entry->len -= overlap;
+                if (entry->len == 0) {
+                    if (entry->pts >= 0) {
+                        entry->pts = -1;
+                        entry->dts = -1;
+                        entry->pos = 0;
+                        entry->len = 0;
+                    }
+
+                    buffer->count_ts = (buffer->count_ts - 1 < 0) ? 0 : buffer->count_ts - 1;
+                }
+            } else {
+                keepScanning = 0;
+            }
+
+            index = (index + 1) % buffer->n_ts;
+        }
+    }
+
+    return 0;
+}
 
 int viBufModifyPts(ViBuf *buffer, TimeStamp *timestamp);
 
