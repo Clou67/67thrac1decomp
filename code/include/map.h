@@ -9,4 +9,6 @@ extern char MapRevealMasks[];
 void map_SaveLevelObjectState(void);
 void map_SaveRevealMask(char *mask);
 
+int Map_PointSideOfLine(int endX, int endY, int startX, int startY, int pointX, int pointY);
+
 #endif

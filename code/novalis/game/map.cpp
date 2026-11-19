@@ -1,4 +1,5 @@
 #include "common.h"
+#include "map.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_LoadPlanetMap);
 
@@ -164,4 +165,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_SaveLevelObject
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_stub);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_PointSideOfLine);
+int Map_PointSideOfLine(int endX, int endY, int startX, int startY, int pointX, int pointY)
+{
+    int relativeX = pointX - startX;
+    int lineX = endX - startX;
+    int relativeY = pointY - startY;
+    int lineY = endY - startY;
+    if ((relativeX * lineY - relativeY * lineX) < 0) return 1;
+    return 0;
+}
