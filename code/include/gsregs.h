@@ -11,8 +11,10 @@
 #define GS_TEST_ATE 1
 #define GS_TEST_ATST_GEQUAL (5 << 1)
 #define GS_TEST_AREF(ref) ((ref) << 4)
+#define GS_TEST_AFAIL_FB_ONLY (1 << 12)
 #define GS_TEST_AFAIL_RGB_ONLY (3 << 12)
 #define GS_TEST_ZTE (1 << 16)
+#define GS_TEST_ZTST_ALWAYS (1 << 17)
 #define GS_TEST_ZTST_GEQUAL (2 << 17)
 
 // ZBUF_1 fields: the Z buffer base pointer is in units of 8192 bytes.
