@@ -3,7 +3,24 @@
 #include "moby.h"
 #include "respawn.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", NAVG_AllocSlot);
+int NAVG_AllocSlot(int level, int uid)
+{
+    int index = -1;
+
+    if (uid >= 0) {
+        uid++;
+        index = 63;
+        while (index >= 0 && BoltSources[level][index].uid != uid &&
+               BoltSources[level][index].uid != 0) {
+            index--;
+        }
+
+        if (index >= 0)
+            BoltSources[level][index].uid = uid;
+    }
+
+    return index;
+}
 
 struct CheckpointData {
     int set;

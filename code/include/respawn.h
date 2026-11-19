@@ -25,4 +25,12 @@ void RestoreSavedMobyVars(void);
 
 void SaveCheckpointMobyVar(void *data, int size, MobyInstance *moby, int isMoby, MobyVarList *list);
 
+struct BoltSourceStats {
+    short uid;
+    short bolts;
+};
+extern BoltSourceStats BoltSources[][64];
+
+int NAVG_AllocSlot(int level, int uid);
+
 #endif
