@@ -1,4 +1,5 @@
 #include "common.h"
+#include "sce.h"
 #include "vobuf.h"
 
 enum {
@@ -33,7 +34,14 @@ int voBufIsFull(VoBuf *buffer)
     return buffer->count == buffer->size;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufIncCount__FP5VoBuf);
+void voBufIncCount(VoBuf *buffer)
+{
+    DIntr();
+    buffer->tag[buffer->write].status = VO_TAG_FILLED;
+    buffer->count++;
+    buffer->write = (buffer->write + 1) % buffer->size;
+    EIntr();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufGetData__FP5VoBuf);
 
