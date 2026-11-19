@@ -22,6 +22,7 @@ struct StashBlock {
 
 extern StashInfo StashState;
 extern StashBlock StashBlocks[];
+extern SifRpcClient StashClient;
 
 void Stash_Init(void)
 {
@@ -72,7 +73,27 @@ int Stash_Upload(void *source, unsigned int slot, int offset, int qwords)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", Stash_Copy);
+int Stash_Copy(void *destination, unsigned int slot, int offset, int qwords, int mode)
+{
+    if (qwords == -1)
+        qwords = Stash_GetSize(slot);
+    if (slot >= STASH_SLOT_COUNT || StashBlocks[slot].qwords == 0)
+        return -3;
+    if (StashBlocks[slot].qwords < offset + qwords)
+        return -1;
+
+    int request[4];
+    request[0] = StashBlocks[slot].address + offset * STASH_QWORD_BYTES;
+    while (qwords != 0) {
+        int chunk = qwords > STASH_MAX_FETCH_QWORDS ? STASH_MAX_FETCH_QWORDS : qwords;
+        sceSifCallRpc(&StashClient, STASH_RPC_FETCH, mode, request, sizeof(request), destination,
+                      chunk * STASH_QWORD_BYTES, 0, 0);
+        qwords -= chunk;
+        destination = (char *)destination + chunk * STASH_QWORD_BYTES;
+        request[0] += chunk * STASH_QWORD_BYTES;
+    }
+    return 0;
+}
 
 int Stash_GetSize(unsigned int slot)
 {

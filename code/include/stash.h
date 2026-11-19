@@ -9,4 +9,6 @@ int Stash_Upload(void *source, unsigned int slot, int offset, int qwords);
 
 int Stash_GetSize(unsigned int slot);
 
+int Stash_Copy(void *destination, unsigned int slot, int offset, int qwords, int mode);
+
 #endif

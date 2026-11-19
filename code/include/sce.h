@@ -148,6 +148,8 @@ struct sceGifTag {
 
 extern "C" {
 void sceSifInitRpc(int mode);
+int sceSifCallRpc(SifRpcClient *client, int command, int mode, void *send, int sendSize,
+                  void *receive, int receiveSize, void (*callback)(void *), void *callbackData);
 int sceCdRead(unsigned int sector, unsigned int sectors, void *destination, sceCdRMode *mode);
 int sceCdSync(int mode);
 int sceCdReadClock(sceCdCLOCK *clock);

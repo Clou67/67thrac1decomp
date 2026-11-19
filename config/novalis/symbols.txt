@@ -1480,7 +1480,7 @@ Stash_Init__Fv = 0x002A75E8; // type:func size:0x1C
 Stash_InitOnce = 0x002A7608; // type:func size:0x138
 Stash_SendData__FPviii = 0x002A7748; // type:func size:0xE0
 Stash_Upload__FPvUiii = 0x002A7828; // type:func size:0x80
-Stash_Copy = 0x002A78A8; // type:func size:0x118
+Stash_Copy__FPvUiiii = 0x002A78A8; // type:func size:0x118
 Stash_GetSize__FUi = 0x002A79C0; // type:func size:0x28
 SetTfragDists__Fv = 0x002A79F0; // type:func size:0x158
 DmaTfragTextures__Fv = 0x002A7B48; // type:func size:0x144
@@ -2197,3 +2197,4 @@ LiveMobyVars = 0x001BAAA0;
 
 StashState = 0x001C1720;
 StashBlocks = 0x001C1758;
+StashClient = 0x001C1728;
