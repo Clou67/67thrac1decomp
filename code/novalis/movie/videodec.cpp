@@ -1,10 +1,15 @@
 #include "common.h"
+#include "movie.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecCreate__FP8VideoDecPUciPUxT3iP9TimeStampi);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CA70);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecSetStream__FP8VideoDeciiPFP7sceMpegP13sceMpegCbDataPv_iPv);
+int videoDecSetStream(VideoDec *decoder, int type, int channel, MpegStreamCallback callback, void *argument)
+{
+    sceMpegAddStrCallback(&decoder->mpeg, type, channel, callback, argument);
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecBeginPut__FP8VideoDecPPUcPiT1T2);
 

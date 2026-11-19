@@ -5,6 +5,7 @@
 
 struct ReadBuf;
 struct sceMpeg;
+struct sceMpegCbData;
 
 struct sceDmaChan {
     unsigned int chcr;
@@ -147,6 +148,7 @@ struct sceGifTag {
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
 extern "C" {
+int sceMpegAddStrCallback(sceMpeg *mpeg, int type, int channel, int (*callback)(sceMpeg *, sceMpegCbData *, void *), void *argument);
 void sceSifInitRpc(int mode);
 int sceSifBindRpc(SifRpcClient *client, int server, int mode);
 int sceSifCheckStatRpc(SifRpcClient *client);
