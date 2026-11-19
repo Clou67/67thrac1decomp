@@ -2085,7 +2085,7 @@ vblankHandler = 0x0031B280; // from boot ELF (movie, 0x23B3D8)
 handler_endimage = 0x0031B3E8; // from boot ELF (movie, 0x23B540)
 startDisplay__Fi = 0x0031B438; // from boot ELF (movie, 0x23B590)
 endDisplay__Fv = 0x0031B488; // from boot ELF (movie, 0x23B5E0)
-videoCallback = 0x0031B498; // from boot ELF (movie, 0x23B5F0)
+videoCallback__FP7sceMpegP13sceMpegCbDataPv = 0x0031B498; // from boot ELF (movie, 0x23B5F0)
 pcmCallback__FP7sceMpegP16sceMpegCbDataStrPv = 0x0031B5D0; // from boot ELF (movie, 0x23B728)
 cpy2area__FPUciT0iT0iT0i = 0x0031B6B8; // from boot ELF (movie, 0x23B810)
 readBufCreate__FP7ReadBuf = 0x0031B7E8; // from boot ELF (movie, 0x23B940)
@@ -2210,3 +2210,5 @@ FontSmallMetrics = 0x001C3970;
 FontLargeMetrics = 0x001C3D10;
 
 FontColorsEnabled = 0x0015F45C; // size:0x4
+
+ptsOverflowMessage = 0x0020A778;

@@ -7,6 +7,15 @@ struct ReadBuf;
 struct sceMpeg;
 struct sceMpegCbData;
 
+struct sceMpegCbDataStr {
+    int type;
+    int channel;
+    unsigned char *data;
+    int length;
+    long pts;
+    long dts;
+};
+
 struct sceMpegCbDataTimeStamp {
     int type;
     long pts;

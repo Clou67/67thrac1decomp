@@ -277,7 +277,6 @@ EnableIntc = 0x00119090;
 movieOpenError = 0x0020A760;
 vblankHandler__Fi = 0x0031B280;
 handler_endimage__Fi = 0x0031B3E8;
-videoCallback__FP7sceMpegP13sceMpegCbDataPv = 0x0031B498;
 ShrubProc__Fv = 0x0029CDF0;
 BuildShrubTextureDma__Fi = 0x0029E538;
 FastFromSpr__FPvii = 0x00221090;
