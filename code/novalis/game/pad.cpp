@@ -365,8 +365,8 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
         if (pad->bits != 0 && pad->bits == pad->bitsPrev) {
             pad->repeatCounter--;
             if (pad->repeatCounter == 0 || pad->repeatCounter == 0xFF) {
-                pad->bitsOn = pad->bits;
                 pad->repeatCounter = pad->repeatSpeed;
+                pad->bitsOn = pad->bits;
             }
         } else
             pad->repeatCounter = pad->repeatDelay;
