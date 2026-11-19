@@ -8,6 +8,8 @@
 void FastSitAndSpin(int cycles);
 void FastMemCopy16(void *destination, void *source, int size);
 void printf_stub(const char *format, ...);
+void printf_stub2(const char *format, ...);
+void printf_stub3(const char *format, ...);
 void ResetFrameBufferForCutscene(void);
 
 // VU1 chain stages still in flight (bits 0-4); cleared by the VIF1 DMA interrupt.

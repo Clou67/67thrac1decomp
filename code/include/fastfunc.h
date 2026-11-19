@@ -24,5 +24,7 @@ int FastDecTimer(int &timer);
 float FastVec3Length(float *vec);
 void FastMemCopy32(void *destination, void *source, int size);
 void FastMemSet(void *destination, int value, int size);
+// DMAs quadwords from the scratchpad at spr_address into main memory.
+void FastFromSpr(void *destination, int spr_address, int quadwords);
 
 #endif

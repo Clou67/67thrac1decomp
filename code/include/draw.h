@@ -16,6 +16,18 @@ extern int videoModePal;
 
 void FadeToBlack(int frames);
 
+// Which scene layers are drawn, and whether their textures are paged into GS memory this frame.
+struct DrawConfig {
+    int unk_00;
+    int sky_texture_paging;
+    int sky;
+    int unk_0C[4];
+    int shrub_texture_paging;
+    int shrub;
+};
+
+extern DrawConfig drawConfig;
+
 void InitViewContext(void);
 void UpdateViewContext(void);
 
