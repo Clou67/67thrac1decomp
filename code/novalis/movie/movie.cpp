@@ -68,4 +68,7 @@ void ErrMessage(char *message)
     printf_stub("[ Error ] %s\n", message);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", proceedAudio__Fv);
+void proceedAudio(void)
+{
+    audioDecSend(&moviePlayer->audio_dec);
+}
