@@ -18,7 +18,9 @@ void voBufCreate(VoBuf *buffer, VoData *data, VoTag *tag, int size)
         buffer->tag[slot].status = VO_TAG_EMPTY;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufDelete__FP5VoBuf);
+void voBufDelete(VoBuf *buffer)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufReset__FP5VoBuf);
 
