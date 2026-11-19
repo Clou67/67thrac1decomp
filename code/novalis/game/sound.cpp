@@ -1,4 +1,7 @@
+#include <stddef.h>
+
 #include "common.h"
+#include "sound.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_CamOfs);
 
@@ -36,7 +39,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_FootstepPla
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", func_002A1960);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetVol);
+int sound_SetVol(int handle, int volume)
+{
+    unsigned int offset = handle * sizeof(SoundVoice);
+    unsigned char *voice = (unsigned char *)(offset + (unsigned int)&audioState);
+    *(int *)(voice + offsetof(SoundAudioState, voices[0].volume)) = volume;
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetPitch);
 
