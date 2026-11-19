@@ -369,4 +369,6 @@ void Hero_ZeroThrustVars(void);
 
 void Hero_ClearBoardMoby(void);
 
+int Hero_IsWeaponGroupA(int slot);
+
 #endif

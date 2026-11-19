@@ -306,3 +306,5 @@ Hero_AddGravity__FfPfT1 = 0x00248B68;
 FrontEnd_DrawMenu__Fi = 0x0028D080;
 
 LibcMemcpy__FPvPCvUi = 0x00115248;
+
+Hero_GetGadgetMoby__Fi = 0x0022DDD8;

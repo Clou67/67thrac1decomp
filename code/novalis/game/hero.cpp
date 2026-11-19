@@ -131,7 +131,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetGadgetMoby
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsWeaponGroupB);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsWeaponGroupA);
+int Hero_GetGadgetMoby(int slot);
+
+int Hero_IsWeaponGroupA(int slot)
+{
+    return (unsigned int)(Hero_GetGadgetMoby(slot) - ITEM_SONIC_SUMMONER) < 3;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsWearingBoots);
 
