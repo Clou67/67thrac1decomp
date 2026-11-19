@@ -11,24 +11,6 @@
 #include "sky.h"
 #include "vuchain.h"
 
-struct SkyCluster {
-    Vec4 bounds;
-    void *data;
-    short vert_cnt;
-    short tri_cnt;
-    short vert_offset;
-    short attr_offset;
-    short tri_offset;
-    short data_size;
-};
-
-struct sky_shell {
-    int cluster_cnt;
-    int gouraud;
-    int unk_08[2];
-    SkyCluster clusters[0];
-};
-
 struct SkyGifPageMarker {
     DmaTag *tag;
 };
@@ -46,22 +28,18 @@ extern int GifLoadCnt;
 extern unsigned int skyTexturedSetup[];
 extern unsigned int skyGouraudSetup[];
 
-unsigned char *skyScratchBuffers[2] = {
+unsigned char *g_SkyVuBufferAddrs[2] = {
     (unsigned char *)0x70000000,
     (unsigned char *)0x70001000
 };
-int skyScratchBufferIndex = 0;
+int g_SkyVuBuffer = 0;
 
 void FastMtx4Identity(float *matrix);
 void FastEulerToMtx2(Mtx4 *matrix, Vec4 *angles);
 void printf_stub3(const char *format, ...);
 void BuildGifTextureDma(void);
-void SkyBsphereCheck(SkyCluster *clusters, int cluster_count, unsigned char *visible);
 void SprDmaToSpr_Start(void *source, int quadwords, void *destination);
 void SprDmaToSpr_Wait(void);
-int SkyProcessVerts(void *source, void *destination, int vertex_count);
-void SkyDrawClusterTextured(int triangle_count, void *triangles, void *texcoords, void *vertices);
-void SkyDrawClusterGouraud(int triangle_count, void *triangles, void *colors, void *vertices);
 
 void SkyLevelNone(void)
 {
@@ -190,28 +168,28 @@ void SkyDrawShellTextured(sky_shell *shell)
     vu1_bufPtr.words += 4;
 
     // Queue the first visible cluster before entering the double-buffered loop.
-    skyScratchBufferIndex = 1 - skyScratchBufferIndex;
+    g_SkyVuBuffer = 1 - g_SkyVuBuffer;
 
     if (visible[0] == 1)
         SprDmaToSpr_Start(shell->clusters[0].data, shell->clusters[0].data_size >> 4,
-                          skyScratchBuffers[skyScratchBufferIndex]);
+                          g_SkyVuBufferAddrs[g_SkyVuBuffer]);
 
     for (int cluster_index = 0; cluster_index < shell->cluster_cnt; cluster_index++) {
         if (visible[cluster_index] == 1)
             SprDmaToSpr_Wait();
 
-        skyScratchBufferIndex = 1 - skyScratchBufferIndex;
+        g_SkyVuBuffer = 1 - g_SkyVuBuffer;
         int next_index = cluster_index + 1;
         if (next_index < shell->cluster_cnt && visible[next_index] == 1) {
             SprDmaToSpr_Start(shell->clusters[next_index].data, shell->clusters[next_index].data_size >> 4,
-                              skyScratchBuffers[skyScratchBufferIndex]);
+                              g_SkyVuBufferAddrs[g_SkyVuBuffer]);
         }
 
         if (visible[cluster_index] == 1) {
-            unsigned char *buffer = skyScratchBuffers[1 - skyScratchBufferIndex];
-            int vertex_offset = shell->clusters[cluster_index].vert_offset;
-            unsigned char *triangles = buffer + shell->clusters[cluster_index].tri_offset;
-            unsigned char *texcoords = buffer + shell->clusters[cluster_index].attr_offset;
+            unsigned char *buffer = g_SkyVuBufferAddrs[1 - g_SkyVuBuffer];
+            int vertex_offset = shell->clusters[cluster_index].vert_ofs;
+            unsigned char *triangles = buffer + shell->clusters[cluster_index].tri_ofs;
+            unsigned char *texcoords = buffer + shell->clusters[cluster_index].st_ofs;
 
             if (SkyProcessVerts(buffer + vertex_offset, transformed, shell->clusters[cluster_index].vert_cnt) == 0)
                 SkyDrawClusterTextured(shell->clusters[cluster_index].tri_cnt, triangles, texcoords, transformed);
@@ -237,28 +215,28 @@ void SkyDrawShellGouraud(sky_shell *shell)
     vu1_bufPtr.words += 4;
 
     // Queue the first visible cluster before entering the double-buffered loop.
-    skyScratchBufferIndex = 1 - skyScratchBufferIndex;
+    g_SkyVuBuffer = 1 - g_SkyVuBuffer;
 
     if (visible[0] == 1)
         SprDmaToSpr_Start(shell->clusters[0].data, shell->clusters[0].data_size >> 4,
-                          skyScratchBuffers[skyScratchBufferIndex]);
+                          g_SkyVuBufferAddrs[g_SkyVuBuffer]);
 
     for (int cluster_index = 0; cluster_index < shell->cluster_cnt; cluster_index++) {
         if (visible[cluster_index] == 1)
             SprDmaToSpr_Wait();
 
-        skyScratchBufferIndex = 1 - skyScratchBufferIndex;
+        g_SkyVuBuffer = 1 - g_SkyVuBuffer;
         int next_index = cluster_index + 1;
         if (next_index < shell->cluster_cnt && visible[next_index] == 1) {
             SprDmaToSpr_Start(shell->clusters[next_index].data, shell->clusters[next_index].data_size >> 4,
-                              skyScratchBuffers[skyScratchBufferIndex]);
+                              g_SkyVuBufferAddrs[g_SkyVuBuffer]);
         }
 
         if (visible[cluster_index] == 1) {
-            unsigned char *buffer = skyScratchBuffers[1 - skyScratchBufferIndex];
-            int vertex_offset = shell->clusters[cluster_index].vert_offset;
-            unsigned char *triangles = buffer + shell->clusters[cluster_index].tri_offset;
-            unsigned char *colors = buffer + shell->clusters[cluster_index].attr_offset;
+            unsigned char *buffer = g_SkyVuBufferAddrs[1 - g_SkyVuBuffer];
+            int vertex_offset = shell->clusters[cluster_index].vert_ofs;
+            unsigned char *triangles = buffer + shell->clusters[cluster_index].tri_ofs;
+            unsigned char *colors = buffer + shell->clusters[cluster_index].st_ofs;
 
             if (SkyProcessVerts(buffer + vertex_offset, transformed, shell->clusters[cluster_index].vert_cnt) == 0)
                 SkyDrawClusterGouraud(shell->clusters[cluster_index].tri_cnt, triangles, colors, transformed);
