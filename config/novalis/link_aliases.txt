@@ -203,7 +203,6 @@ music_PlayPreseekedSpeech__Fv = 0x00279E78;
 sound_LevelPlay__Fiii = 0x002A1770;
 
 snd_PauseAllSoundsInGroup__Fi = 0x0012E3E8;
-music_Pause__Fi = 0x0027A408;
 FadeToBlack__Fi = 0x0021B438;
 Hud_SetEntryValueById__Fii = 0x0024B090;
 HudStub__Fv = 0x0024FB38;

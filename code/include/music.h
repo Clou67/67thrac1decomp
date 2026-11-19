@@ -35,7 +35,7 @@ struct MusicTransition {
 extern MusicTransition musicTransition;
 
 void music_Sync(int wait);
-void music_Pause(int fade);
+void music_Pause(int includeSpeech);
 void music_Unpause(void);
 void music_RegisterBankCB(void);
 void music_PlayPreseekedSpeech(void);

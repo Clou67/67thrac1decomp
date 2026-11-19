@@ -33,7 +33,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_SetTransiti
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Stop);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Pause);
+enum { MUSIC_COMMAND_PAUSE = -0x8000 };
+
+void music_Pause(int includeSpeech)
+{
+    if (includeSpeech) {
+        musicTransition.secondary_command = MUSIC_COMMAND_PAUSE;
+        musicTransition.secondary_unpause = 0;
+    }
+
+    musicTransition.primary_command = MUSIC_COMMAND_PAUSE;
+    musicTransition.primary_unpause = 0;
+    musicTransition.transition_command = MUSIC_COMMAND_PAUSE;
+    musicTransition.transition_unpause = 0;
+}
 
 enum { MUSIC_COMMAND_RESUME = 4 };
 
