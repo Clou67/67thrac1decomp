@@ -19,4 +19,6 @@ int DecAlpha(int *rgba, int decrement);
 
 float MB_CollLineWrapper(Vec4 *position);
 
+float MB_catmullRom(float first, float second, float third, float fourth, float fraction);
+
 #endif

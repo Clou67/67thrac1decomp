@@ -29,7 +29,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randVector)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randSphere);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_catmullRom);
+float MB_catmullRom(float first, float second, float third, float fourth, float fraction)
+{
+    float firstDelta = first - second;
+    float cubic = (fourth - third) - firstDelta;
+    float fractionSquared = fraction * fraction;
+    float linear = third - first;
+    float fractionCubed = fractionSquared * fraction;
+    float quadratic = firstDelta - cubic;
+
+    return cubic * fractionCubed + quadratic * fractionSquared + linear * fraction + second;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CosineInterpolate);
 
