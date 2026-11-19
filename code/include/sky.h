@@ -1,6 +1,7 @@
 #ifndef SKY_H
 #define SKY_H
 
+struct Mtx4;
 struct sky_shell;
 
 struct SKY {
@@ -12,6 +13,7 @@ struct SKY {
 };
 
 extern SKY *Sky;
+extern Mtx4 outMatrix;
 
 void SkyDrawShell(int shell_index);
 void SkyDrawShellTextured(sky_shell *shell);

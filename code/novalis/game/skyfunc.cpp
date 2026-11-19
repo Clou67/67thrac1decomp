@@ -7,7 +7,15 @@ struct sky_shell {
     int gouraud;
 };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkyLevelNone);
+void FastMtx4Identity(float *matrix);
+
+void SkyLevelNone(void)
+{
+    FastMtx4Identity(&outMatrix.v0.x);
+
+    for (int shell_index = 0; shell_index < Sky->shell_cnt; shell_index++)
+        SkyDrawShell(shell_index);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkyLevel_01);
 
