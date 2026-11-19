@@ -155,6 +155,32 @@ void InfobotHint_SetEntryState(MobyInstance *moby, int state)
         LevelObjectStates[index].state = state;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/npc", InfobotHint_InitInstance);
+int InfobotHint_InitInstance(MobyInstance *moby, InfobotHint *hint)
+{
+    InfobotHintEntry *entry;
+    int index;
+
+    index = InfobotHint_FindEntry(moby);
+    if (index == -1)
+        return -1;
+
+    if (InfobotHintLists[index] == 0)
+        return -1;
+
+    hint->initialized = 1;
+    hint->startTime = worldUpdateTime;
+    hint->previousEntry = -1;
+    hint->entry = 0;
+    hint->entries = InfobotHintLists[index];
+
+    // Once seen, an unconditional first entry moves straight on to the next one.
+    if (LevelObjectStates[index].state != 0 && hint->entries->condition == INFOBOT_HINT_ALWAYS)
+        hint->entry = hint->entries->next;
+
+    entry = &hint->entries[hint->entry];
+    hint->anyDirection = entry->flags & INFOBOT_HINT_ANY_DIRECTION;
+
+    return index;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/npc", InfobotHint_SetState);
