@@ -219,7 +219,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetNormaliz
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RemoveVecComponent);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetPvarsIfMobyHasThem);
+struct MobySpecialVars {
+    void *pVars;
+};
+
+void *MB_GetPvarsIfMobyHasThem(MobyInstance *moby)
+{
+    if (!moby)
+        return 0;
+
+    if (moby->modeBits & HAS_SPECIAL_VARS)
+        return ((MobySpecialVars *)moby->pVar)->pVars;
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetPVarsField10);
 

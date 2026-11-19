@@ -21,4 +21,6 @@ float MB_CollLineWrapper(Vec4 *position);
 
 float MB_catmullRom(float first, float second, float third, float fourth, float fraction);
 
+void *MB_GetPvarsIfMobyHasThem(MobyInstance *moby);
+
 #endif
