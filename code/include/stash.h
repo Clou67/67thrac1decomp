@@ -5,4 +5,6 @@ void Stash_Init(void);
 
 int Stash_SendData(void *source, int transferQwords, int reserveQwords, int comment);
 
+int Stash_Upload(void *source, unsigned int slot, int offset, int qwords);
+
 #endif

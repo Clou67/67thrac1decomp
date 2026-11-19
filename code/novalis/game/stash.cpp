@@ -56,7 +56,21 @@ int Stash_SendData(void *source, int transferQwords, int reserveQwords, int comm
     return slot;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", Stash_Upload);
+int Stash_Upload(void *source, unsigned int slot, int offset, int qwords)
+{
+    if (slot >= STASH_SLOT_COUNT || StashBlocks[slot].qwords == 0)
+        return -3;
+    if (StashBlocks[slot].qwords < offset + qwords)
+        return -1;
+
+    SifDmaTransfer transfer;
+    transfer.source = source;
+    transfer.destination = (void *)(StashBlocks[slot].address + offset * STASH_QWORD_BYTES);
+    transfer.size = qwords * STASH_QWORD_BYTES;
+    transfer.attributes = 0;
+    sceSifSetDma(&transfer, 1);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", Stash_Copy);
 
