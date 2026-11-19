@@ -5,6 +5,7 @@
 extern "C" {
 char *strncpy(char *destination, const char *source, unsigned int count);
 int memcmp(const void *first, const void *second, unsigned int count);
+void *memset(void *destination, int value, unsigned int count);
 char *strcpy(char *destination, const char *source);
 int sprintf(char *buffer, const char *format, ...);
 }

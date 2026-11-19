@@ -1,6 +1,10 @@
 #ifndef FREEZE_H
 #define FREEZE_H
 
+extern char FontNormalMetrics[];
+extern int freezeStatsTimeRefA[2];
+extern int freezeStatsScoreRefA[2];
+
 // Values of freeze_t::mode.
 enum freeze_mode {
     FREEZE_MODE_CONFIRM_CANCEL,
@@ -30,6 +34,18 @@ struct freeze_t {
 };
 
 extern freeze_t Freeze;
+
+// Text and format strings of the freeze dialogs.
+extern char FreezeEmptyText[];
+extern char FreezeFormatPrompt[];
+extern char FreezeFormatIndented[];
+extern char FreezeFormatFirst[];
+extern char FreezeFormatSecond[];
+extern char FreezeFormatThird[];
+extern char FreezeFormatNth[];
+extern char FreezeFormatString[];
+extern char FreezeFormatTime[];
+extern char FreezeFormatNumber[];
 
 // Which occlusion the frozen scene is drawn with.
 extern int OcclMode;
@@ -66,8 +82,8 @@ struct LevelSelectText {
 extern LevelSelectText LevelSelectTexts[];
 extern LevelMapMarker LevelMapMarkers[];
 extern unsigned char LevelUnlocked[];
-extern int MediumFontHeight;
 
+extern int MediumFontHeight;
 void DrawMessageBox(int left, int right, int top, int bottom);
 
 #endif

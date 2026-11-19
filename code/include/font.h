@@ -14,8 +14,6 @@ struct FontWindow {
     short flags;
     short sub_pixel_x;
     short sub_pixel_y;
-    short drop_shadow_offset_x;
-    short drop_shadow_offset_y;
 };
 
 // Selects font and returns its TEX0 register value (RC1 layout; DL returns void).
@@ -23,6 +21,10 @@ unsigned long FontSet(int fontName);
 int FontLen(char *text, int length);
 void FontPrintMediumLeft(int x, int y, unsigned long rgba, char *text, int length);
 void SetFontWindow(FontWindow *window, int win_top, int win_bot, int win_left, int win_right, int text_x, int text_y, int line_spacing, int flags);
+// The window printers take the font's TEX0 value and its width table.
+void FontPrintWindow(FontWindow *window, unsigned long rgba, char *text, int length, unsigned long tex0, void *metrics);
+void FontPrintWindowMedium(FontWindow *window, unsigned long rgba, char *text, int length);
+int FontPrintCenter(int xpos, int ypos, unsigned long rgba, char *s, int len);
 void FontPrintWindowSmall(FontWindow *window, unsigned long rgba, char *text, int length);
 
 #endif

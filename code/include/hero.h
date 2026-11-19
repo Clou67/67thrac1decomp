@@ -16,9 +16,14 @@ struct HeroState {
     int trickHudHandle;
     char unk884[0xC];
     unsigned char *raceMoby;
-    char unk894[6];
+    int raceTimeFrames;
+    short racePathNode;
     short raceLap;
-    char unk89C[0xD73];
+    char unk89C[0xC];
+    int raceScore;
+    char unk8AC[0x14];
+    int racePosition;
+    char unk8C4[0xD4B];
     unsigned char shipFlags;
     char unk1610[0x6F0];
     float savedPosRot[8];
