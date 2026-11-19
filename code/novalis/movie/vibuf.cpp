@@ -60,7 +60,13 @@ int viBufDelete(ViBuf *buffer)
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufCount__FP5ViBuf);
+int viBufCount(ViBuf *buffer)
+{
+    WaitSema(buffer->sema);
+    int count = (buffer->dmaN << VIBUF_BLOCK_SHIFT) + buffer->readBytes;
+    SignalSema(buffer->sema);
+    return count;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufFlush__FP5ViBuf);
 
