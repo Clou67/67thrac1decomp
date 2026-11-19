@@ -171,7 +171,6 @@ int EnableDmac(int channel);
 int DisableDmac(int channel);
 }
 
-#ifdef ALLOW_NON_MATCHING
 // EE kernel thread descriptor.
 struct EeThreadParams {
     int status;
@@ -192,6 +191,5 @@ int _StartThread(int thread, void *argument);
 int AddIntcHandler(int cause, int (*handler)(int), int next);
 int EnableIntc(int cause);
 }
-#endif
 
 #endif

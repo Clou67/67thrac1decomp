@@ -171,8 +171,6 @@ int isAudioOK(void)
     return audioDecIsPageFull(&moviePlayer->audio_dec);
 }
 
-#ifdef ALLOW_NON_MATCHING
-// The thread descriptor setup still differs from retail.
 struct MovieDecoderMemory {
     VoData output_frames[2];
     VoTag output_tags[2];
@@ -193,7 +191,7 @@ int pcmCallback(sceMpeg *mpeg, sceMpegCbDataStr *event, void *argument);
 void videoDecMain(void *argument);
 int vblankHandler(int cause);
 int handler_endimage(int channel);
-extern char _gp_1[];
+extern int _gp;
 extern const char movieOpenError[];
 
 int initAll(int sector, int size, int language)
@@ -229,7 +227,7 @@ int initAll(int sector, int size, int language)
     thread.entry = videoDecMain;
     thread.stack_size = MOVIE_DECODER_STACK_SIZE;
     thread.priority = MOVIE_THREAD_PRIORITY;
-    thread.gp = _gp_1;
+    thread.gp = &_gp;
     thread.option = 0;
     int thread_id = CreateThread(&thread);
     movieDecoderThread = thread_id;
@@ -251,9 +249,6 @@ int initAll(int sector, int size, int language)
 
     return opened;
 }
-#else
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", initAll__Fiii);
-#endif
 
 void termAll(void)
 {
