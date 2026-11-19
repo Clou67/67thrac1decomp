@@ -54,23 +54,16 @@ void InitPadRing(void)
     pad->ringValidSize = 0;
 }
 
-#ifdef ALLOW_NON_MATCHING
 int PadRingBitsOn(int bits, int frames, int *frame)
 {
     PAD *pad = &padState;
-    int *ring = pad->bitsOnRing;
-    int *held;
-    int age;
+    int limit = pad->ringValidSize < frames ? pad->ringValidSize : frames;
 
-    if (frames > pad->ringValidSize)
-        frames = pad->ringValidSize;
-
-    frames++;
-    for (age = 1; age < frames; age++) {
-        held = &ring[(pad->ringIndex - age + PAD_RING_LENGTH) % PAD_RING_LENGTH];
+    for (int age = 1; age < limit + 1; age++) {
+        int *held = &padState.bitsOnRing[(padState.ringIndex - age + PAD_RING_LENGTH) % PAD_RING_LENGTH];
 
         if (*held & bits) {
-            if (frame != 0)
+            if (frame)
                 *frame = age - 1;
 
             return *held & bits;
@@ -79,9 +72,6 @@ int PadRingBitsOn(int bits, int frames, int *frame)
 
     return 0;
 }
-#else
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pad", PadRingBitsOn);
-#endif
 
 int PadRingCoincidentBitsOn(int firstBits, int secondBits, int frames, int window)
 {
