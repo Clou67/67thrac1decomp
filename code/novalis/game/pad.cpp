@@ -188,17 +188,15 @@ void UpdatePadEx(PAD *pad)
     pad->act_direct[1] = 0;
 }
 
-#ifdef ALLOW_NON_MATCHING
 void ClearPadInput(PAD *pad)
 {
     int index;
 
     pad->digitalBits = 0;
-    pad->handsOffStick = 1;
     pad->bits = 0;
     pad->bitsOn = 0;
     pad->bitsOff = 0;
-    pad->handsOff = 1;
+    pad->handsOffStick = pad->handsOff = 1;
     pad->digitalBitsOn = 0;
     pad->digitalBitsOff = 0;
     pad->hudBits = 0;
@@ -211,9 +209,6 @@ void ClearPadInput(PAD *pad)
         pad->hudAnalog[index] = 0.0f;
     }
 }
-#else
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pad", ClearPadInput);
-#endif
 
 #ifdef ALLOW_NON_MATCHING
 static inline void MirrorPadBits(int &bits)
