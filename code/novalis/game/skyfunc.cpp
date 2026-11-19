@@ -118,6 +118,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", func_0029EF90);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", func_0029F258);
 
+// Retail forms the static origin address as part of the quadword copy.
+static inline void CopySkyOriginInline(Vec4 *destination)
+{
+    const Vec4 *source;
+    __asm__ volatile("la %0, %2\n\tlq $2, 0(%0)\n\tsq $2, 0(%1)"
+                     : "=&r"(source)
+                     : "r"(destination), "i"(&skyOrigin)
+                     : "$2", "memory");
+}
+
 void SkySpace(void)
 {
     Vec4 rotation;
@@ -171,7 +181,7 @@ void SkySpace(void)
         FastScaleVec4(&outMatrix.v0, &outMatrix.v0, scale);
         FastScaleVec4(&outMatrix.v1, &outMatrix.v1, scale);
         FastScaleVec4(&outMatrix.v2, &outMatrix.v2, scale);
-        COPY_VEC4_FROM_SYMBOL(&outMatrix.v3, skyOrigin);
+        CopySkyOriginInline(&outMatrix.v3);
         SkyDrawShell(shell_index);
     }
 
