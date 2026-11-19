@@ -117,6 +117,22 @@ void UnlockPurchasableItems(void)
     AddToUnlockedList(Level);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/initlevel", AddToUnlockedList);
+void AddToUnlockedList(int level)
+{
+    int item;
+    int index;
+
+    item = LevelVendorItems[level];
+    if (item == 0) {
+        return;
+    }
+
+    for (index = 0; (PurchasableVendorItems[index] & VENDOR_ITEM_ID_MASK) != item && PurchasableVendorItems[index] != VENDOR_ITEM_NONE; index++) {
+    }
+
+    if (PurchasableVendorItems[index] == VENDOR_ITEM_NONE) {
+        PurchasableVendorItems[index] = item;
+    }
+}
 
 TEXT_PADDING(0x27BD0090, 0x00000000);
