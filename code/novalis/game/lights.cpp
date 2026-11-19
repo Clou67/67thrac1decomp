@@ -152,7 +152,116 @@ void UpdatePointLights(void)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", AttachPointLight);
+void AttachPointLight(int light)
+{
+    PointLight *pointLight;
+    PL_Data *data;
+    TieInstance *tie;
+    Tfrag *tfrag;
+    ShrubInstance *shrub;
+    Vec4 sphere;
+    short *entry;
+    short *end;
+    unsigned int slots;
+    int tieIndex;
+    int tfragIndex;
+    int shrubIndex;
+
+    pointLight = &PointLights[light];
+    data = &PointLightData[light];
+    entry = data->list;
+    end = entry + POINT_LIGHT_LIST_LENGTH;
+
+    CopyVec4Inline(&sphere, &pointLight->pos);
+    sphere.w += POINT_LIGHT_MARGIN;
+
+    if (entry < end) {
+        data->tie_offset = 0;
+        tieIndex = 0;
+        for (tie = TieInstances; tie != TieInstanceEnd; tie++, tieIndex++) {
+            if (FastVec3AddSubLen(&sphere, &tie->bsphere)) {
+                *entry++ = tieIndex;
+                slots = tie->point_lights;
+                if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                    tie->point_lights = light | 0xFFF0;
+                } else if ((slots & 0xFFF0) == 0xFFF0) {
+                    tie->point_lights = (slots & 0xFF0F) | (light << 4);
+                } else if ((slots & 0xFF00) == 0xFF00) {
+                    tie->point_lights = (slots & 0xF0FF) | (light << 8);
+                } else if ((slots & 0xF000) == 0xF000) {
+                    tie->point_lights = (slots & 0x0FFF) | (light << 12);
+                } else {
+                    entry--;
+                }
+
+                if (entry >= end) {
+                    break;
+                }
+            }
+        }
+
+        data->tie_count = entry - data->list;
+    }
+
+    if (entry < end) {
+        data->tfrag_offset = entry - data->list;
+        FastScaleVec4(&sphere, &sphere, TFRAG_POSITION_SCALE);
+
+        tfrag = Tfrags;
+        for (tfragIndex = 0; tfragIndex < TfragsCnt; tfragIndex++, tfrag++) {
+            if (FastVec3AddSubLen(&sphere, &tfrag->bsphere)) {
+                *entry++ = tfragIndex;
+                slots = tfrag->point_lights;
+                if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                    tfrag->point_lights = light | 0xFFF0;
+                } else if ((slots & 0xFFF0) == 0xFFF0) {
+                    tfrag->point_lights = (slots & 0xFF0F) | (light << 4);
+                } else if ((slots & 0xFF00) == 0xFF00) {
+                    tfrag->point_lights = (slots & 0xF0FF) | (light << 8);
+                } else if ((slots & 0xF000) == 0xF000) {
+                    tfrag->point_lights = (slots & 0x0FFF) | (light << 12);
+                } else {
+                    entry--;
+                }
+
+                if (entry >= end) {
+                    break;
+                }
+            }
+        }
+
+        data->tfrag_count = (entry - data->list) - data->tfrag_offset;
+    }
+
+    if (entry < end) {
+        data->shrub_offset = entry - data->list;
+        shrubIndex = 0;
+        for (shrub = ShrubInstances; shrub != ShrubInstanceEnd; shrub++, shrubIndex++) {
+            if (FastVec3AddSubLen(&sphere, &shrub->bsphere)) {
+                *entry++ = shrubIndex;
+                slots = shrub->point_lights;
+                if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                    shrub->point_lights = light | 0xFFF0;
+                } else if ((slots & 0xFFF0) == 0xFFF0) {
+                    shrub->point_lights = (slots & 0xFF0F) | (light << 4);
+                } else if ((slots & 0xFF00) == 0xFF00) {
+                    shrub->point_lights = (slots & 0xF0FF) | (light << 8);
+                } else if ((slots & 0xF000) == 0xF000) {
+                    shrub->point_lights = (slots & 0x0FFF) | (light << 12);
+                } else {
+                    entry--;
+                }
+
+                if (entry >= end) {
+                    break;
+                }
+            }
+        }
+
+        data->shrub_count = (entry - data->list) - data->shrub_offset;
+    }
+}
+
 
 void RefreshPointLight(int light)
 {
