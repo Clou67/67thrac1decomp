@@ -1,4 +1,5 @@
 #include "common.h"
+#include "fastfunc.h"
 #include "moby.h"
 #include "mobyutil.h"
 
@@ -129,7 +130,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetZBoundsF
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetZBoundsFromFloorCeil);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", TweenColor);
+int TweenColor(int from, int to, float fraction)
+{
+    return FastTweenColor(from, to, fraction);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_FindSlotByMask);
 
