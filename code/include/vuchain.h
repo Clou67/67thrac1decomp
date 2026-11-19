@@ -129,6 +129,12 @@ extern unsigned char *SkinVertexCache;
 #define GS_TRANSFER_BLOCK_QWC (GS_TRANSFER_BLOCK_SIZE / 16)
 #define GS_LOAD_IMAGE_QWC (sizeof(sceGsLoadImage) / 16)
 
+// Where a texture was placed in GS memory this frame; zero when it was not.
+struct GsTextureLoc {
+    short base;
+    short mip;
+};
+
 // Display size, read by the scissor clamp (core global).
 extern int occlViewParams[];
 

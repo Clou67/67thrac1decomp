@@ -21,7 +21,9 @@ struct DrawConfig {
     int unk_00;
     int sky_texture_paging;
     int sky;
-    int unk_0C[4];
+    int tfrag_texture_paging;
+    int tfrag;
+    int unk_14[2];
     int shrub_texture_paging;
     int shrub;
 };
