@@ -73,6 +73,10 @@ segments:
     - [0x202c, lit4]
     - [0x2230, .sdata, game/npc]  # BoltHudHandle, separators
     - [0x2250, lit4]
+    - [0x25c8, .sdata, game/skyfunc]  # scratchpad DMA buffers and index
+    - [0x25d8, lit4]
+    - [0x2610, .rodata, game/skyfunc]  # sky texture label; trailing zero fill includes Sky at 0x16051c
+    - [0x2620, lit4]
     - [0x32a0, .sdata, game/vuchain]  # VifChainFlags
     - [0x32a4, lit4]
 

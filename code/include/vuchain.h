@@ -103,6 +103,7 @@ extern unsigned char *SkinVertexCache;
 
 // DMA tag ids (bits 28-30): payload follows the tag inline (cnt) or sits at the address in word 1 (ref).
 #define DMA_TAG_CNT 0x10000000
+#define DMA_TAG_NEXT 0x20000000
 #define DMA_TAG_REF 0x30000000
 #define DMA_TAG_END 0x70000000
 
