@@ -140,6 +140,8 @@ int sceSifSetDma(SifDmaTransfer *transfer, int count);
 int sceSifDmaStat(int id);
 int DIntr(void);
 int EIntr(void);
+int GetThreadId(void);
+int ChangeThreadPriority(int thread, int priority);
 
 sceDmaChan *sceDmaGetChan(int channel);
 void sceDmaSend(sceDmaChan *channel, void *tag);
