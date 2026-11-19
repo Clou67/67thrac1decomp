@@ -1,5 +1,0 @@
-# SkyDrawShellTextured and SkyDrawShellGouraud
-
-The C++ candidates allocate one visibility byte per cluster and pass the array to SkyBsphereCheck. They emit the shell setup DMA packet and alternate between the two scratchpad buffers. Each loop iteration waits for the current visible cluster's transfer, queues the next visible cluster, then processes the current cluster. Gouraud also restores GS TEST and ZBUF after drawing.
-
-The standalone candidates match the original sizes (0x23C and 0x274), with 83 differing instruction words in each after masking relocation fields. The first differences start in VU1 packet setup. The compiler interleaves the scratch buffer index load and update earlier than retail. It also folds the 0x10 shell header offset into the cluster pointer, while retail leaves it in the field displacements. Using direct array member expressions instead of local cluster pointers shortened both candidates by eight bytes. The shared inline routine was emitted out of line by GCC 2.95.
