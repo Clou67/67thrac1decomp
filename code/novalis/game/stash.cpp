@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 #include "common.h"
 #include "sce.h"
 #include "stash.h"
@@ -29,9 +31,42 @@ void Stash_Init(void)
     sceSifInitRpc(0);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", Stash_InitOnce);
+void Stash_InitOnce(void)
+{
+    StashInfo *state;
+    int reply[4];
+    int index;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", func_002A7740);
+    for (;;) {
+        if (sceSifBindRpc(&StashClient, STASH_RPC_SERVER, 1) < 0) {
+            for (;;) {
+            }
+        }
+        while (sceSifCheckStatRpc(&StashClient) != 0) {
+        }
+        state = &StashState;
+        if (state->client.server != 0)
+            break;
+        // Give the IOP server time to start before retrying the bind.
+        index = 0xFFFF;
+        while (index != -1) {
+            index--;
+        }
+    }
+
+    SifRpcClient *client = &StashClient;
+    sceSifCallRpc(client, STASH_RPC_INFO, 0, 0, 0, reply, sizeof(reply), 0, 0);
+    // The RPC client is embedded in the stash state.
+    StashInfo *info = (StashInfo *)((char *)client - offsetof(StashInfo, client));
+    info->base = reply[0];
+    info->size = reply[1];
+    info->next = reply[0];
+    info->count = 0;
+    for (index = 0; index < STASH_SLOT_COUNT; index++) {
+        StashBlocks[index].address = 0;
+        StashBlocks[index].qwords = 0;
+    }
+}
 
 int Stash_SendData(void *source, int transferQwords, int reserveQwords, int comment)
 {

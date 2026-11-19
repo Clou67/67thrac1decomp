@@ -2,6 +2,7 @@
 #define STASH_H
 
 void Stash_Init(void);
+void Stash_InitOnce(void);
 
 int Stash_SendData(void *source, int transferQwords, int reserveQwords, int comment);
 
