@@ -11,4 +11,6 @@
 // Temporary: marks a core small-data variable until the core has its own build.
 extern unsigned char PurchasableVendorItems[VENDOR_ITEM_COUNT] __attribute__((section(".sdata")));
 
+void Vendor_ResetHUDPass(void);
+
 #endif
