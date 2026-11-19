@@ -293,3 +293,4 @@ FastMtxTransform__FP4Mtx4N20 = 0x00221CE8;
 TieProc__Fv = 0x002A9A90;
 BuildTieTextureDma__Fi = 0x002AAF68;
 LightTies__FPv = 0x002AB218;
+FastAbsI__Fi = 0x00221110;
