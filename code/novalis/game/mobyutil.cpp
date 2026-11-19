@@ -77,7 +77,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetNextMoby
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026E3A0);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", DecAlpha);
+int DecAlpha(int *rgba, int decrement)
+{
+    int color = *rgba;
+    int alpha = (color >> 24) - decrement;
+
+    if (alpha < 0)
+        alpha = 0;
+
+    *rgba = (color & 0x00FFFFFF) | (alpha << 24);
+    return alpha == 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_BallisticTicksToHeight);
 

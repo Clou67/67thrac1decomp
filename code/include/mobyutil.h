@@ -14,4 +14,6 @@ void MB_SetZBoundsFromPos(MobyInstance *moby, float z);
 
 int TweenColor(int from, int to, float fraction);
 
+int DecAlpha(int *rgba, int decrement);
+
 #endif
