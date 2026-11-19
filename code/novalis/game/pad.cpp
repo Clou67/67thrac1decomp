@@ -46,7 +46,6 @@ int scePad2Read(int socket, unsigned char *data);
 #define PAD_FLICK_TURN 0.9599311f
 #define PAD_FLICK_TURN_FRAMES 5
 
-
 void InitPadRing(void)
 {
     PAD *pad = &padState;
@@ -227,25 +226,18 @@ static inline void MirrorPadBits(int &bits)
 
 void ProcessPadInput(PAD *pad, unsigned char *data, int length)
 {
-    float *analog;
-    float *hudAnalog;
-    float *angRing;
-    int *bitsRing;
     Vec4 stick;
     float stickLength;
     float stickAngle;
     int index;
+    int age;
+    int turn;
 
     pad->bits = (data[0] << 8 | data[1]) ^ 0xFFFF;
     pad->digitalBits = pad->bits;
 
-    for (index = 15; index >= 0; index--)
+    for (index = PAD_ANALOG_COUNT - 1; index >= 0; index--)
         pad->analog[index] = 0.0f;
-
-    analog = pad->analog;
-    hudAnalog = pad->hudAnalog;
-    angRing = pad->analogAngRing;
-    bitsRing = pad->bitsOnRing;
 
     if (length >= PAD_DATA_STICK_BYTES) {
         for (index = 0; index < PAD_STICK_COUNT; index++) {
@@ -279,7 +271,7 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
     }
 
     for (index = 0; index < PAD_ANALOG_COUNT; index++)
-        hudAnalog[index] = analog[index];
+        pad->hudAnalog[index] = pad->analog[index];
 
     if (pad->analog[2] != 0.0f || pad->analog[3] != 0.0f)
         pad->useAnalog = 1;
@@ -300,12 +292,12 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
 
     pad->handsOffStick = (pad->bits & PAD_DPAD) == 0;
     pad->handsOff = pad->bits == 0;
-    pad->digitalBitsOn = ~pad->bitsPrev & pad->digitalBits;
-    pad->digitalBitsOff = ~pad->bits & pad->digitalBitsPrev;
-    pad->hudBitsOn = ~pad->bitsPrev & pad->bits;
-    pad->hudBitsOff = ~pad->bits & pad->bitsPrev;
     pad->bitsOn = ~pad->bitsPrev & pad->bits;
+    pad->digitalBitsOn = ~pad->bitsPrev & pad->digitalBits;
     pad->bitsOff = ~pad->bits & pad->bitsPrev;
+    pad->digitalBitsOff = ~pad->bits & pad->digitalBitsPrev;
+    pad->hudBitsOn = pad->bitsOn;
+    pad->hudBitsOff = pad->bitsOff;
     pad->hudBits = pad->bits;
     pad->unmaskedBits = pad->bits;
 
@@ -344,11 +336,11 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
     stickAngle = FastArcTan(stick.x, stick.y);
 
     pad->analogMagRing[pad->ringIndex] = stickLength;
-    angRing[pad->ringIndex] = stickAngle;
+    pad->analogAngRing[pad->ringIndex] = stickAngle;
 
     if (stickLength > PAD_FLICK_ENGAGED) {
-        for (index = 1; index < FastScaleRoundInt(PAD_FLICK_FRAMES); index++) {
-            float previous = pad->analogMagRing[(pad->ringIndex - index + PAD_RING_LENGTH) % PAD_RING_LENGTH];
+        for (age = 1; age < FastScaleRoundInt(PAD_FLICK_FRAMES); age++) {
+            float previous = pad->analogMagRing[(pad->ringIndex - age + PAD_RING_LENGTH) % PAD_RING_LENGTH];
 
             if (previous > PAD_FLICK_ENGAGED)
                 break;
@@ -360,8 +352,8 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
         }
 
         if ((pad->bitsOn & PAD_STICK_FLICK) == 0) {
-            for (index = 1; index < FastScaleRoundInt(PAD_FLICK_TURN_FRAMES); index++) {
-                if (FastDiffRots(angRing[(pad->ringIndex - index + PAD_RING_LENGTH) % PAD_RING_LENGTH], stickAngle) > PAD_FLICK_TURN) {
+            for (turn = 1; turn < FastScaleRoundInt(PAD_FLICK_TURN_FRAMES); turn++) {
+                if (FastDiffRots(pad->analogAngRing[(pad->ringIndex - turn + PAD_RING_LENGTH) % PAD_RING_LENGTH], stickAngle) > PAD_FLICK_TURN) {
                     pad->bitsOn |= PAD_STICK_FLICK;
                     break;
                 }
@@ -369,10 +361,9 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
         }
     }
 
-    bitsRing[pad->ringIndex] = pad->bitsOn;
-    pad->ringValidSize++;
+    pad->bitsOnRing[pad->ringIndex] = pad->bitsOn;
     pad->ringIndex = (pad->ringIndex + 1) % PAD_RING_LENGTH;
-    if (pad->ringValidSize > PAD_RING_LENGTH)
+    if (++pad->ringValidSize > PAD_RING_LENGTH)
         pad->ringValidSize = PAD_RING_LENGTH;
 
     if (pad->repeatSpeed != 0) {
