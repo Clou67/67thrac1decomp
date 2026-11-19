@@ -8,7 +8,9 @@ void readBufCreate(ReadBuf *buffer)
     buffer->count = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufDelete__FP7ReadBuf);
+void readBufDelete(ReadBuf *buffer)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufBeginPut__FP7ReadBufPPUc);
 
