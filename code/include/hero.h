@@ -371,4 +371,6 @@ void Hero_ClearBoardMoby(void);
 
 int Hero_IsWeaponGroupA(int slot);
 
+int Hero_IsWearingBoots(int slot);
+
 #endif

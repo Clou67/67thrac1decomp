@@ -138,7 +138,10 @@ int Hero_IsWeaponGroupA(int slot)
     return (unsigned int)(Hero_GetGadgetMoby(slot) - ITEM_SONIC_SUMMONER) < 3;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsWearingBoots);
+int Hero_IsWearingBoots(int slot)
+{
+    return (unsigned int)(Hero_GetGadgetMoby(slot) - ITEM_MAGNEBOOTS) < 2;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsInSpecialMovementState);
 
