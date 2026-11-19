@@ -85,8 +85,7 @@ void audioDecReset(_AudioDec *decoder)
     decoder->iopZero = 0;
 }
 
-void audioDecBeginPut(_AudioDec *decoder, unsigned char **first, int *first_size,
-                      unsigned char **second, int *second_size)
+void audioDecBeginPut(_AudioDec *decoder, unsigned char **first, int *first_size, unsigned char **second, int *second_size)
 {
     if (decoder->state == AUDIO_DEC_HEADER_PENDING) {
         if (decoder->type != sceMpegStrDATA) {
