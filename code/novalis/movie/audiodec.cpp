@@ -8,6 +8,8 @@ int snd_InitMovieSound(int block_size, int page_size, int transfer_size, int spu
 
 void snd_CloseMovieSound(void);
 
+void snd_StartMovieSound(int iop_buffer, int buffer_size, int iop_offset, int rate, int channels);
+
 enum {
     ADPCM_BLOCK_SIZE = 0x400,
     ADPCM_PAGE_SIZE = 0x1000,
@@ -53,7 +55,13 @@ int audioDecDelete(_AudioDec *decoder)
 
 TEXT_PADDING(0x27BD0010, 0);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecStart);
+void audioDecStart(_AudioDec *decoder)
+{
+    snd_StartMovieSound(decoder->iopBuff,
+                        (decoder->iopBuffSize / ADPCM_BLOCK_SIZE) * ADPCM_BLOCK_SIZE,
+                        decoder->iopZero, decoder->sshd.rate, decoder->sshd.ch);
+    decoder->state = AUDIO_DEC_PLAYING;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecReset__FP9_AudioDec);
 
