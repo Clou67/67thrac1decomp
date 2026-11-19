@@ -97,7 +97,23 @@ int videoDecIsFlushed(VideoDec *decoder)
     return flushed;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecMain__FPv);
+enum {
+    VIDEO_DECODER_ABORTED = 1,
+    VIDEO_DECODER_FINISHED = 3
+};
+
+void videoDecMain(void *argument)
+{
+    VideoDec *decoder = (VideoDec *)argument;
+    viBufReset(&decoder->vibuf);
+    voBufReset(&moviePlayer->vo_buf);
+    decBs0(decoder);
+
+    while (moviePlayer->vo_buf.count != 0 && videoDecGetState(decoder) != VIDEO_DECODER_ABORTED) {
+    }
+
+    videoDecSetState(decoder, VIDEO_DECODER_FINISHED);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", decBs0__FP8VideoDec);
 

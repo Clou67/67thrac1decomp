@@ -119,4 +119,8 @@ int viBufGetTs(ViBuf *buffer, TimeStamp *timestamp);
 
 int viBufCreate(ViBuf *buffer, unsigned long long *input, unsigned long long *tags, int sectors, TimeStamp *timestamps, int timestampCount);
 
+int viBufReset(ViBuf *buffer);
+
+int decBs0(VideoDec *decoder);
+
 #endif
