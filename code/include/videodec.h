@@ -117,4 +117,6 @@ int mpegTimeStamp(sceMpeg *mpeg, sceMpegCbDataTimeStamp *data, void *argument);
 
 int viBufGetTs(ViBuf *buffer, TimeStamp *timestamp);
 
+int viBufCreate(ViBuf *buffer, unsigned long long *input, unsigned long long *tags, int sectors, TimeStamp *timestamps, int timestampCount);
+
 #endif

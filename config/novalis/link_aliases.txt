@@ -297,3 +297,5 @@ PostUpdateMoby__FP12MobyInstance = 0x00265BD8;
 SetHeroType__FiiP12MobyInstance = 0x00231348;
 FastEulerToMtx__FP4Mtx4P4Vec4 = 0x00221960;
 Camera_resetToFollow__Fv = 0x0020EE80;
+
+viBufCreate__FP5ViBufPUxT1iP9TimeStampi = 0x0031BAF0;

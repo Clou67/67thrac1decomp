@@ -1,9 +1,29 @@
 #include "common.h"
 #include "movie.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecCreate__FP8VideoDecPUciPUxT3iP9TimeStampi);
+enum {
+    MPEG_CALLBACK_ERROR = 0,
+    MPEG_CALLBACK_NO_DATA = 1,
+    MPEG_CALLBACK_STOP_DMA = 2,
+    MPEG_CALLBACK_RESTART_DMA = 3,
+    MPEG_CALLBACK_TIMESTAMP = 5
+};
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CA70);
+int videoDecCreate(VideoDec *decoder, unsigned char *work, int workSize, unsigned long long *input,
+                   unsigned long long *tags, int sectors, TimeStamp *timestamps, int timestampCount)
+{
+    sceMpegCreate(&decoder->mpeg, work, workSize);
+    sceMpegAddCallback(&decoder->mpeg, MPEG_CALLBACK_ERROR, (MpegStreamCallback)mpegError, 0);
+    sceMpegAddCallback(&decoder->mpeg, MPEG_CALLBACK_NO_DATA, mpegNodata, 0);
+    sceMpegAddCallback(&decoder->mpeg, MPEG_CALLBACK_STOP_DMA, (MpegStreamCallback)mpegStopVideoDMA, 0);
+    sceMpegAddCallback(&decoder->mpeg, MPEG_CALLBACK_RESTART_DMA, (MpegStreamCallback)mpegRestartVideoDMA, 0);
+    sceMpegAddCallback(&decoder->mpeg, MPEG_CALLBACK_TIMESTAMP, (MpegStreamCallback)mpegTimeStamp, 0);
+    videoDecReset(decoder);
+    viBufCreate(&decoder->vibuf, input, tags, sectors, timestamps, timestampCount);
+    return 1;
+}
+
+TEXT_PADDING(0x27BD0010, 0x00000000);
 
 int videoDecSetStream(VideoDec *decoder, int type, int channel, MpegStreamCallback callback, void *argument)
 {
