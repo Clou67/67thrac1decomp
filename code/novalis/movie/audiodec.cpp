@@ -10,6 +10,8 @@ void snd_CloseMovieSound(void);
 
 void snd_StartMovieSound(int iop_buffer, int buffer_size, int iop_offset, int rate, int channels);
 
+void snd_ResetMovieSound(void);
+
 enum {
     ADPCM_BLOCK_SIZE = 0x400,
     ADPCM_PAGE_SIZE = 0x1000,
@@ -63,7 +65,18 @@ void audioDecStart(_AudioDec *decoder)
     decoder->state = AUDIO_DEC_PLAYING;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecReset__FP9_AudioDec);
+void audioDecReset(_AudioDec *decoder)
+{
+    snd_ResetMovieSound();
+    decoder->state = AUDIO_DEC_HEADER_PENDING;
+    decoder->hdrCount = 0;
+    decoder->put = 0;
+    decoder->count = 0;
+    decoder->totalBytes = 0;
+    decoder->iopLastPos = 0;
+    decoder->totalBytesSent = 0;
+    decoder->iopZero = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecBeginPut__FP9_AudioDecPPUcPiT1T2);
 
