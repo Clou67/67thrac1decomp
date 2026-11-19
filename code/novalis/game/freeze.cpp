@@ -88,7 +88,6 @@ int FreezeMatchedTextColorBlend = 0x8060EF60;
 int FreezeUnmatchedTextColor = 0x006060EF;
 int FreezeUnmatchedTextColorBlend = 0x806060EF;
 
-
 int GetLastFreezeDialogType(void)
 {
     return Freeze.prevGameMode;
@@ -149,10 +148,10 @@ void mode_freezeInit(int dialog, int restorePage)
         Freeze.ans1 = 0;
         Freeze.ans2 = 0;
         Freeze.countdown = PROMPT_DEFAULT_TIMER;
+
         break;
     }
 }
-
 
 void DrawDialogText(void)
 {
@@ -179,10 +178,13 @@ void DrawDialogText(void)
 
         alpha = 1.0f - (float)Freeze.countdown / (float)FastScaleRoundInt(30);
         DrawTextShadow(0x50, 0x154, 0x60, 0x1A0, (int)(alpha * 80.0f));
+
         box = logWindow;
         color = FastTweenColor(FreezeTextColor, FreezeTextColorBlend, alpha);
+
         strncpy((char *)SCRATCHPAD, msg_string(0x4E2B), 0x400);
         cursor = (char *)SCRATCHPAD;
+
         while (*(unsigned char *)cursor >= 2) {
             cursor++;
         }
@@ -194,22 +196,28 @@ void DrawDialogText(void)
         }
 
         FontPrintWindow(&box, color, (char *)SCRATCHPAD, -1, FontSet(1), FontNormalMetrics);
+
         iconSize = 272.0f;
         box.flags |= 4;
         bottom = box.text_y + box.max_height;
         FontPrintWindow(&box, color, cursor, -1, FontSet(1), FontNormalMetrics);
+
         box.flags ^= 4;
         box.text_y = 0x136 - box.max_height;
         FontPrintWindow(&box, color, cursor, -1, FontSet(1), FontNormalMetrics);
+
         tint = FastTweenColor(0x20FFFF, 0x8020FFFF, 1.0f - (float)Freeze.updTimers[2] / (float)FastScaleRoundInt(30));
         FontPrintCenter(0x100, 0x140, tint, msg_string(0x524A), -1);
+
         mid = (bottom + box.text_y) >> 1;
         VU1_addGSregister(GS_REG_TEST_1, 0x3004B);
         top = mid - 0x20;
         Hud_DrawTexQuad(HudTex_GetFrame(0x755D, 0), 0xE0, top, 0x40, 0x40, 0x80);
+
         iconY = (float)(mid << 4);
         angle = (float)(gsFrame % 55) * -6.2831855f / 55.0f;
         Hud_DrawRotatedSprite16(4096.0f, iconY, iconSize, iconSize, angle, 0x40, 0x40, HudTex_Bind(HudTex_GetFrame(0x755D, 1)));
+
         break;
     }
     case FREEZE_DIALOG_SAVE_FAILED: {
@@ -226,6 +234,7 @@ void DrawDialogText(void)
         left = 0;
         mid = 0;
         right = 0;
+
         switch (mc_state) {
         case CS_PROMPT_FORMAT:
             left = 0x524F;
@@ -330,17 +339,22 @@ void DrawDialogText(void)
         initialWindow.text_y = 0x68;
         initialWindow.line_spacing = 0x10;
         initialWindow.flags = 5;
+
         box = initialWindow;
         FontPrintWindowMedium(&box, 0, text, -1);
+
         dialogHeight = box.max_height + 0x28;
         top = (occlViewParams[1] - dialogHeight) >> 1;
         box.win_bot = top + dialogHeight;
         box.text_y = top + 4;
         box.win_top = top;
+
         alpha = 1.0f - (float)Freeze.countdown / (float)FastScaleRoundInt(30);
         DrawTextShadow(box.win_top, box.win_bot, 0x60, 0x1A0, (int)(alpha * 80.0f));
+
         box.flags ^= 4;
         FontPrintWindowMedium(&box, FastTweenColor(FreezeTextColor, FreezeTextColorBlend, alpha), text, -1);
+
         tint = FastTweenColor(0x20FFFF, 0x8020FFFF, 1.0f - (float)Freeze.updTimers[2] / (float)FastScaleRoundInt(30));
         if (left != 0) {
             FontPrintCenter(0xCA, box.win_bot - 0x14, tint, msg_string(left), -1);
@@ -353,6 +367,7 @@ void DrawDialogText(void)
         if (mid != 0) {
             FontPrintCenter(0x100, box.win_bot - 0x14, tint, msg_string(mid), -1);
         }
+
         break;
     }
     case FREEZE_MODE_VIDEO_MODE_TEST: {
@@ -362,10 +377,13 @@ void DrawDialogText(void)
         float alpha;
 
         box = choiceWindow;
+
         alpha = 1.0f - (float)Freeze.countdown / (float)FastScaleRoundInt(30);
         DrawTextShadow(0x64, 0x12C, 0x60, 0x1A0, (int)(alpha * 80.0f));
+
         textColor = FastTweenColor(FreezeTextColor, FreezeTextColorBlend, alpha);
         buttonColor = FastTweenColor(0x20FFFF, 0x8020FFFF, alpha);
+
         switch (Freeze.updTimers[0]) {
         case 0:
         case 1:
@@ -390,6 +408,7 @@ void DrawDialogText(void)
         if (bodyMessage != 0) {
             FontPrintWindow(&box, textColor, msg_string(bodyMessage), -1, FontSet(1), FontNormalMetrics);
         }
+
         break;
     }
     case FREEZE_DIALOG_CONFIRM: {
@@ -410,6 +429,7 @@ void DrawDialogText(void)
         float blend;
 
         pulse = FastTweenColor(FreezePulseColor, FreezePulseColorBlend, FastAngleCosF((float)(gsFrame % FreezePulsePeriod) / FastIntToFloat(FreezePulsePeriod) * 6.28318f - 3.14159f) * 0.5f + 0.5f);
+
         scale = (float)Freeze.updTimers[1] * 0.125f;
         if (scale > 1.0f) {
             scale = 1.0f;
@@ -420,6 +440,7 @@ void DrawDialogText(void)
         sharedColor = FreezeSharedTextColor;
         matchedColor = FreezeMatchedTextColor;
         unmatchedColor = FreezeUnmatchedTextColor;
+
         if (Freeze.updTimers[2] != 0) {
             blend = (float)Freeze.updTimers[2] * 0.125f;
             if (blend > 1.0f) {
@@ -435,12 +456,15 @@ void DrawDialogText(void)
 
         if (Hero.raceLap < 3) {
             DrawRoundedRect(FreezeConfirmBoxCenterY - FastFloatToInt((float)FreezeConfirmBoxHalfHeight * scale), FreezeConfirmBoxCenterY + FastFloatToInt((float)FreezeConfirmBoxHalfHeight * scale), FreezeConfirmBoxCenterX - FastFloatToInt((float)FreezeConfirmBoxHalfWidth * scale), FreezeConfirmBoxCenterX + FastFloatToInt((float)FreezeConfirmBoxHalfWidth * scale), pulse);
+
             FontPrintCenter(0x100, FreezeConfirmTextY, sharedColor, msg_string(0x4F6E), -1);
             FontPrintCenter(0x100, FreezeConfirmTextY + 0x18, sharedColor, msg_string(0x5249), -1);
             FontPrintCenter(0x100, FreezeConfirmTextY + 0x30, sharedColor, msg_string(0x5248), -1);
         } else {
             DrawRoundedRect(FreezeStatsBoxCenterY - FastFloatToInt((float)FreezeStatsBoxHalfHeight * scale), FreezeStatsBoxCenterY + FastFloatToInt((float)FreezeStatsBoxHalfHeight * scale), FreezeStatsBoxCenterX - FastFloatToInt((float)FreezeStatsBoxHalfWidth * scale), FreezeStatsBoxCenterX + FastFloatToInt((float)FreezeStatsBoxHalfWidth * scale), pulse);
+
             sprintf(line, FreezeFormatIndented, msg_string(0x5240));
+
             if (Hero.racePosition == 1) {
                 sprintf(line, FreezeFormatFirst, 1);
             } else if (Hero.racePosition == 2) {
@@ -459,6 +483,7 @@ void DrawDialogText(void)
             }
 
             best = freezeStatsTimeRefA[(Level ^ 0x10) ? 0 : 1];
+
             if (best == Hero.raceTimeFrames) {
                 unit = videoModePal ? 3000 : 3600;
                 perSecond = unit / 60;
@@ -466,6 +491,7 @@ void DrawDialogText(void)
                 remainder = best - minutes * unit;
                 seconds = remainder / perSecond;
                 hundredths = (remainder - seconds * perSecond) * 100 / perSecond;
+
                 sprintf(line, FreezeFormatString, msg_string(0x50A3));
                 FontPrintCenter(0x100, FreezeStatsTextY + 0x26, matchedColor, line, -1);
                 sprintf(line, FreezeFormatTime, minutes, seconds, hundredths);
@@ -476,6 +502,7 @@ void DrawDialogText(void)
             }
 
             scoreReference = freezeStatsScoreRefA[(Level ^ 0x10) ? 0 : 1];
+
             if (scoreReference != 0 && scoreReference == Hero.raceScore) {
                 sprintf(line, FreezeFormatString, msg_string(0x50A5));
                 FontPrintCenter(0x100, FreezeStatsTextY + 0x56, matchedColor, line, -1);
@@ -489,6 +516,7 @@ void DrawDialogText(void)
             FontPrintCenter(0x100, FreezeStatsTextY + 0x90, sharedColor, msg_string(0x5249), -1);
             FontPrintCenter(0x100, FreezeStatsTextY + 0xA8, sharedColor, msg_string(0x5248), -1);
         }
+
         break;
     }
     case FREEZE_MODE_AWAIT_CROSS:
@@ -500,6 +528,7 @@ void DrawDialogText(void)
         int pulse;
 
         pulse = FastTweenColor(FreezePulseColor, FreezePulseColorBlend, FastAngleCosF((float)(gsFrame % FreezePulsePeriod) / FastIntToFloat(FreezePulsePeriod) * 6.28318f - 3.14159f) * 0.5f + 0.5f);
+
         DrawRoundedRect(0x50, FreezeAnsRow1 + 0x1A, 0xB0, 0x150, pulse);
         if (dialog->query != 0) {
             FontPrintCenter(0x100, 0x5A, 0x8000C0C0, dialog->query, -1);
@@ -512,13 +541,13 @@ void DrawDialogText(void)
         if (dialog->ans2 != 0) {
             FontPrintCenter(0x100, FreezeAnsRow1, 0x80FFA888, dialog->ans2, -1);
         }
+
         break;
     }
     }
 
     FinalizeVU1FramePacketChain();
 }
-
 
 void UpdateModeFreeze(void)
 {
@@ -829,6 +858,7 @@ void UpdateModeFreeze(void)
             }
             break;
         }
+
         break;
     }
 
