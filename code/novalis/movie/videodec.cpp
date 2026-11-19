@@ -115,7 +115,43 @@ void videoDecMain(void *argument)
     videoDecSetState(decoder, VIDEO_DECODER_FINISHED);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", decBs0__FP8VideoDec);
+void setImageTag(unsigned int (*packets)[2], VoData *frame, int width, int height);
+extern const char decodeThreadAbortedMessage[];
+extern char decodePictureErrorMessage[];
+void printf_stub(const char *format, ...);
+
+int decBs0(VideoDec *decoder)
+{
+    int result = 1;
+    while (!sceMpegIsEnd(&decoder->mpeg)) {
+        if (videoDecGetState(decoder) == VIDEO_DECODER_ABORTED) {
+            result = -1;
+            printf_stub(decodeThreadAbortedMessage);
+            break;
+        }
+
+        VoData *frame;
+        while ((frame = voBufGetData(&moviePlayer->vo_buf)) == 0) {
+            switchThread();
+        }
+        if (sceMpegGetPicture(&decoder->mpeg, frame, 0x340) < 0)
+            ErrMessage(decodePictureErrorMessage);
+
+        if (decoder->mpeg.frameCount == 0) {
+            int width = decoder->mpeg.width;
+            int height = decoder->mpeg.height;
+            for (int index = 0; index < moviePlayer->vo_buf.size; index++) {
+                setImageTag(moviePlayer->vo_buf.tag[index].v,
+                            &moviePlayer->vo_buf.data[index], width, height);
+            }
+        }
+        voBufIncCount(&moviePlayer->vo_buf);
+        switchThread();
+    }
+
+    sceMpegReset(&decoder->mpeg);
+    return result;
+}
 
 extern const char videoErrorMessage[];
 void printf_stub(const char *format, ...);

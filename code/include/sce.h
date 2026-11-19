@@ -159,6 +159,9 @@ struct sceGifTag {
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
 extern "C" {
+int sceMpegIsEnd(sceMpeg *mpeg);
+int sceMpegGetPicture(sceMpeg *mpeg, struct VoData *frame, int stride);
+int sceMpegReset(sceMpeg *mpeg);
 int sceMpegCreate(sceMpeg *mpeg, unsigned char *work, int workSize);
 int sceMpegAddCallback(sceMpeg *mpeg, int type, int (*callback)(sceMpeg *, sceMpegCbData *, void *), void *argument);
 unsigned int videoDecIsDecoderEmpty(sceMpeg *mpeg);
