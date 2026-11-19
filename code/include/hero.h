@@ -88,7 +88,11 @@ struct HeroState {
     float animSpeed;
     char unkA94[0x14];
     float animFrame;
-    char unkAAC[0x5E4];
+    char unkAAC[4];
+    int animLoopFrame;
+    char unkAB4[4];
+    int queuedFrameRequest;
+    char unkABC[0x5D4];
     MobyInstance *currentWeaponMoby;
     char unk1094[0x24];
     int currentWeapon;
@@ -351,5 +355,7 @@ void Hero_RevertToRatchet(void);
 void Hero_Warp(float *position, float *rotation, int flags, int snap);
 
 void Hero_SubGravity(float amount, float *out, float *in);
+
+void Hero_ClearNextAnim(void);
 
 #endif

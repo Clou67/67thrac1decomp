@@ -363,7 +363,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SnapAnim);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetNextAnimFrame);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ClearNextAnim);
+void Hero_ClearNextAnim(void)
+{
+    Hero.animLoopFrame = -1;
+    Hero.queuedFrameRequest = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetNextAnimBlend);
 
