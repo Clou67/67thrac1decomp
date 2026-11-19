@@ -270,3 +270,4 @@ snd_CloseMovieSound__Fv = 0x0012F0E0;
 snd_StartMovieSound__Fiiiii = 0x0012F108;
 snd_ResetMovieSound__Fv = 0x0012F0A8;
 snd_UpdateMovieADPCM__Fii = 0x0012F148;
+snd_GetMovieNAX__Fv = 0x0012F178;

@@ -17,6 +17,8 @@ void sendADPCM(_AudioDec *decoder);
 
 void snd_UpdateMovieADPCM(int size, int offset);
 
+int snd_GetMovieNAX(void);
+
 enum {
     ADPCM_BLOCK_SIZE = 0x400,
     ADPCM_PAGE_SIZE = 0x1000,
@@ -176,4 +178,57 @@ void sendToSPU(_AudioDec *decoder, unsigned char *source, int size, int offset)
     snd_UpdateMovieADPCM(size, offset);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", sendADPCM__FP9_AudioDec);
+void sendADPCM(_AudioDec *decoder)
+{
+    int available = 0;
+
+    switch (decoder->state) {
+    case AUDIO_DEC_PRESET:
+        if (decoder->count < ADPCM_PAGE_SIZE)
+            return;
+
+        available = ADPCM_PAGE_SIZE - decoder->iopLastPos;
+        break;
+
+    case AUDIO_DEC_PLAYING:
+        available = (snd_GetMovieNAX() - decoder->spuPos) & (ADPCM_PAGE_SIZE - 1);
+        break;
+
+    case AUDIO_DEC_PAUSED:
+        return;
+    }
+
+    while (available >= ADPCM_BLOCK_SIZE && decoder->count >= decoder->sshd.ch * ADPCM_BLOCK_SIZE) {
+        for (int channel = 0; channel < decoder->sshd.ch; channel++) {
+            unsigned char *read_cursor = decoder->data + (decoder->put - decoder->count + decoder->size) % decoder->size;
+            read_cursor += channel * decoder->sshd.interSize;
+            unsigned char *write_cursor = movieAdpcmStagingBuffer;
+            int copied = 0;
+
+            while (copied < ADPCM_BLOCK_SIZE) {
+                for (int byte_index = 0; byte_index < decoder->sshd.interSize; byte_index++) {
+                    *write_cursor++ = *read_cursor++;
+                    copied++;
+                }
+                read_cursor += decoder->sshd.interSize * (decoder->sshd.ch - 1);
+            }
+
+            if (decoder->spuPos + ADPCM_BLOCK_SIZE == ADPCM_PAGE_SIZE)
+                movieAdpcmStagingBuffer[ADPCM_BLOCK_SIZE - ADPCM_FRAME_SIZE + ADPCM_FLAGS_OFFSET] =
+                    ADPCM_LOOP_END | ADPCM_LOOP_REPEAT;
+
+            if (decoder->spuPos == 0) {
+                unsigned char *staging_buffer = movieAdpcmStagingBuffer;
+                staging_buffer[ADPCM_FLAGS_OFFSET] = ADPCM_LOOP_START | ADPCM_LOOP_REPEAT;
+                staging_buffer[ADPCM_FRAME_SIZE + ADPCM_FLAGS_OFFSET] = ADPCM_LOOP_REPEAT;
+            }
+            sendToSPU(decoder, movieAdpcmStagingBuffer, ADPCM_BLOCK_SIZE,
+                      channel * ADPCM_PAGE_SIZE + decoder->spuPos);
+        }
+
+        decoder->spuPos = (decoder->spuPos + ADPCM_BLOCK_SIZE) % ADPCM_PAGE_SIZE;
+        decoder->count -= decoder->sshd.ch * ADPCM_BLOCK_SIZE;
+        decoder->iopLastPos += ADPCM_BLOCK_SIZE;
+        available -= ADPCM_BLOCK_SIZE;
+    }
+}
