@@ -44,6 +44,11 @@ MobyInstance *FindMobyByUID(int unused, int uid)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", RestoreMobyVarList);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", RestoreSavedMobyVars);
+extern MobyVarList SavedMobyVars;
+
+void RestoreSavedMobyVars(void)
+{
+    RestoreMobyVarList(&SavedMobyVars);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", SaveCheckpointMobyVar);
