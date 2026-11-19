@@ -49,7 +49,73 @@ void InitLevel(void)
     ElapsedTime += LEVEL_LOAD_ELAPSED_TIME;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/initlevel", UnlockPurchasableItems);
+void UnlockPurchasableItems(void)
+{
+    int index;
+    int item;
+    int level;
+
+    // Levels past the last story level start with every item.
+    if (Level >= LEVEL_COUNT) {
+        int itemId;
+
+        for (itemId = 0; itemId < ITEM_COUNT; itemId++) {
+            UnlockableItems[itemId] = 1;
+            ObtainedItems[itemId] = 1;
+        }
+
+        PurchasableVendorItems[0] = VENDOR_ITEM_AMMO | ITEM_BOMB_GLOVE;
+        PurchasableVendorItems[1] = VENDOR_ITEM_AMMO | ITEM_PYROCITOR;
+        PurchasableVendorItems[2] = VENDOR_ITEM_AMMO | ITEM_BLASTER;
+        PurchasableVendorItems[3] = VENDOR_ITEM_AMMO | ITEM_GLOVE_OF_DOOM;
+        PurchasableVendorItems[4] = VENDOR_ITEM_AMMO | ITEM_MINE_GLOVE;
+        PurchasableVendorItems[5] = VENDOR_ITEM_AMMO | ITEM_TAUNTER;
+        PurchasableVendorItems[6] = VENDOR_ITEM_AMMO | ITEM_DEVASTATOR;
+        PurchasableVendorItems[7] = VENDOR_ITEM_AMMO | ITEM_WALLOPER;
+        PurchasableVendorItems[8] = VENDOR_ITEM_AMMO | ITEM_VISIBOMB_GUN;
+        PurchasableVendorItems[9] = VENDOR_ITEM_AMMO | ITEM_DECOY_GLOVE;
+        PurchasableVendorItems[10] = VENDOR_ITEM_AMMO | ITEM_DRONE_DEVICE;
+        PurchasableVendorItems[11] = VENDOR_ITEM_AMMO | ITEM_TESLA_CLAW;
+
+        QuickSelectItems[0] = ITEM_BLASTER;
+        QuickSelectItems[1] = ITEM_SWINGSHOT;
+        QuickSelectItems[2] = ITEM_VISIBOMB_GUN;
+        QuickSelectItems[3] = ITEM_DEVASTATOR;
+        QuickSelectItems[4] = ITEM_MINE_GLOVE;
+        QuickSelectItems[5] = ITEM_BOMB_GLOVE;
+        QuickSelectItems[6] = ITEM_PYROCITOR;
+        QuickSelectItems[7] = ITEM_TESLA_CLAW;
+        return;
+    }
+
+    // The bomb glove is always owned once a level is reached.
+    if (!UnlockableItems[ITEM_BOMB_GLOVE]) {
+        MB_UnlockItem(ITEM_BOMB_GLOVE, 1);
+        PurchasableVendorItems[0] = VENDOR_ITEM_AMMO | ITEM_BOMB_GLOVE;
+        EquippedItems[0] = ITEM_BOMB_GLOVE;
+    }
+
+    // Drop vendor entries no level has unlocked yet.
+    for (index = 0; index < VENDOR_ITEM_COUNT; index++) {
+        if (PurchasableVendorItems[index] == VENDOR_ITEM_NONE) {
+            continue;
+        }
+
+        item = PurchasableVendorItems[index] & VENDOR_ITEM_ID_MASK;
+        if (item == ITEM_BOMB_GLOVE) {
+            continue;
+        }
+
+        for (level = 0; level < LEVEL_COUNT && LevelVendorItems[level] != item; level++) {
+        }
+
+        if (level == LEVEL_COUNT || item == 0) {
+            PurchasableVendorItems[index] = VENDOR_ITEM_NONE;
+        }
+    }
+
+    AddToUnlockedList(Level);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/initlevel", AddToUnlockedList);
 
