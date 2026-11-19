@@ -20,7 +20,8 @@
 #define PAD_STICK_FLICK 0x10000
 
 // Reverses the left and right of the sticks and the d-pad.
-#define CHEAT_MIRROR_MODE 1
+#define CHEAT_MIRROR_MODE 4
+#define CHEAT_COUNT 12
 
 // Frames of button and stick history kept in the rings.
 #define PAD_RING_LENGTH 30
@@ -92,7 +93,7 @@ struct Pad2SocketParam {
 extern PAD padState;
 extern Pad2SocketParam PadSocketParam;
 // One flag per cheat; these are set by Hero_CheckCheatSequences.
-extern unsigned char CheatsActivated[];
+extern unsigned char CheatsActivated[CHEAT_COUNT] __attribute__((section(".sdata")));
 
 void InitPadRing(void);
 int PadRingBitsOn(int bits, int frames, int *frame);

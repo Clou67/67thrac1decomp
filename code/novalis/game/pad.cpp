@@ -200,13 +200,22 @@ void ClearPadInput(PAD *pad)
     }
 }
 
-#ifdef ALLOW_NON_MATCHING
+static inline bool IsMirrorModeActive(void)
+{
+    return CheatsActivated[CHEAT_MIRROR_MODE] != 0;
+}
+
 static inline void MirrorPadBits(int &bits)
 {
-    if (bits & PAD_LEFT)
-        bits = (bits & ~PAD_LEFT) | PAD_RIGHT;
-    else if (bits & PAD_RIGHT)
-        bits = (bits & ~PAD_RIGHT) | PAD_LEFT;
+    if (bits & PAD_LEFT) {
+        bits &= ~PAD_LEFT;
+        bits |= PAD_RIGHT;
+    }
+
+    else if (bits & PAD_RIGHT) {
+        bits &= ~PAD_RIGHT;
+        bits |= PAD_LEFT;
+    }
 }
 
 void ProcessPadInput(PAD *pad, unsigned char *data, int length)
@@ -247,7 +256,7 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
             pad->analog[index] = FastIntToFloat(data[index + 2]) * PAD_PRESSURE_SCALE;
     }
 
-    if (CheatsActivated[CHEAT_MIRROR_MODE]) {
+    if (IsMirrorModeActive()) {
         pad->analog[2] = -pad->analog[2];
         pad->analog[0] = -pad->analog[0];
 
@@ -286,7 +295,7 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
     pad->hudBits = pad->bits;
     pad->unmaskedBits = pad->bits;
 
-    if (CheatsActivated[CHEAT_MIRROR_MODE]) {
+    if (IsMirrorModeActive()) {
         pad->hudAnalog[2] = -pad->hudAnalog[2];
         pad->hudAnalog[0] = -pad->hudAnalog[0];
 
@@ -362,11 +371,6 @@ void ProcessPadInput(PAD *pad, unsigned char *data, int length)
             pad->repeatCounter = pad->repeatDelay;
     }
 }
-#else
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pad", ProcessPadInput);
-// The delay slot of its final jr, which the split left as its own entry.
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pad", func_0027C474);
-#endif
 
 void UpdatePad(void)
 {
