@@ -48,4 +48,6 @@ void CallDrawOverlayIfNoCutscene(void);
 
 int FontLenWithTable(char *text, int length, unsigned char *metrics);
 
+void EndAuxDrawMode(void);
+
 #endif

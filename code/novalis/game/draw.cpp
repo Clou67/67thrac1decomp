@@ -1,4 +1,5 @@
 #include "common.h"
+#include "framebuf.h"
 #include "draw.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ScreenPosFromWorldSpace);
@@ -215,7 +216,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupVU1WorldDraw)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", BeginAuxDrawMode);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", EndAuxDrawMode);
+void EndAuxDrawMode(void)
+{
+    PutDrawBufferLarge();
+    InitViewContext();
+    UpdateViewContext();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawWorldEffectsPass);
 
