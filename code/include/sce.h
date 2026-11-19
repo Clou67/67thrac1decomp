@@ -22,6 +22,19 @@ struct sceGsStoreImage {
 // libgraph register images (Sony libgraph.h layouts).
 typedef unsigned int u_long128 __attribute__((mode(TI)));
 
+struct SifRpcClient {
+    void *packet;
+    unsigned int packetId;
+    int threadId;
+    unsigned int mode;
+    unsigned int command;
+    void *buffer;
+    void *callbackBuffer;
+    void (*callback)(void *);
+    void *callbackData;
+    void *server;
+};
+
 struct SifDmaTransfer {
     void *source;
     void *destination;
@@ -134,6 +147,7 @@ struct sceGifTag {
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
 extern "C" {
+void sceSifInitRpc(int mode);
 int sceCdRead(unsigned int sector, unsigned int sectors, void *destination, sceCdRMode *mode);
 int sceCdSync(int mode);
 int sceCdReadClock(sceCdCLOCK *clock);

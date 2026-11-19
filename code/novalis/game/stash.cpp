@@ -1,6 +1,11 @@
 #include "common.h"
+#include "sce.h"
+#include "stash.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", Stash_Init);
+void Stash_Init(void)
+{
+    sceSifInitRpc(0);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/stash", Stash_InitOnce);
 
