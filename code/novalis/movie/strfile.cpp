@@ -8,6 +8,9 @@ int strFileBegin(StrFile *file, int sector, int frame_count)
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/strfile", strFileDelete__FP7StrFile);
+int strFileDelete(StrFile *file)
+{
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/strfile", FUN_0031b908);
