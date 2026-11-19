@@ -1,6 +1,7 @@
 #include <stddef.h>
 
 #include "common.h"
+#include "fastfunc.h"
 #include "framebuf.h"
 #include "gameglobals.h"
 #include "gsregs.h"
@@ -46,7 +47,10 @@ extern char skyGifPageLabel[];
 extern int GifLoadCnt;
 extern unsigned int skyTexturedSetup[];
 extern unsigned int skyGouraudSetup[];
+extern Vec4 skyOrigin;
 
+float skyShellAngleStep = 0.0f;
+float spaceSkyAngle = 0.0f;
 unsigned char *skyScratchBuffers[2] = {
     (unsigned char *)0x70000000,
     (unsigned char *)0x70001000
@@ -54,6 +58,7 @@ unsigned char *skyScratchBuffers[2] = {
 int skyScratchBufferIndex = 0;
 
 void FastMtx4Identity(float *matrix);
+void FastVecZero(Vec4 *vector);
 void FastEulerToMtx2(Mtx4 *matrix, Vec4 *angles);
 void printf_stub3(const char *format, ...);
 void BuildGifTextureDma(void);
@@ -113,7 +118,68 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", func_0029EF90);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", func_0029F258);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkySpace);
+void SkySpace(void)
+{
+    Vec4 rotation;
+
+    SetupSkyGifPaging();
+    Sky->clear_screen = 0;
+    FastMtx4Identity(&outMatrix.v0.x);
+    FastVecZero(&rotation);
+
+    for (int shell_index = 0; shell_index < Sky->shell_cnt; shell_index++) {
+        float scale = 1.0f;
+
+        switch (shell_index) {
+        case 0:
+            rotation.y = 0.0f;
+            rotation.z = spaceSkyAngle;
+            // Fall through.
+
+        case 1:
+            scale = 1.0f;
+            rotation.y = 0.0f;
+            rotation.z = FastAddRots(spaceSkyAngle, rotation.y);
+            break;
+
+        case 2:
+            rotation.y = -0.075f;
+            rotation.z = FastAddRots(spaceSkyAngle, -0.15f);
+            scale = 1.25f;
+            break;
+
+        case 3:
+            rotation.y = 0.05f;
+            rotation.z = FastAddRots(spaceSkyAngle, 0.125f);
+            scale = 1.5f;
+            break;
+
+        case 4:
+            rotation.y = 0.1f;
+            rotation.z = FastAddRots(spaceSkyAngle, -0.05f);
+            scale = 1.75f;
+            break;
+
+        case 5:
+            rotation.y = -0.15f;
+            rotation.z = FastAddRots(spaceSkyAngle, 0.1f);
+            scale = 2.0f;
+            break;
+        }
+
+        FastEulerToMtx2(&outMatrix, &rotation);
+        FastScaleVec4(&outMatrix.v0, &outMatrix.v0, scale);
+        FastScaleVec4(&outMatrix.v1, &outMatrix.v1, scale);
+        FastScaleVec4(&outMatrix.v2, &outMatrix.v2, scale);
+        COPY_VEC4_FROM_SYMBOL(&outMatrix.v3, skyOrigin);
+        SkyDrawShell(shell_index);
+    }
+
+    DoSkyGifPaging();
+    VU1_addGSregister(GS_REG_TEST_1, GS_TEST_ATE | GS_TEST_ATST_GEQUAL | GS_TEST_AREF(0x60)
+                      | GS_TEST_AFAIL_RGB_ONLY | GS_TEST_ZTE | GS_TEST_ZTST_GEQUAL);
+    VU1_addGSregister(GS_REG_ZBUF_1, SCE_GS_SET_ZBUF(GSmemZbuf >> 13, 1, 0));
+}
 
 void SetupSkyGifPaging(void)
 {
