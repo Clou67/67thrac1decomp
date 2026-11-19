@@ -31,7 +31,7 @@ void DmaShrubTextures(void)
             VU1_texFlush();
 
             if (gsEnd > SHRUB_GS_MEMORY_LIMIT)
-                printf_stub("shrub texture overflow\n");
+                printf_stub(ShrubTextureOverflowMessage);
 
             if (ShrubGsMax < gsEnd)
                 ShrubGsMax = gsEnd;
@@ -89,7 +89,7 @@ void DrawShrub(void)
     ShrubVu1Marker.tag = vu1_bufPtr.tag++;
     textureCursor = textureCursorEnd;
 
-    printf_stub3(ShrubTextureLabel, 1);
+    printf_stub3("shrub texs", 1);
 
     if (drawConfig.shrub) {
         FlushCache(0);
@@ -97,7 +97,7 @@ void DrawShrub(void)
         FastFromSpr(ShrubSprStash, SHRUB_SPR_RESULT_ADDRESS, SHRUB_SPR_RESULT_QWORDS);
     }
 
-    printf_stub3(ShrubDrawLabel, 7);
+    printf_stub3("shrub draw", 7);
     DmaShrubTextures();
-    printf_stub2(ShrubDrawLabel, 7);
+    printf_stub2("shrub draw", 7);
 }
