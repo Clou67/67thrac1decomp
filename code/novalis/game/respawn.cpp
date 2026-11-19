@@ -65,4 +65,31 @@ void RestoreSavedMobyVars(void)
     RestoreMobyVarList(&SavedMobyVars);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", SaveCheckpointMobyVar);
+void SaveCheckpointMobyVar(void *data, int size, MobyInstance *moby, int isMoby, MobyVarList *list)
+{
+    short uid = moby->uid;
+    short oClass = moby->oClass;
+    int offset = (short)(isMoby == 1
+                       ? (unsigned int)data - (unsigned int)moby
+                       : (unsigned int)data - (unsigned short)(unsigned int)moby->pVar);
+
+    for (int index = 0; index < list->count; index++) {
+        MobyVarEntry *entry = &list->entries[index];
+        if (entry->offset == offset && entry->size == size && uid == entry->uid && oClass == entry->oClass) {
+            // A matching entry can change where a newly appended value will be restored.
+            isMoby = entry->isMoby;
+            if (isMoby != 0) {
+                FastMemCopy32(entry->data, data, size);
+                return;
+            }
+        }
+    }
+
+    MobyVarEntry *entry = &list->entries[list->count++];
+    entry->offset = offset;
+    FastMemCopy32(entry->data, data, size);
+    entry->size = size;
+    entry->isMoby = isMoby;
+    entry->uid = uid;
+    entry->oClass = oClass;
+}

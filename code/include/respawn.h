@@ -23,4 +23,6 @@ MobyInstance *FindMobyByUID(int unused, int uid);
 void RestoreMobyVarList(MobyVarList *vars);
 void RestoreSavedMobyVars(void);
 
+void SaveCheckpointMobyVar(void *data, int size, MobyInstance *moby, int isMoby, MobyVarList *list);
+
 #endif
