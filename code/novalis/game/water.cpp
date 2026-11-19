@@ -15,7 +15,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_UpdateW
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_UpdateUVs);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_PutDropThunk);
+void WaterTile_PutDropThunk(WaterTile *tile, int tiles, float x, float y, float radius, float height)
+{
+    WaterTile_PutDrop(tile, tiles, x, y, radius, height, 0);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_PutDrop);
 

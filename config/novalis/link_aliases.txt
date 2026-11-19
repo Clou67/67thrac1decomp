@@ -309,3 +309,5 @@ Hero_GetGadgetMoby__Fi = 0x0022DDD8;
 snd_StreamSafeCdCallback__FPFi_v = 0x0012EF28;
 
 snd_StreamSafeCdGetError__Fv = 0x0012EEF0;
+
+WaterTile_PutDrop__FP9WaterTileiffffi = 0x002B82A8;
