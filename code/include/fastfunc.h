@@ -8,6 +8,7 @@ struct BSphere;
 // Stops in the debugger; used when a save is bigger than its buffer.
 void FastTrap(void);
 int FastScaleRoundInt(int value);
+int FastAbsI(int value);
 int FastTweenColor(int from, int to, float fraction);
 int FastFloatToInt(float value);
 float FastIntToFloat(int value);
