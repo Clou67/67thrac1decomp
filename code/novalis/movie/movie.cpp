@@ -32,7 +32,10 @@ void switchThread(void)
     RotateThreadReadyQueue(MOVIE_THREAD_PRIORITY);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", isAudioOK);
+int isAudioOK(void)
+{
+    return audioDecIsPageFull(&moviePlayer->audio_dec);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", initAll__Fiii);
 
