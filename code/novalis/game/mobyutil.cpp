@@ -1,6 +1,7 @@
 #include "common.h"
 #include "fastfunc.h"
 #include "moby.h"
+#include "hero.h"
 #include "mobyutil.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DropAmmo);
@@ -246,7 +247,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_MtxToQuat);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_TransformToQuat);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CopyHeroLights);
+void MB_CopyHeroLights(MobyInstance *moby)
+{
+    moby->lights = Hero.moby->lights;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_AxisAngleToQuat);
 

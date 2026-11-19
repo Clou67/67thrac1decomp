@@ -63,8 +63,13 @@ struct MobyInstance {
     short drawDistance;
     unsigned short modeBits;
     unsigned short occlIndex;
-    unsigned int color;
-    unsigned int light;
+    union {
+        unsigned long long lights;
+        struct {
+            unsigned int color;
+            unsigned int light;
+        };
+    };
     Vec4 rotation;
     char previousAnimationFrame;
     char animationFrame;

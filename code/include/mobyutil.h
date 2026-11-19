@@ -23,4 +23,6 @@ float MB_catmullRom(float first, float second, float third, float fourth, float 
 
 void *MB_GetPvarsIfMobyHasThem(MobyInstance *moby);
 
+void MB_CopyHeroLights(MobyInstance *moby);
+
 #endif
