@@ -1,4 +1,3 @@
-#include "common.h"
 #include "sce.h"
 #include "vobuf.h"
 
@@ -65,4 +64,8 @@ VoTag *voBufGetTag(VoBuf *buffer)
     return &buffer->tag[slot];
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vobuf", voBufDecCount__FP5VoBuf);
+void voBufDecCount(VoBuf *buffer)
+{
+    if (buffer->count > 0)
+        buffer->count--;
+}
