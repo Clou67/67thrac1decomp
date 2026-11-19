@@ -83,7 +83,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", decBs0__FP8Vi
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", mpegError__FP7sceMpegP18sceMpegCbDataErrorPv);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", mpegNodata__FP7sceMpegP13sceMpegCbDataPv);
+int mpegNodata(sceMpeg *mpeg, sceMpegCbData *data, void *argument)
+{
+    switchThread();
+    viBufAddDMA(&moviePlayer->video_dec.vibuf);
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", func_0031CF88);
 

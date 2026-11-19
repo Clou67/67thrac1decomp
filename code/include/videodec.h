@@ -99,4 +99,8 @@ int videoDecInputCount(VideoDec *decoder);
 
 int viBufCount(ViBuf *buffer);
 
+int mpegNodata(sceMpeg *mpeg, sceMpegCbData *data, void *argument);
+
+int viBufAddDMA(ViBuf *buffer);
+
 #endif
