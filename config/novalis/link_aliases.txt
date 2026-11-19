@@ -305,3 +305,5 @@ FontLenWithTable__FPciPUc = 0x0021CC40;
 SetupVU1WorldDraw__Fv = 0x0021E340;
 
 Hero_AddGravity__FfPfT1 = 0x00248B68;
+
+FrontEnd_DrawMenu__Fi = 0x0028D080;

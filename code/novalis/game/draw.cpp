@@ -47,7 +47,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDrawMo
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDrawFreeze);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", CallDrawOverlayIfNoCutscene);
+extern int CutscenePlaying;
+void FrontEnd_DrawMenu(int mode);
+
+void CallDrawOverlayIfNoCutscene(void)
+{
+    if (!CutscenePlaying)
+        FrontEnd_DrawMenu(0);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DrawFrameEnd);
 

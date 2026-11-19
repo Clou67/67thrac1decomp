@@ -44,4 +44,6 @@ void EnableFontColors(void);
 
 void DisableFontColors(void);
 
+void CallDrawOverlayIfNoCutscene(void);
+
 #endif
