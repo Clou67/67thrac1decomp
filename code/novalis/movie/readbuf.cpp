@@ -12,7 +12,15 @@ void readBufDelete(ReadBuf *buffer)
 {
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufBeginPut__FP7ReadBufPPUc);
+int readBufBeginPut(ReadBuf *buffer, unsigned char **destination)
+{
+    int free_space = buffer->capacity - buffer->count;
+
+    if (free_space != 0)
+        *destination = buffer->data + buffer->put_pos;
+
+    return free_space;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufEndPut__FP7ReadBufi);
 
