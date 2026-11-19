@@ -97,7 +97,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SolveQuad);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CollLineDown);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CollLineWrapper);
+float MB_CollLineDown(Vec4 *position, float distance, int flags);
+
+enum { COLLISION_PROBE_FLAGS = 0x20 };
+
+float MB_CollLineWrapper(Vec4 *position)
+{
+    return MB_CollLineDown(position, 0.5f, COLLISION_PROBE_FLAGS);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026E6B8);
 
