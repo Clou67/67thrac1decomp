@@ -2218,3 +2218,5 @@ LevelLoadRequested = 0x0015F570; // size:0x4
 
 movieDisplayActive = 0x00161320; // size:0x4
 movieVblankCount = 0x00161324; // size:0x4
+
+inactiveVideoDmaMessage = 0x0020A790;

@@ -146,7 +146,56 @@ void viBufEndPut(ViBuf *buffer, int size)
     SignalSema(buffer->sema);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufAddDMA__FP5ViBuf);
+void ErrMessage(char *message);
+extern char inactiveVideoDmaMessage[];
+
+int viBufAddDMA(ViBuf *buffer)
+{
+    int added = 0;
+    WaitSema(buffer->sema);
+    if (!buffer->isActive) {
+        ErrMessage(inactiveVideoDmaMessage);
+        return 0;
+    }
+
+    setD4_CHCR(IPU_OUTPUT_DMA_IDLE_CHCR);
+    unsigned int channelControl = *(volatile unsigned int *)IPU_OUTPUT_DMA_CHCR;
+    int current = getFIFOindex(buffer, (void *)*(volatile unsigned int *)IPU_OUTPUT_DMA_MADR);
+    int consumed = (current + buffer->n - buffer->dmaStart) % buffer->n;
+    buffer->dmaStart = (buffer->dmaStart + consumed) % buffer->n;
+    buffer->dmaN -= consumed;
+    int next = (buffer->dmaStart + buffer->dmaN) % buffer->n;
+    int blocks = buffer->readBytes / VIBUF_BLOCK_SIZE;
+    buffer->readBytes -= blocks << VIBUF_BLOCK_SHIFT;
+
+    if (blocks > 0) {
+        int last = buffer->n - 1;
+        int previous = (buffer->dmaStart + buffer->dmaN + last) % buffer->n;
+        scTag2((unsigned long *)&buffer->tag[previous],
+               (unsigned int)buffer->data + (previous << VIBUF_BLOCK_SHIFT), 3, VIBUF_BLOCK_SIZE / 16);
+        added = 1;
+    }
+
+    int index = next;
+    for (int block = 0; block < blocks; block++) {
+        int id = 0;
+        if (block != blocks - 1)
+            id = 3;
+        scTag2((unsigned long *)&buffer->tag[index],
+               (unsigned int)buffer->data + (index << VIBUF_BLOCK_SHIFT), id, VIBUF_BLOCK_SIZE / 16);
+        index = (index + 1) % buffer->n;
+    }
+
+    buffer->dmaN += blocks;
+    if (buffer->dmaN != 0) {
+        if (added)
+            channelControl = (channelControl & VIBUF_PHYSICAL_ADDRESS_MASK) | 0x30000000;
+        setD4_CHCR(channelControl | 0x100);
+    }
+
+    SignalSema(buffer->sema);
+    return 1;
+}
 
 void setD3_CHCR(unsigned int value);
 
