@@ -183,4 +183,117 @@ int InfobotHint_InitInstance(MobyInstance *moby, InfobotHint *hint)
     return index;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/npc", InfobotHint_SetState);
+void InfobotHint_SetState(MobyInstance *moby, InfobotHint *hint, int activate)
+{
+    char text[0x100];
+    InfobotHintEntry *entry;
+    unsigned short flags;
+    int met;
+    int next;
+    int cost;
+
+    entry = &hint->entries[hint->entry];
+    if (hint->entries == 0)
+        return;
+
+    // Move on to the entry after the one that was just played.
+    if (activate) {
+        hint->previousEntry = hint->entry;
+        hint->startTime = worldUpdateTime;
+
+        if (hint->entry != entry->next) {
+            InfobotHintEntry *following = &hint->entries[entry->next];
+
+            flags = entry->flags;
+            hint->entry = entry->next;
+            entry = following;
+            hint->anyDirection = entry->flags & INFOBOT_HINT_ANY_DIRECTION;
+
+            if (flags & INFOBOT_HINT_AUTO_PLAY) {
+                ActiveHint.moby = moby;
+                ActiveHint.hint = hint;
+
+                if (entry->scene & INFOBOT_HINT_MOVIE) {
+                    PlayInfobotMovie((short)(entry->scene ^ INFOBOT_HINT_MOVIE));
+                } else {
+                    Hud_SetEntryIconById(BoltHudHandle);
+                    BoltHudHandle = -1;
+                    mode_movieUnInit(entry->scene);
+                }
+            }
+        }
+    }
+
+    if (hint->entry == -1)
+        return;
+
+    ActiveHint.message = entry->message;
+
+    // Price messages print the price with the language's thousands separator.
+    if (entry->condition == INFOBOT_HINT_PRICE) {
+        char *separators[LANGUAGE_COUNT] = {",", ",", ",", ".", ",", "."};
+        char price[0x20];
+
+        strcpy((char *)SCRATCHPAD, msg_string(entry->message));
+
+        {
+            char *number = strstr((char *)SCRATCHPAD, "%d");
+
+            if (number)
+                number[1] = 's';
+        }
+
+        cost = VendorPrices[entry->conditionValue].goldBoltPrice;
+        sprintf(price, InfobotPriceFormat, cost / 1000, separators[gameLanguage % LANGUAGE_COUNT], cost % 1000);
+        sprintf(text, (char *)SCRATCHPAD, price);
+    } else {
+        sprintf(text, msg_string(entry->message));
+    }
+
+    if (ActiveHint.message != 0) {
+        GetHelpLen(text);
+    } else if (BoltHudHandle != -1) {
+        Hud_SetEntryIconById(BoltHudHandle);
+        BoltHudHandle = -1;
+    }
+
+    if (entry->condition == INFOBOT_HINT_ALWAYS)
+        return;
+
+    met = 0;
+    switch (entry->condition) {
+    case INFOBOT_HINT_ENOUGH_BOLTS:
+        met = HeroBolts >= VendorPrices[entry->conditionValue].bolts;
+        break;
+
+    case INFOBOT_HINT_HAS_ITEM:
+        met = UnlockableItems[entry->conditionValue] != 0;
+        break;
+
+    case INFOBOT_HINT_ITEM_NOT_OBTAINED:
+        met = UnlockableItems[entry->conditionValue] && !ObtainedItems[entry->conditionValue];
+        break;
+
+    case INFOBOT_HINT_ITEM_FLAG:
+        met = ItemFlags[entry->conditionValue] != 0;
+        break;
+
+    case INFOBOT_HINT_ENOUGH_GOLD_BOLTS:
+        met = MB_GetUnspentGoldBolts() >= entry->conditionValue;
+        break;
+
+    case INFOBOT_HINT_PRICE:
+        met = HeroBolts >= VendorPrices[entry->conditionValue].goldBoltPrice && MB_GetUnspentGoldBolts() >= 4;
+        break;
+    }
+
+    next = met ? entry->entryIfMet : entry->entryOtherwise;
+    if (next == hint->entry)
+        return;
+
+    hint->entry = next;
+    hint->startTime = worldUpdateTime;
+    entry = &hint->entries[next];
+    hint->anyDirection = entry->flags & INFOBOT_HINT_ANY_DIRECTION;
+    InfobotHint_SetState(moby, hint, 0);
+}
