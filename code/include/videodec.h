@@ -129,4 +129,6 @@ int viBufFlush(ViBuf *buffer);
 int cpy2area(unsigned char *first, int firstSize, unsigned char *second, int secondSize,
              unsigned char *source, int sourceSize, unsigned char *unused, int unusedSize);
 
+unsigned int getFIFOindex(ViBuf *buffer, void *position);
+
 #endif
