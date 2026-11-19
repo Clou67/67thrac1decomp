@@ -94,6 +94,8 @@ segments:
     - [0xaab90, .rodata, game/freeze]  # jump tables
     - [0xaace0, .rodata, game/help]  # jump tables
     - [0xaad50, data]
+    - [0xab730, .rodata, game/lights]  # debug strings
+    - [0xab7a0, data]
     - [0xabde0, .rodata, game/memcard]
     - [0xabfa0, data]
     - [0xac690, .rodata, game/vuchain]

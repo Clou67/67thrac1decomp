@@ -160,4 +160,114 @@ void RefreshPointLight(int light)
     CreatePointLight(light);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", DetachPointLight);
+void DetachPointLight(int light)
+{
+    PL_Data *data;
+    unsigned short slots;
+    unsigned short slot0;
+    unsigned short slot1;
+    unsigned short slot2;
+    unsigned short slot3;
+
+    data = &PointLightData[light];
+
+    // The light's index as it appears in each of the four slots.
+    slot0 = light;
+    slot1 = light << 4;
+    slot2 = light << 8;
+    slot3 = light << 12;
+
+    // Take the light out of its slot and shift the slots above it down.
+    {
+        short *entry = data->list + data->tie_offset;
+        short *end = entry + data->tie_count;
+
+        for (; entry != end; entry++) {
+            TieInstance *tie = &TieInstances[*entry];
+
+            slots = tie->point_lights;
+            if ((slots & 0x000F) == slot0) {
+                slots = (slots >> 4) | 0xF000;
+            } else if ((slots & 0x00F0) == slot1) {
+                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
+            } else if ((slots & 0x0F00) == slot2) {
+                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
+            } else if ((slots & 0xF000) == slot3) {
+                slots |= 0xF000;
+            } else {
+                printf_stub("screwed up point light on tie\n");
+            }
+
+            if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                tie->dir_lights_upd = 1;
+            }
+
+            tie->point_lights = slots;
+        }
+    }
+
+    data->tie_offset = 0;
+    data->tie_count = 0;
+
+    {
+        short *entry = data->list + data->tfrag_offset;
+        short *end = entry + data->tfrag_count;
+
+        for (; entry != end; entry++) {
+            Tfrag *tfrag = &Tfrags[*entry];
+
+            slots = tfrag->point_lights;
+            if ((slots & 0x000F) == slot0) {
+                slots = (slots >> 4) | 0xF000;
+            } else if ((slots & 0x00F0) == slot1) {
+                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
+            } else if ((slots & 0x0F00) == slot2) {
+                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
+            } else if ((slots & 0xF000) == slot3) {
+                slots |= 0xF000;
+            } else {
+                printf_stub("screwed up point light on tfrag\n");
+            }
+
+            if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                tfrag->dir_lights_upd = 1;
+            }
+
+            tfrag->point_lights = slots;
+        }
+    }
+
+    data->tfrag_offset = 0;
+    data->tfrag_count = 0;
+
+    {
+        short *entry = data->list + data->shrub_offset;
+        short *end = entry + data->shrub_count;
+
+        for (; entry != end; entry++) {
+            ShrubInstance *shrub = &ShrubInstances[*entry];
+
+            slots = shrub->point_lights;
+            if ((slots & 0x000F) == slot0) {
+                slots = (slots >> 4) | 0xF000;
+            } else if ((slots & 0x00F0) == slot1) {
+                slots = (slots & 0x000F) | ((slots >> 4) & 0x0FF0) | 0xF000;
+            } else if ((slots & 0x0F00) == slot2) {
+                slots = (slots & 0x00FF) | ((slots >> 4) & 0x0F00) | 0xF000;
+            } else if ((slots & 0xF000) == slot3) {
+                slots |= 0xF000;
+            } else {
+                printf_stub("screwed up point light on shrub\n");
+            }
+
+            if (slots == POINT_LIGHT_SLOTS_EMPTY) {
+                shrub->dir_lights_upd = 1;
+            }
+
+            shrub->point_lights = slots;
+        }
+    }
+
+    data->shrub_offset = 0;
+    data->shrub_count = 0;
+}
