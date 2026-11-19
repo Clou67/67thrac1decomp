@@ -272,7 +272,6 @@ snd_ResetMovieSound__Fv = 0x0012F0A8;
 snd_UpdateMovieADPCM__Fii = 0x0012F148;
 snd_GetMovieNAX__Fv = 0x0012F178;
 UpdatePad__Fv = 0x0027C478;
-videoDecGetState__FP8VideoDec = 0x0031CB28;
 snd_SetMasterVolume__Fii = 0x0012E208;
 sceMpegInit = 0x0012B730;
 AddIntcHandler = 0x00118790;
@@ -298,3 +297,7 @@ PostUpdateMoby__FP12MobyInstance = 0x00265BD8;
 SetHeroType__FiiP12MobyInstance = 0x00231348;
 FastEulerToMtx__FP4Mtx4P4Vec4 = 0x00221960;
 Camera_resetToFollow__Fv = 0x0020EE80;
+
+viBufCreate__FP5ViBufPUxT1iP9TimeStampi = 0x0031BAF0;
+
+setImageTag__FPA1_UiP6VoDataii = 0x0031B0B8;

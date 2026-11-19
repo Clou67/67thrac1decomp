@@ -5,6 +5,18 @@
 
 struct ReadBuf;
 struct sceMpeg;
+struct sceMpegCbData;
+
+struct sceMpegCbDataTimeStamp {
+    int type;
+    long pts;
+    long dts;
+};
+
+struct sceMpegCbDataError {
+    int type;
+    char *message;
+};
 
 struct sceDmaChan {
     unsigned int chcr;
@@ -147,6 +159,14 @@ struct sceGifTag {
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
 extern "C" {
+int sceMpegIsEnd(sceMpeg *mpeg);
+int sceMpegGetPicture(sceMpeg *mpeg, struct VoData *frame, int stride);
+int sceMpegReset(sceMpeg *mpeg);
+int sceMpegCreate(sceMpeg *mpeg, unsigned char *work, int workSize);
+int sceMpegAddCallback(sceMpeg *mpeg, int type, int (*callback)(sceMpeg *, sceMpegCbData *, void *), void *argument);
+unsigned int videoDecIsDecoderEmpty(sceMpeg *mpeg);
+int videoDecRelease(sceMpeg *mpeg);
+int sceMpegAddStrCallback(sceMpeg *mpeg, int type, int channel, int (*callback)(sceMpeg *, sceMpegCbData *, void *), void *argument);
 void sceSifInitRpc(int mode);
 int sceSifBindRpc(SifRpcClient *client, int server, int mode);
 int sceSifCheckStatRpc(SifRpcClient *client);
