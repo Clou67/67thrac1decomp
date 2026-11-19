@@ -462,18 +462,18 @@ void DrawDialogText(void)
 
             sprintf(line, FreezeFormatIndented, msg_string(0x5240));
 
-            if (Hero.racePosition == 1) {
+            if (Hero.racePlace == 1) {
                 sprintf(line, FreezeFormatFirst, 1);
-            } else if (Hero.racePosition == 2) {
+            } else if (Hero.racePlace == 2) {
                 sprintf(line, FreezeFormatSecond, 2);
-            } else if (Hero.racePosition == 3) {
+            } else if (Hero.racePlace == 3) {
                 sprintf(line, FreezeFormatThird, 3);
             } else {
-                sprintf(line, FreezeFormatNth, Hero.racePosition);
+                sprintf(line, FreezeFormatNth, Hero.racePlace);
             }
 
             line[3] = ' ';
-            if (Hero.racePosition == 1) {
+            if (Hero.racePlace == 1) {
                 FontPrintCenter(0x100, FreezeStatsTextY, matchedColor, line, -1);
             } else {
                 FontPrintCenter(0x100, FreezeStatsTextY, unmatchedColor, line, -1);
@@ -481,7 +481,7 @@ void DrawDialogText(void)
 
             best = freezeStatsTimeRefA[(Level ^ 0x10) ? 0 : 1];
 
-            if (best == Hero.raceTimeFrames) {
+            if (best == Hero.raceTime) {
                 unit = videoModePal ? 3000 : 3600;
                 perSecond = unit / 60;
                 minutes = best / unit;

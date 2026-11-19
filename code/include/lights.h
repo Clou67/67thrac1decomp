@@ -2,6 +2,9 @@
 #define LIGHTS_H
 
 #include "moby.h"
+#include "shrub.h"
+#include "tfrag.h"
+#include "tie.h"
 
 #define MAX_POINT_LIGHTS 8
 #define POINT_LIGHT_LIST_LENGTH 512
@@ -34,48 +37,10 @@ struct DirectionalLight {
     Vec4 direction2;
 };
 
-// Instances a point light can attach to. point_lights holds four 4-bit light slots
-// (0xF is empty); dir_lights_upd is set when no point light is left on it.
-struct TieInstance {
-    BSphere bsphere;
-    char unk10[0xB];
-    char dir_lights_upd;
-    char unk1C[2];
-    unsigned short point_lights;
-};
-
-struct ShrubInstance {
-    BSphere bsphere;
-    float draw_dist;
-    char pad[2];
-    char flags;
-    char bboard_dist;
-    short index;
-    char s_class;
-    char dir_lights_upd;
-    unsigned short dir_lights;
-    unsigned short point_lights;
-};
-
-struct Tfrag {
-    BSphere bsphere;
-    char unk10[0x25];
-    char dir_lights_upd;
-    unsigned short point_lights;
-    char unk38[8];
-};
-
 extern PointLight PointLights[MAX_POINT_LIGHTS];
 extern PL_Data PointLightData[MAX_POINT_LIGHTS];
 extern short PointLightLists[MAX_POINT_LIGHTS][POINT_LIGHT_LIST_LENGTH];
 extern DirectionalLight DirectionalLights[16];
-
-extern TieInstance *TieInstances;
-extern TieInstance *TieInstanceEnd;
-extern ShrubInstance *ShrubInstances;
-extern ShrubInstance *ShrubInstanceEnd;
-extern Tfrag *Tfrags;
-extern int TfragsCnt;
 
 // Fraction of the frame budget in use; no new point lights are made above 0.8.
 extern float PerfLoad;
