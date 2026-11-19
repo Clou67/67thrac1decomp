@@ -116,4 +116,86 @@ void DrawTie(void)
     printf_stub2("tie draw", 5);
 }
 
+#ifdef ALLOW_NON_MATCHING
+void DrawTiesEx(void)
+{
+    {
+        int a;
+        int n = TieClassIndex;
+
+        for (a = 1; a < n; a += 2)
+            TieClasses[a]->mode_bits |= TIE_CLASS_HIDDEN;
+    }
+
+    {
+        DmaTag *current = vu1_bufPtr.tag;
+
+        TieVu1Marker.tag = current;
+        textureCursor = textureCursorEnd;
+        current++;
+        vu1_bufPtr.tag = current;
+    }
+
+    printf_stub3("tie texs", 1);
+
+    {
+        if (drawConfig.tie) {
+            FlushCache(0);
+            TieProc();
+            FastFromSpr(TieSprStashOdd, TIE_SPR_RESULT_ADDRESS, TIE_SPR_RESULT_QWORDS);
+        }
+    }
+
+    DmaTieTextures();
+
+    FastMemCopy16(TieClassRectifyOdd, TieClassRectify, sizeof(TieClassRectify));
+    FastMemCopy16(TieGsLocStashOdd, TieGsLocStash, sizeof(TieGsLocStash));
+
+    {
+        int b;
+        int n = TieClassIndex;
+
+        for (b = 1; b < n; b += 2)
+            TieClasses[b]->mode_bits &= ~TIE_CLASS_HIDDEN;
+    }
+
+    {
+        int c;
+        int n = TieClassIndex;
+
+        for (c = 0; c < n; c += 2)
+            TieClasses[c]->mode_bits |= TIE_CLASS_HIDDEN;
+    }
+
+    {
+        DmaTag *current = vu1_bufPtr.tag;
+
+        TieVu1Marker.tag = current;
+        textureCursor = textureCursorEnd;
+        current++;
+        vu1_bufPtr.tag = current;
+
+        if (drawConfig.tie) {
+            FlushCache(0);
+            TieProc();
+            FastFromSpr(TieSprStash, TIE_SPR_RESULT_ADDRESS, TIE_SPR_RESULT_QWORDS);
+        }
+    }
+
+    printf_stub3("tie draw", 5);
+    DmaTieTextures();
+
+    {
+        int d;
+        int n = TieClassIndex;
+
+        for (d = 0; d < n; d += 2)
+            TieClasses[d]->mode_bits &= ~TIE_CLASS_HIDDEN;
+    }
+
+    FastMemCopy16(vu1_bufPtr.tag, TieChainEnd, sizeof(TieChainEnd));
+    printf_stub2("tie draw", 5);
+}
+#else
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/tiefunc", DrawTiesEx);
+#endif
