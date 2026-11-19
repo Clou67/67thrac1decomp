@@ -258,7 +258,7 @@ DisableFontColors = 0x0021CC38; // type:func size:0x8
 FontLenWithTable = 0x0021CC40; // type:func size:0x50
 FontLen__FPci = 0x0021CC90; // type:func size:0x20
 FontLenSmall__FPci = 0x0021CCB0; // type:func size:0x20
-FontLenLarge = 0x0021CCD0; // type:func size:0x20
+FontLenLarge__FPci = 0x0021CCD0; // type:func size:0x20
 FontPrint = 0x0021CCF0; // type:func size:0x280
 FontPrintMediumLeft = 0x0021CF70; // type:func size:0x7C
 FontPrintSmallLeft = 0x0021CFF0; // type:func size:0x7C
@@ -2206,3 +2206,5 @@ decodeThreadAbortedMessage = 0x0020A7A8;
 decodePictureErrorMessage = 0x0020A7C0;
 
 FontSmallMetrics = 0x001C3970;
+
+FontLargeMetrics = 0x001C3D10;
