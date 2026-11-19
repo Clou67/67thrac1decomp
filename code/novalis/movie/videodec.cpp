@@ -70,14 +70,14 @@ unsigned int videoDecSetState(VideoDec *decoder, unsigned int state)
     return oldState;
 }
 
-void videoDecPutTs(VideoDec *decoder, long pts, long dts, unsigned char *position, int size)
+int videoDecPutTs(VideoDec *decoder, long pts, long dts, unsigned char *position, int size)
 {
     TimeStamp timestamp;
     timestamp.pts = pts;
     timestamp.dts = dts;
     timestamp.pos = position - (unsigned char *)decoder->vibuf.data;
     timestamp.len = size;
-    viBufPutTs(&moviePlayer->video_dec.vibuf, &timestamp);
+    return viBufPutTs(&moviePlayer->video_dec.vibuf, &timestamp);
 }
 
 int videoDecInputCount(VideoDec *decoder)
