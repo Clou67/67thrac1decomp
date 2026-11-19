@@ -146,7 +146,10 @@ struct HeroState {
     int loopSounds;
     char unk221C[0x1C];
     MobyInstance *loopSoundMobys;
-    char unk223C[0x48];
+    char unk223C[0x3C];
+    MobyInstance *animLinkMoby;
+    int animLinkTable;
+    char unk2280[4];
     int requestedCamType;
     char unk2288[0x14];
     float padMagnitude;
@@ -363,5 +366,7 @@ void Hero_HideHeroMoby(void);
 void Hero_ShowHeroMoby(void);
 
 void Hero_ZeroThrustVars(void);
+
+void Hero_ClearBoardMoby(void);
 
 #endif

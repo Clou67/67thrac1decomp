@@ -351,7 +351,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetBackpackAn
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SyncBackpackAnimSpeed);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ClearBoardMoby);
+void Hero_ClearBoardMoby(void)
+{
+    Hero.animLinkMoby = 0;
+    Hero.animLinkTable = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetBoardAnim);
 
