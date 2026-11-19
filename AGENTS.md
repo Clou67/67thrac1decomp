@@ -10,6 +10,7 @@ The goal is C++ source that compiles to the original bytes and is also good code
 2. **One set of compiler flags for all code.** Do not add flags for one file or one function (`-fno-schedule-insns`, `-mno-split-addresses`, `-O1`, …) to force a match. If a function only matches with different flags, it does not match. Leave it as `INCLUDE_ASM` and record what you tried.
 3. **No source tricks that only exist to fool the compiler.** No `asm()` statements, register variables (`register int x asm("$2")`), dummy volatiles, `goto` spaghetti or meaningless temporaries added just to shift register allocation. The one exception is genuine VU0/COP2 macro code (`lqc2`, `vmul`, `qmtc2`, …). The original source used inline asm for that, so inline asm that reproduces the same VU0 instructions is legitimate.
    - **Last resort only:** a plain temporary that steers register allocation (for example one `zero` variable reused as an index and a loop start, as in `DrawLineList`) may be used, but only after natural rewrites have really been exhausted. Prefer leaving the function as `INCLUDE_ASM` with a note. Never use `asm()`, register variables or volatiles for this.
+   - **Vector copies:** the original copied quadword vectors through a hand-written inline helper (`lq $2` then `sq $2`, always `$2`, address in its own register). Use `CopyVec4Inline` from `mathfunc_inline.h` wherever retail shows that pattern; a plain struct assignment compiles differently.
 4. **Fake "functions" stay as `INCLUDE_ASM`.** Some splat functions are really trailing alignment padding, or a few stray words after a real function's `jr $ra`. The linker and compiler do not reproduce these as functions. Do not invent a body: write them with `TEXT_PADDING(words...)` (from `include_asm.h`), copying the words from the generated `.s`. It aligns to 8 and emits the words verbatim. Anything that has a real symbol in `config/symbols.txt` or `config/novalis/symbols.txt` (a named function, not `func_XXXXXXXX` padding) is fair game.
 5. **Handwritten assembly files stay assembly.** Files marked `asm` in the yaml (`*proc` files such as `mobyproc`, `partproc`, `shadowproc`, `tfragproc`, `tieproc`, `shrubproc`, `skyproc`, plus `cmecpu`, `collproc`, `drawquad`, `fastfunc`, `miscproc`) were written in assembly by Insomniac. Do not decompile them to C++.
 6. **The bytes decide.** Never declare a match by reading the code. It only counts when the object bytes for the function equal the original, and the full build still compares equal (see "Verifying").
@@ -82,12 +83,22 @@ Rules:
       blender->activeCamera = NULL;
       blender->blendTime = 0.0f;
 
-      if (camera->exitFunc != NULL) {
+      if (camera->exitFunc != NULL)
           camera->exitFunc(camera);
-      }
 
       ResetCameraShake();
   }
+  ```
+- **Braces:** an `if`/`else` branch with a single statement has no braces, and each branch of an `if`/`else if`/`else` chain is separated by a blank line. Branches with more than one statement keep their braces.
+  ```cpp
+  if (slots == POINT_LIGHT_SLOTS_EMPTY)
+      tie->point_lights = light | 0xFFF0;
+
+  else if ((slots & 0xFFF0) == 0xFFF0)
+      tie->point_lights = (slots & 0xFF0F) | (light << 4);
+
+  else
+      entry--;
   ```
 - **Control flow:** write it naturally, with early returns where the original logic has them, `for` loops with real bounds and `switch` for jump tables. No `goto` unless the original control flow really needs it.
 - **Comments:** short, and say why rather than what. Note anything non-obvious, such as a field whose meaning is a guess.
