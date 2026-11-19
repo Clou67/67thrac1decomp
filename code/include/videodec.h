@@ -91,4 +91,8 @@ int viBufDelete(ViBuf *buffer);
 
 unsigned int videoDecSetState(VideoDec *decoder, unsigned int state);
 
+void videoDecPutTs(VideoDec *decoder, long pts, long dts, unsigned char *position, int size);
+
+int viBufPutTs(ViBuf *buffer, TimeStamp *timestamp);
+
 #endif

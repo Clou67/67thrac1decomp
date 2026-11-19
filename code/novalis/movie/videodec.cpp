@@ -50,7 +50,15 @@ unsigned int videoDecSetState(VideoDec *decoder, unsigned int state)
     return oldState;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecPutTs__FP8VideoDecllPUci);
+void videoDecPutTs(VideoDec *decoder, long pts, long dts, unsigned char *position, int size)
+{
+    TimeStamp timestamp;
+    timestamp.pts = pts;
+    timestamp.dts = dts;
+    timestamp.pos = position - (unsigned char *)decoder->vibuf.data;
+    timestamp.len = size;
+    viBufPutTs(&moviePlayer->video_dec.vibuf, &timestamp);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecInputCount__FP8VideoDec);
 
