@@ -106,7 +106,13 @@ int CreatePointLight2(Vec4 *pos, float radius, float intensity, float red, float
     return index;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", DeletePointLight);
+void DeletePointLight(int light)
+{
+    DetachPointLight(light);
+
+    FastMemSetZero(&PointLights[light], sizeof(PointLight));
+    FastMemSetZero(&PointLightData[light], sizeof(PL_Data));
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/lights", UpdatePointLights);
 
