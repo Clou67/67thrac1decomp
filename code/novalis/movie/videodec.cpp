@@ -16,7 +16,10 @@ int videoDecBeginPut(VideoDec *decoder, unsigned char **first, int *firstSize, u
     return viBufBeginPut(&decoder->vibuf, first, firstSize, second, secondSize);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecEndPut__FP8VideoDec);
+void videoDecEndPut(VideoDec *decoder, int size)
+{
+    viBufEndPut(&decoder->vibuf, size);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/videodec", videoDecReset__FP8VideoDec);
 

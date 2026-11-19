@@ -81,4 +81,8 @@ int videoDecBeginPut(VideoDec *decoder, unsigned char **first, int *firstSize, u
 
 int viBufBeginPut(ViBuf *buffer, unsigned char **first, int *firstSize, unsigned char **second, int *secondSize);
 
+void videoDecEndPut(VideoDec *decoder, int size);
+
+void viBufEndPut(ViBuf *buffer, int size);
+
 #endif
