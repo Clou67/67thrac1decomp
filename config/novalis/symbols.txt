@@ -66,6 +66,7 @@ WaterTileBoxes = 0x001612D4; // size:0x4
 WaterTileCnt = 0x001612D8; // size:0x4
 movieDecoderBuffer = 0x00161348; // size:0x4
 moviePlayer = 0x0016134C; // size:0x4
+movieDecoderThread = 0x00161350; // size:0x4
 mcstate_time = 0x00162280; // size:0x4
 movieAdpcmStagingBuffer = 0x001622BC; // size:0x4
 _gp_1 = 0x00166C00; // size:0x1
