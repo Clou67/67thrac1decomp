@@ -167,7 +167,17 @@ struct sceGifTag {
 // Sony libgraph.h register value builder.
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
+struct EeSemaParam {
+    int count;
+    int maxCount;
+    int initialCount;
+    int waitThreads;
+    unsigned int attributes;
+    unsigned int option;
+};
+
 extern "C" {
+int CreateSema(EeSemaParam *parameters);
 int DeleteSema(int semaphore);
 int SignalSema(int semaphore);
 int WaitSema(int semaphore);

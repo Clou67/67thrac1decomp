@@ -30,7 +30,24 @@ void scTag2(unsigned long *tag, unsigned int address, unsigned int id, unsigned 
     *tag = ((unsigned long)address << 32) | (((unsigned long)id << 32) >> 4) | (unsigned long)count;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/vibuf", viBufCreate);
+int viBufCreate(ViBuf *buffer, unsigned long long *input, unsigned long long *tags, int sectors,
+                TimeStamp *timestamps, int timestampCount)
+{
+    EeSemaParam parameters;
+    buffer->data = (u_long128 *)input;
+    buffer->tag = (u_long128 *)(((unsigned int)tags & VIBUF_PHYSICAL_ADDRESS_MASK) | 0x20000000);
+    buffer->n = sectors;
+    buffer->buffSize = sectors << VIBUF_BLOCK_SHIFT;
+    buffer->ts = timestamps;
+    buffer->n_ts = timestampCount;
+
+    parameters.initialCount = 1;
+    parameters.maxCount = 1;
+    buffer->sema = CreateSema(&parameters);
+    viBufReset(buffer);
+    buffer->totalBytes = 0;
+    return 1;
+}
 
 int viBufReset(ViBuf *buffer)
 {
