@@ -8,6 +8,9 @@
 // GS memory the shrub textures may use before they overflow it.
 #define SHRUB_GS_MEMORY_LIMIT 0x400000
 
+// GS texture address bits of a texture register word.
+#define GS_TEXTURE_ADDRESS_MASK 0xFFFFC000
+
 // Scratchpad range ShrubProc leaves its results in.
 #define SHRUB_SPR_RESULT_ADDRESS 0x3200
 #define SHRUB_SPR_RESULT_QWORDS 0x40
@@ -49,7 +52,37 @@ void DmaShrubTextures(void)
     start->vif1 = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/shrubfunc", PatchShrubGifs);
+void PatchShrubGifs(void)
+{
+    int *rectify;
+    ShrubClass *shrubClass;
+    int packetIndex;
+    int drawIndex;
+    ShrubDrawList *list;
+    ShrubDraw *draw;
+    ShrubGsLoc *location;
+
+    for (rectify = ShrubGifRectify; *rectify >= 0; rectify++) {
+        shrubClass = ShrubClasses[*rectify];
+
+        for (packetIndex = 0; packetIndex < shrubClass->packet_cnt; packetIndex++) {
+            list = (ShrubDrawList *)shrubClass->packets[packetIndex].data + 1;
+            draw = (ShrubDraw *)((ShrubDrawList *)(list + list->skip_qwords) + 1);
+
+            for (drawIndex = 0; drawIndex < list->draw_cnt; drawIndex++) {
+                location = &ShrubGsLocStash[draw->stash_index];
+
+                if (location->base != 0)
+                    draw->base_tex = (draw->base_tex & GS_TEXTURE_ADDRESS_MASK) | location->base;
+
+                if (location->mip != 0)
+                    draw->mip_tex = (draw->mip_tex & GS_TEXTURE_ADDRESS_MASK) | location->mip;
+
+                draw++;
+            }
+        }
+    }
+}
 
 void DrawShrub(void)
 {

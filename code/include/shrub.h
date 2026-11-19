@@ -37,7 +37,7 @@ struct ShrubPacket {
     int size;
 };
 
-// A shrub class. Its ShrubPackets follow it in memory.
+// A shrub class, followed by its packets.
 struct ShrubClass {
     BSphere bSphere;
     float mip_dist;
@@ -56,6 +56,7 @@ struct ShrubClass {
     short scis_cnt;
     short bboard_cnt;
     short pad_s[3];
+    ShrubPacket packets[0];
 };
 
 // Header of the draw list in a shrub packet, 0x10 bytes into its data.
