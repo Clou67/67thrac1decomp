@@ -171,4 +171,27 @@ int EnableDmac(int channel);
 int DisableDmac(int channel);
 }
 
+#ifdef ALLOW_NON_MATCHING
+// EE kernel thread descriptor.
+struct EeThreadParams {
+    int status;
+    void (*entry)(void *);
+    void *stack;
+    int stack_size;
+    void *gp;
+    int priority;
+    int current_priority;
+    int attributes;
+    unsigned int option;
+};
+
+extern "C" {
+void sceMpegInit(void);
+int CreateThread(EeThreadParams *params);
+int _StartThread(int thread, void *argument);
+int AddIntcHandler(int cause, int (*handler)(int), int next);
+int EnableIntc(int cause);
+}
+#endif
+
 #endif

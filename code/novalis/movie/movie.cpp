@@ -171,7 +171,89 @@ int isAudioOK(void)
     return audioDecIsPageFull(&moviePlayer->audio_dec);
 }
 
+#ifdef ALLOW_NON_MATCHING
+// The thread descriptor setup still differs from retail.
+struct MovieDecoderMemory {
+    VoData output_frames[2];
+    VoTag output_tags[2];
+    u_long128 input_tags[MOVIE_INPUT_SECTORS + 1];
+    unsigned char adpcm_staging[0x400];
+    unsigned char unk_1c8590[0x30];
+    unsigned char mpeg_work[0xEB768];
+};
+
+struct sceMpegCbDataStr;
+typedef int (*MpegStreamCallback)(sceMpeg *, sceMpegCbData *, void *);
+
+int videoDecCreate(VideoDec *decoder, unsigned char *work, int work_size, unsigned long long *input,
+                   unsigned long long *tags, int sectors, TimeStamp *timestamps, int timestamp_count);
+int videoDecSetStream(VideoDec *decoder, int type, int channel, MpegStreamCallback callback, void *argument);
+int videoCallback(sceMpeg *mpeg, sceMpegCbData *event, void *argument);
+int pcmCallback(sceMpeg *mpeg, sceMpegCbDataStr *event, void *argument);
+void videoDecMain(void *argument);
+int vblankHandler(int cause);
+int handler_endimage(int channel);
+extern char _gp_1[];
+extern const char movieOpenError[];
+
+int initAll(int sector, int size, int language)
+{
+    const unsigned int dma_enable = 1;
+    const unsigned int gif_acknowledge = 1 << MOVIE_GIF_DMA_CHANNEL;
+    volatile unsigned int *const dma_control = (volatile unsigned int *)DMA_CONTROL_ADDRESS;
+    volatile unsigned int *const dma_status = (volatile unsigned int *)0x1000E010;
+    EeThreadParams thread;
+    int opened;
+
+    *dma_control |= dma_enable | DMA_CONTROL_RELEASE;
+    *dma_status = gif_acknowledge;
+    readBufCreate(&moviePlayer->read_buf);
+    sceMpegInit();
+
+    videoDecCreate(&moviePlayer->video_dec, ((MovieDecoderMemory *)movieDecoderBuffer)->mpeg_work,
+                   sizeof(((MovieDecoderMemory *)movieDecoderBuffer)->mpeg_work),
+                   (unsigned long long *)moviePlayer->vi_buf_data,
+                   (unsigned long long *)((MovieDecoderMemory *)movieDecoderBuffer)->input_tags, MOVIE_INPUT_SECTORS,
+                   moviePlayer->vi_buf_ts, MOVIE_TIMESTAMP_COUNT);
+    audioDecCreate(&moviePlayer->audio_dec, moviePlayer->audio_buf, MOVIE_AUDIO_BUFFER_SIZE,
+                   ((MovieDecoderMemory *)movieDecoderBuffer)->adpcm_staging);
+    videoDecSetStream(&moviePlayer->video_dec, sceMpegStrM2V, 0, videoCallback, &moviePlayer->read_buf);
+    videoDecSetStream(&moviePlayer->video_dec, sceMpegStrADPCM, language,
+                      (MpegStreamCallback)pcmCallback, &moviePlayer->read_buf);
+
+    voBufCreate(&moviePlayer->vo_buf,
+                (VoData *)(((unsigned int)((MovieDecoderMemory *)movieDecoderBuffer)->output_frames & 0x0FFFFFFF) | 0x20000000),
+                ((MovieDecoderMemory *)movieDecoderBuffer)->output_tags, sizeof(((MovieDecoderMemory *)movieDecoderBuffer)->output_frames) / sizeof(VoData));
+
+    thread.stack = moviePlayer->decoder_stack;
+    thread.entry = videoDecMain;
+    thread.stack_size = MOVIE_DECODER_STACK_SIZE;
+    thread.priority = MOVIE_THREAD_PRIORITY;
+    thread.gp = _gp_1;
+    thread.option = 0;
+    int thread_id = CreateThread(&thread);
+    movieDecoderThread = thread_id;
+    _StartThread(thread_id, &moviePlayer->video_dec);
+
+    if (!strFileBegin(&moviePlayer->str_file, sector, size)) {
+        opened = 0;
+        printf_stub(movieOpenError);
+    }
+
+    else {
+        opened = 1;
+    }
+
+    moviePlayer->video_dec.hid_vblank = AddIntcHandler(MOVIE_VBLANK_INTERRUPT, vblankHandler, 0);
+    EnableIntc(MOVIE_VBLANK_INTERRUPT);
+    moviePlayer->video_dec.hid_endimage = AddDmacHandler(MOVIE_GIF_DMA_CHANNEL, handler_endimage, 0);
+    EnableDmac(MOVIE_GIF_DMA_CHANNEL);
+
+    return opened;
+}
+#else
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", initAll__Fiii);
+#endif
 
 void termAll(void)
 {
