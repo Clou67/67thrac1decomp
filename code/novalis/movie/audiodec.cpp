@@ -12,6 +12,8 @@ void snd_StartMovieSound(int iop_buffer, int buffer_size, int iop_offset, int ra
 
 void snd_ResetMovieSound(void);
 
+void sendADPCM(_AudioDec *decoder);
+
 enum {
     ADPCM_BLOCK_SIZE = 0x400,
     ADPCM_PAGE_SIZE = 0x1000,
@@ -144,7 +146,11 @@ int audioDecIsPageFull(_AudioDec *decoder)
     return decoder->iopLastPos >= ADPCM_PAGE_SIZE;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", audioDecSend);
+void audioDecSend(_AudioDec *decoder)
+{
+    if (decoder->state != AUDIO_DEC_HEADER_PENDING)
+        sendADPCM(decoder);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/audiodec", sendToSPU__FP9_AudioDecPUcii);
 
