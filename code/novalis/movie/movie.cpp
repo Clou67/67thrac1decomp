@@ -1,5 +1,7 @@
 #include "common.h"
 #include "movie.h"
+#include "pad.h"
+#include "sound.h"
 
 int initAll(int sector, int size, int language);
 int readMpeg(VideoDec *decoder, ReadBuf *buffer, StrFile *file);
@@ -31,7 +33,133 @@ int playMpegMovie(int sector, int size, unsigned char *decoder_buffer, MoviePlay
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/movie", readMpeg__FP8VideoDecP7ReadBufP7StrFile);
+enum {
+    MOVIE_SKIP_DISABLED = -1,
+    MOVIE_SKIP_ANY_BUTTON = 2,
+    MOVIE_DECODER_END = 3,
+    MOVIE_READ_SIZE = 0x10000,
+    MOVIE_MIN_DEMUX_SIZE = 5,
+    MOVIE_SOUND_GROUP = 5
+};
+
+// The skip mode is sampled again when checking whether Start is allowed.
+extern volatile int decodeMode;
+extern int movieSkipEnabled;
+extern int ChallengeMode;
+extern int Level;
+
+struct MovieAudioState {
+    unsigned char unk_00[0x48];
+    int group_volume[6];
+};
+extern MovieAudioState audioState;
+
+void UpdatePad(void);
+void switchThread(void);
+int isAudioOK(void);
+void proceedAudio(void);
+int videoDecAbort(VideoDec *decoder);
+unsigned int videoDecGetState(VideoDec *decoder);
+int videoDecFlush(VideoDec *decoder);
+int videoDecIsFlushed(VideoDec *decoder);
+void startDisplay(int wait);
+void endDisplay(void);
+void snd_SetMasterVolume(int group, int volume);
+
+static inline int movieButtonPressed(PAD *pad, int mask)
+{
+    return pad->bitsOn & mask;
+}
+
+static inline int movieSkipChord(PAD *pad, unsigned long mask)
+{
+    if ((*(unsigned long *)&pad->bits & mask) != mask)
+        return 0;
+
+    return 1;
+}
+
+int readMpeg(VideoDec *decoder, ReadBuf *buffer, StrFile *file)
+{
+    const unsigned long skip_chord = ((unsigned long)PAD_START << 32)
+                                   | PAD_L1 | PAD_L2 | PAD_R1 | PAD_R2;
+    unsigned char *write_ptr;
+    unsigned char *read_ptr;
+    int skipped = 0;
+    int started = 0;
+    int decode_remaining = file->size;
+    int read_remaining = decode_remaining;
+
+    FlushCache(0);
+    FlushCache(2);
+    sceGsSyncV(0);
+
+    while (decode_remaining >= MOVIE_MIN_DEMUX_SIZE && videoDecGetState(decoder) != MOVIE_DECODER_END) {
+        UpdatePad();
+        int skip_mode = decodeMode;
+
+        if (skip_mode != MOVIE_SKIP_DISABLED) {
+            int skip;
+
+            if ((skip_mode == MOVIE_SKIP_ANY_BUTTON && movieButtonPressed(&padState, -1)) ||
+                ((movieSkipEnabled != 0 || ChallengeMode != 0 || decodeMode != 0 || Level <= 0) &&
+                 movieButtonPressed(&padState, PAD_START)))
+                skip = 1;
+
+            else
+                skip = movieSkipChord(&padState, skip_chord);
+
+            if (skip) {
+                skipped = 1;
+                videoDecAbort(&moviePlayer->video_dec);
+            }
+        }
+
+        int space = readBufBeginPut(buffer, &write_ptr);
+
+        if (read_remaining > 0 && space >= MOVIE_READ_SIZE) {
+            int transferred = strFileRead(file, write_ptr, MOVIE_READ_SIZE, 0);
+            read_remaining -= transferred;
+            readBufEndPut(buffer, transferred);
+        }
+
+        proceedAudio();
+        switchThread();
+
+        int available = readBufBeginGet(buffer, &read_ptr);
+
+        if (available > 0) {
+            int transferred = sceMpegDemuxPssRing(&decoder->mpeg, read_ptr, available, buffer, buffer->capacity);
+            decode_remaining -= transferred;
+            readBufEndGet(buffer, transferred);
+        }
+
+        proceedAudio();
+
+        if (!started && voBufIsFull(&moviePlayer->vo_buf) && isAudioOK()) {
+            started = 1;
+            startDisplay(1);
+            audioDecStart(&moviePlayer->audio_dec);
+        }
+    }
+
+    while (!videoDecFlush(decoder)) {
+        proceedAudio();
+        switchThread();
+    }
+
+    while (!videoDecIsFlushed(decoder) && videoDecGetState(decoder) != MOVIE_DECODER_END) {
+        proceedAudio();
+        switchThread();
+    }
+
+    endDisplay();
+    audioDecReset(&moviePlayer->audio_dec);
+    snd_SetMasterVolume(MOVIE_SOUND_GROUP, audioState.group_volume[MOVIE_SOUND_GROUP]);
+    snd_FlushSoundCommands();
+
+    return skipped;
+}
 
 void switchThread(void)
 {

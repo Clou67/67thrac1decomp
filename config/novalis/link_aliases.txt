@@ -271,3 +271,6 @@ snd_StartMovieSound__Fiiiii = 0x0012F108;
 snd_ResetMovieSound__Fv = 0x0012F0A8;
 snd_UpdateMovieADPCM__Fii = 0x0012F148;
 snd_GetMovieNAX__Fv = 0x0012F178;
+UpdatePad__Fv = 0x0027C478;
+videoDecGetState__FP8VideoDec = 0x0031CB28;
+snd_SetMasterVolume__Fii = 0x0012E208;

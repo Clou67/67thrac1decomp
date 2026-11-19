@@ -3,6 +3,9 @@
 
 // Sony SDK (libdma, libgraph, kernel). These libraries are C, so they keep C linkage.
 
+struct ReadBuf;
+struct sceMpeg;
+
 struct sceDmaChan {
     unsigned int chcr;
 };
@@ -154,6 +157,8 @@ void sceDmaSend(sceDmaChan *channel, void *tag);
 int sceGsSetDefLoadImage(sceGsLoadImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsSetDefStoreImage(sceGsStoreImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsExecStoreImage(sceGsStoreImage *image, void *destination);
+int sceGsSyncV(int mode);
+int sceMpegDemuxPssRing(sceMpeg *mpeg, unsigned char *source, int bytes, ReadBuf *buffer, int capacity);
 int sceGsSyncPath(int mode, unsigned short timeout);
 void sceGsSetDefDispEnv(sceGsDispEnv *disp, short psm, short w, short h, short dx, short dy);
 void sceGsSetDefDrawEnv(sceGsDrawEnv1 *draw, short psm, short w, short h, short ztest, short zpsm);
