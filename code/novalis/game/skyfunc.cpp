@@ -42,7 +42,6 @@ struct DrawConfig {
 extern SkyGifPageMarker sky_gif_page_markerA;
 extern SkyGifPageMarker sky_gif_page_markerB;
 extern DrawConfig drawConfig;
-extern char skyGifPageLabel[];
 extern int GifLoadCnt;
 extern unsigned int skyTexturedSetup[];
 extern unsigned int skyGouraudSetup[];
@@ -118,7 +117,7 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/skyfunc", SkySpace);
 void SetupSkyGifPaging(void)
 {
     sky_gif_page_markerA.tag = vu1_bufPtr.tag++;
-    printf_stub3(skyGifPageLabel, 1);
+    printf_stub3("sky texs", 1);
 
     textureCursor = textureCursorEnd;
     GifLoadCnt = 0;

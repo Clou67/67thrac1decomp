@@ -34,7 +34,6 @@ ShrubVu1Marker = 0x001604B0; // size:0x4
 ShrubGsMax = 0x001604B8; // size:0x4
 skyScratchBuffers = 0x001604C8; // size:0x8
 skyScratchBufferIndex = 0x001604D0; // size:0x4
-skyGifPageLabel = 0x00160510; // size:0x9
 Sky = 0x0016051C; // size:0x4
 sky_gif_page_markerA = 0x00160530; // size:0x4
 sky_gif_page_markerB = 0x00160534; // size:0x4
