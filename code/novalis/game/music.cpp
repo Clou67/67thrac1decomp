@@ -44,7 +44,17 @@ void music_Unpause(void)
     musicTransition.secondary_command = MUSIC_COMMAND_RESUME;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_UnpauseDelay);
+enum { MUSIC_PAUSED_FLAG = 0x8000 };
+
+void music_UnpauseDelay(int frames)
+{
+    if (musicTransition.primary_command & MUSIC_PAUSED_FLAG)
+        musicTransition.primary_unpause = frames;
+    if (musicTransition.transition_command & MUSIC_PAUSED_FLAG)
+        musicTransition.transition_unpause = frames;
+    if (musicTransition.secondary_command & MUSIC_PAUSED_FLAG)
+        musicTransition.secondary_unpause = frames;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_UpdateStream);
 
