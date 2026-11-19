@@ -1,10 +1,10 @@
 #include "sce.h"
 #include "strfile.h"
 
-int strFileBegin(StrFile *file, int sector, int frame_count)
+int strFileBegin(StrFile *file, int sector, int file_size)
 {
     file->sector = sector;
-    file->frame_count = frame_count;
+    file->size = file_size;
     return 1;
 }
 

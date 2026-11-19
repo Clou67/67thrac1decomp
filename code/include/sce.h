@@ -3,6 +3,9 @@
 
 // Sony SDK (libdma, libgraph, kernel). These libraries are C, so they keep C linkage.
 
+struct ReadBuf;
+struct sceMpeg;
+
 struct sceDmaChan {
     unsigned int chcr;
 };
@@ -140,6 +143,13 @@ int sceSifSetDma(SifDmaTransfer *transfer, int count);
 int sceSifDmaStat(int id);
 int DIntr(void);
 int EIntr(void);
+int TerminateThread(int thread);
+int DeleteThread(int thread);
+int DisableIntc(int cause);
+int RemoveIntcHandler(int cause, int handler);
+int RotateThreadReadyQueue(int priority);
+int GetThreadId(void);
+int ChangeThreadPriority(int thread, int priority);
 
 sceDmaChan *sceDmaGetChan(int channel);
 void sceDmaSend(sceDmaChan *channel, void *tag);
@@ -147,6 +157,8 @@ void sceDmaSend(sceDmaChan *channel, void *tag);
 int sceGsSetDefLoadImage(sceGsLoadImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsSetDefStoreImage(sceGsStoreImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsExecStoreImage(sceGsStoreImage *image, void *destination);
+int sceGsSyncV(int mode);
+int sceMpegDemuxPssRing(sceMpeg *mpeg, unsigned char *source, int bytes, ReadBuf *buffer, int capacity);
 int sceGsSyncPath(int mode, unsigned short timeout);
 void sceGsSetDefDispEnv(sceGsDispEnv *disp, short psm, short w, short h, short dx, short dy);
 void sceGsSetDefDrawEnv(sceGsDrawEnv1 *draw, short psm, short w, short h, short ztest, short zpsm);
@@ -157,6 +169,30 @@ int AddDmacHandler(int channel, int (*handler)(int), int next);
 int RemoveDmacHandler(int channel, int handlerId);
 int EnableDmac(int channel);
 int DisableDmac(int channel);
+}
+
+// Global pointer value, set by the linker.
+extern int _gp;
+
+// EE kernel thread descriptor.
+struct EeThreadParams {
+    int status;
+    void (*entry)(void *);
+    void *stack;
+    int stack_size;
+    void *gp;
+    int priority;
+    int current_priority;
+    int attributes;
+    unsigned int option;
+};
+
+extern "C" {
+void sceMpegInit(void);
+int CreateThread(EeThreadParams *params);
+int _StartThread(int thread, void *argument);
+int AddIntcHandler(int cause, int (*handler)(int), int next);
+int EnableIntc(int cause);
 }
 
 #endif

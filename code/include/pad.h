@@ -10,6 +10,12 @@ struct PAD {
 
 extern PAD padState;
 
+void UpdatePad(void);
+
+#define PAD_L2 0x0001
+#define PAD_R2 0x0002
+#define PAD_L1 0x0004
+#define PAD_R1 0x0008
 #define PAD_TRIANGLE 0x0010
 #define PAD_CIRCLE 0x0020
 #define PAD_CROSS 0x0040
