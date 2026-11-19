@@ -42,7 +42,21 @@ MobyInstance *FindMobyByUID(int unused, int uid)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/respawn", RestoreMobyVarList);
+void RestoreMobyVarList(MobyVarList *list)
+{
+    for (int index = 0; index < list->count; index++) {
+        MobyVarEntry *entry = &list->entries[index];
+        MobyInstance *moby = FindMobyByUID(entry->oClass, entry->uid);
+        if (moby != 0) {
+            unsigned char *destination;
+            if (entry->isMoby == 1)
+                destination = (unsigned char *)(entry->offset + (int)moby);
+            else
+                destination = (unsigned char *)(entry->offset + (int)moby->pVar);
+            FastMemCopy32(destination, entry->data, entry->size);
+        }
+    }
+}
 
 extern MobyVarList SavedMobyVars;
 

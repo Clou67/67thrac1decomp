@@ -294,5 +294,3 @@ TieProc__Fv = 0x002A9A90;
 BuildTieTextureDma__Fi = 0x002AAF68;
 LightTies__FPv = 0x002AB218;
 FastAbsI__Fi = 0x00221110;
-
-RestoreMobyVarList__FP11MobyVarList = 0x0029AFC8;
