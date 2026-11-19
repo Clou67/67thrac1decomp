@@ -33,4 +33,6 @@ int sound_LevelPlay(int entry, int flags, int owner);
 
 int sound_SetVol(int handle, int volume);
 
+int sound_SetPitch(int handle, int pitch);
+
 #endif

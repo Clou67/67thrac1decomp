@@ -47,7 +47,13 @@ int sound_SetVol(int handle, int volume)
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetPitch);
+int sound_SetPitch(int handle, int pitch)
+{
+    unsigned int offset = handle * sizeof(SoundVoice);
+    unsigned char *voice = (unsigned char *)(offset + (unsigned int)&audioState);
+    *(int *)(voice + offsetof(SoundAudioState, voices[0].pitch_bend)) = pitch;
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetupAmbientFunctions);
 
