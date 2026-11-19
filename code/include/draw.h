@@ -36,4 +36,6 @@ void UpdateViewContext(void);
 
 int FontLen(char *text, int length);
 
+int FontLenSmall(char *text, int length);
+
 #endif

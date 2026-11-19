@@ -117,7 +117,12 @@ int FontLen(char *text, int length)
     return FontLenWithTable(text, length, FontNormalMetrics);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenSmall);
+extern unsigned char FontSmallMetrics[];
+
+int FontLenSmall(char *text, int length)
+{
+    return FontLenWithTable(text, length, FontSmallMetrics);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontLenLarge);
 
