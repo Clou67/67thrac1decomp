@@ -1,4 +1,3 @@
-#include "common.h"
 #include "readbuf.h"
 
 void readBufCreate(ReadBuf *buffer)
@@ -41,4 +40,10 @@ int readBufBeginGet(ReadBuf *buffer, unsigned char **source)
     return buffer->count;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/movie/readbuf", readBufEndGet__FP7ReadBufi);
+int readBufEndGet(ReadBuf *buffer, int size)
+{
+    int consumed = size < buffer->count ? size : buffer->count;
+    buffer->count -= consumed;
+
+    return consumed;
+}
