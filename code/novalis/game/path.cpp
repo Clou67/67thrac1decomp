@@ -15,7 +15,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", func_0028B780);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", PathFollower_GetPntPtr);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", PathFollower_WrapIdx);
+int PathFollower_WrapIdx(PathFollower *follower, int index)
+{
+    int last = follower->pathId >= 0 ? follower->path->pointCount - 1 : 0;
+
+    if (index < 0)
+        return last + index;
+    if (index > last)
+        return index % (last + 1);
+    return index;
+}
 
 int PathFollower_Advance(PathFollower *follower)
 {

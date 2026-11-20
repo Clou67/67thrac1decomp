@@ -18,4 +18,6 @@ struct PathFollower {
 
 int PathFollower_Advance(PathFollower *follower);
 
+int PathFollower_WrapIdx(PathFollower *follower, int index);
+
 #endif
