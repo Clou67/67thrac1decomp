@@ -1375,7 +1375,7 @@ GameComplete_Draw__FP18GameCompleteWidget = 0x00299670; // type:func size:0x50
 Menu_InitStreamBuffers = 0x002996C8; // type:func size:0x154
 Menu_AllocStreamBuffer = 0x00299820; // type:func size:0xBC
 Menu_FreeStreamBuffer = 0x002998E0; // type:func size:0xB0
-Menu_GetStreamBufferSize = 0x00299990; // type:func size:0x50
+Menu_GetStreamBufferSize__FPv = 0x00299990; // type:func size:0x50
 Menu_LockStreamBuffer = 0x002999E0; // type:func size:0x44
 Menu_UnlockStreamBuffer = 0x00299A28; // type:func size:0x4C
 LoadMenuRatchetModel = 0x00299A78; // type:func size:0x764
@@ -2234,3 +2234,5 @@ GoldWeaponFlags = 0x0014BEC0; // size:0x50
 SkillPointFlags = 0x0013E520; // size:0x25
 
 MobyGroupEntries = 0x001ABCC0; // size:0x400
+
+MenuStreamBuffers = 0x001BA638; // size:0x28

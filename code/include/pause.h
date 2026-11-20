@@ -23,6 +23,15 @@ struct ImageWidget {
     int unk_54;
 };
 
+enum { MENU_STREAM_BUFFER_COUNT = 5, MENU_STREAM_LARGE = 1, MENU_STREAM_LOCKED = 4 };
+
+struct MenuStreamBuffer {
+    void *data;
+    int flags;
+};
+
+extern MenuStreamBuffer MenuStreamBuffers[MENU_STREAM_BUFFER_COUNT];
+
 extern int pauseActionListMode;
 
 // State of the pause menu's map page; only the level being shown is known so far.
@@ -47,5 +56,7 @@ int GameComplete_Draw(GameCompleteWidget *widget);
 int GoldBoltWidget_DeleteMoby(GoldBoltWidget *widget);
 
 int ImageWidget_OnExit(ImageWidget *widget);
+
+int Menu_GetStreamBufferSize(void *data);
 
 #endif

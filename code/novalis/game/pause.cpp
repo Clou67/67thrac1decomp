@@ -325,7 +325,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_AllocStreamB
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_FreeStreamBuffer);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_GetStreamBufferSize);
+int Menu_GetStreamBufferSize(void *data)
+{
+    MenuStreamBuffer *buffer = MenuStreamBuffers;
+
+    for (int slot = 0; slot < MENU_STREAM_BUFFER_COUNT; ++slot, ++buffer) {
+        if (buffer->data == data) {
+            return buffer->flags & MENU_STREAM_LARGE ? 0x4F000 : 0x11800;
+        }
+    }
+
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_LockStreamBuffer);
 
