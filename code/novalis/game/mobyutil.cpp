@@ -69,7 +69,16 @@ void MB_randVector(Vec4 *vector, float low, float high)
     MB_SphericalToVector(vector, radius, azimuth, elevation);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randSphere);
+void MB_randSphere(Vec4 *out, float minimum, float maximum)
+{
+    float radius = MB_randRangeFloat(minimum, maximum);
+    float azimuth = MB_randRot();
+    float elevation = MB_randRot();
+
+    out->x = FastAngleSinF(azimuth) * FastAngleCosF(elevation) * radius;
+    out->y = FastAngleCosF(azimuth) * FastAngleCosF(elevation) * radius;
+    out->z = FastAngleSinF(elevation) * radius;
+}
 
 float MB_catmullRom(float first, float second, float third, float fourth, float fraction)
 {

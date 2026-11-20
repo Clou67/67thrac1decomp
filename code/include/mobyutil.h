@@ -98,4 +98,6 @@ void MB_BobMotion(MobyInstance *moby, float *phase, float *offset, float height,
 
 void MB_SphericalToVector(Vec4 *out, float radius, float azimuth, float elevation);
 
+void MB_randSphere(Vec4 *out, float minimum, float maximum);
+
 #endif
