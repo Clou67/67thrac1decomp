@@ -603,6 +603,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CountGoldWe
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CountSkillPoints);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CountGoldBolts);
+extern unsigned char GoldBoltFlags[32];
+
+int MB_CountGoldBolts(void)
+{
+    int count = 0;
+
+    for (int index = 0; index < 32; ++index) {
+        if (GoldBoltFlags[index])
+            ++count;
+    }
+
+    if (count < 0)
+        count = 0;
+    if (count > 30)
+        count = 30;
+    return count;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", SetupMobyFunctions);
