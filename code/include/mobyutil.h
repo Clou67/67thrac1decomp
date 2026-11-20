@@ -1,6 +1,8 @@
 #ifndef MOBYUTIL_H
 #define MOBYUTIL_H
 
+#include "moby.h"
+
 int MB_RequestHelpMessage(int selector, int messageId);
 
 void MB_UnlockLevel(int level);
@@ -8,7 +10,19 @@ void MB_UnlockItem(int item, char equip);
 
 float Lerp(float from, float to, float weight);
 
-struct MobyInstance;
+struct COLL_DAM_IN {
+    Vec4 momentum;
+    MobyInstance *pMoby;
+    int damageFlags;
+    unsigned char damageClass;
+    unsigned char damageStrength;
+    unsigned short damageIndex;
+    float damageHp;
+    int flags;
+    float damageHeroHp;
+    int shotUID;
+    int pad;
+};
 struct Vec4;
 
 void MB_SetZBoundsFromPos(MobyInstance *moby, float z);
@@ -36,5 +50,7 @@ float MB_randRangeSigned(float low, float high);
 float MB_randRot(void);
 
 void MB_randVector(Vec4 *vector, float low, float high);
+
+void SetCollDamIn(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags, float damageHp);
 
 #endif

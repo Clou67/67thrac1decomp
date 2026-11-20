@@ -165,7 +165,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026E790)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_HasCollPrims);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", SetCollDamIn);
+void FastVecZero(Vec4 *vector);
+
+void SetCollDamIn(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags, float damageHp)
+{
+    damage.pMoby = damager;
+    damage.damageFlags = damageFlags;
+    damage.damageHp = damageHp;
+    damage.flags = 0;
+
+    FastVecZero(&damage.momentum);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", SetCollDamIn_2);
 
