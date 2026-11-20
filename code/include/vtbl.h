@@ -233,4 +233,6 @@ void UpdateSound_6(AmbientSound *sound);
 
 void M676_DrawWaterSheets(MobyInstance *moby);
 
+int M806_IsActive(MobyInstance *moby);
+
 #endif
