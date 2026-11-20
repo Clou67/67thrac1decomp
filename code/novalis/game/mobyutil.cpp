@@ -621,7 +621,23 @@ int MB_CountGoldWeapons(void)
     return count;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CountSkillPoints);
+extern unsigned char SkillPointFlags[37];
+
+int MB_CountSkillPoints(void)
+{
+    int count = 0;
+
+    for (int index = 0; index < 37; ++index) {
+        if (SkillPointFlags[index])
+            ++count;
+    }
+
+    if (count < 0)
+        count = 0;
+    if (count > 10)
+        count = 10;
+    return count;
+}
 
 extern unsigned char GoldBoltFlags[32];
 

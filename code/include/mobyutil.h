@@ -78,4 +78,6 @@ int MB_CountGoldBolts(void);
 
 int MB_CountGoldWeapons(void);
 
+int MB_CountSkillPoints(void);
+
 #endif
