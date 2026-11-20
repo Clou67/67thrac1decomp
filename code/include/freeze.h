@@ -57,6 +57,10 @@ extern short LevelChangePending[];
 extern int RilgarRetryCount;
 extern int KaleboRetryCount;
 
+// Pending level load and its destination level.
+extern int g_newlevel;
+extern int g_newlevelnum;
+
 void ChangeLevel(int level);
 
 int GetLastFreezeDialogType(void);

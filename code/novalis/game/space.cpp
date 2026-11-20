@@ -19,14 +19,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/space", Space_StartTakeof
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/space", StartLeaveLevelCutscene);
 
-extern int RequestedLevel;
 extern int CutscenePlaying;
-extern int LevelLoadRequested;
 
 void ChangeLevel(int level)
 {
-    RequestedLevel = level;
-    LevelLoadRequested = 1;
+    g_newlevelnum = level;
+    g_newlevel = 1;
     CutscenePlaying = 1;
 }
 
