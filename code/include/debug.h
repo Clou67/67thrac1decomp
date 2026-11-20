@@ -7,4 +7,6 @@ void STUB_00218800(void);
 
 void STUB_00218808(void);
 
+void STUB_00218810(void);
+
 #endif
