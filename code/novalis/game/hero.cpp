@@ -1,4 +1,5 @@
 #include "common.h"
+#include "draw.h"
 #include "npc.h"
 #include "mobyutil.h"
 #include "fastfunc.h"
@@ -63,7 +64,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateScaleEf
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateScreenFadeInOut);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_RegisterGlowDraw);
+void Hero_DrawGlows(MobyInstance *moby);
+
+void Hero_RegisterGlowDraw(void)
+{
+    if (!Hero.glowDrawRegistered) {
+        Hero.glowDrawRegistered = 1;
+        RegisterMobyDraw(Hero_DrawGlows, Hero.moby);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_DrawGlows);
 

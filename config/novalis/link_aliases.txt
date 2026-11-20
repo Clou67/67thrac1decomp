@@ -367,3 +367,5 @@ MB_BeginSucking__FP12MobyInstance = 0x00304690;
 MobyComputeSelectedJoints__FP12MobyInstanceiPiP4Mtx4 = 0x00268D80;
 
 FastVecMtx3Mult__FP4Vec4T0P4Mtx4 = 0x002215E0;
+
+Hero_DrawGlows__FP12MobyInstance = 0x00229440;

@@ -121,7 +121,8 @@ struct HeroState {
     char unk1D2C[0xA4];
     Vec4 glowPos[14];
     short glowCount;
-    char unk1EB2[0x196];
+    short glowDrawRegistered;
+    char unk1EB4[0x194];
     unsigned char metalDetectorSpotIsClose;
     char unk2049[0x37];
     MobyInstance *moby;
@@ -418,5 +419,7 @@ int Hero_GetWeaponAmmo(int item);
 int Hero_GetOverlayAnimId(int overlay);
 
 int Hero_IsWeaponGroupB(int slot);
+
+void Hero_RegisterGlowDraw(void);
 
 #endif
