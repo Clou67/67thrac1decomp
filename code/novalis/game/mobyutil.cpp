@@ -184,7 +184,16 @@ float MB_BallisticTicksToHeight(Vec4 *start, Vec4 *velocity, float gravity, int 
     return height;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_BallisticPosAtTicks);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void MB_BallisticPosAtTicks(Vec4 *out, Vec4 *start, Vec4 *velocity, float gravity, int ticks)
+{
+    Vec4 displacement;
+
+    FastVec3Scale(&displacement, velocity, FastIntToFloat(ticks));
+    displacement.z -= FastIntToFloat((ticks * ticks + ticks) >> 1) * gravity;
+    FastVec3Add(out, start, &displacement);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SolveQuad);
 

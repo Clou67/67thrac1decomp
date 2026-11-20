@@ -90,4 +90,6 @@ float MB_lerpRotCosine(float start, float end, float weight);
 
 float MB_BallisticTicksToHeight(Vec4 *start, Vec4 *velocity, float gravity, int *ticksOut);
 
+void MB_BallisticPosAtTicks(Vec4 *out, Vec4 *start, Vec4 *velocity, float gravity, int ticks);
+
 #endif
