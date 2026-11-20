@@ -1,9 +1,16 @@
 #include "common.h"
+#include "camera.h"
+#include "mathfunc_inline.h"
 #include "vtbl.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f338);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f340);
+extern Vec4 HeroPosition;
+
+void Camera_CopyHeroPosition(MobyInstance *target, Vec4 *position)
+{
+    CopyVec4Inline(position, &HeroPosition);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f358);
 
