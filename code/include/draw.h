@@ -59,4 +59,6 @@ void RegisterMobyDraw(DrawMobyCallback draw, MobyInstance *moby);
 
 void RegisterPreDraw(DrawMobyCallback draw, MobyInstance *moby);
 
+void STUB_00218990(void);
+
 #endif

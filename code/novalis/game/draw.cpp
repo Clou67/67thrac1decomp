@@ -7,7 +7,9 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ScreenPosFromWorld
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetLevelCounters);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", STUB_00218990);
+void STUB_00218990(void)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", printf_stub2);
 
