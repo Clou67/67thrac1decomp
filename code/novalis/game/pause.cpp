@@ -285,7 +285,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GameComplete_OnEx
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", M1957_Update_GirlwadOnGameComplete);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GameComplete_Draw);
+void DrawMobyListProc(MobyInstance *moby, int count);
+enum { MENU_WIDGET_DRAW_COMPLETE = 4 };
+
+int GameComplete_Draw(GameCompleteWidget *widget)
+{
+    MobyInstance **moby = widget->mobys;
+
+    for (int remaining = GAME_COMPLETE_MOBY_COUNT - 1; remaining >= 0; --remaining, ++moby) {
+        if (*moby)
+            DrawMobyListProc(*moby, 1);
+    }
+
+    return MENU_WIDGET_DRAW_COMPLETE;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002996C0);
 
