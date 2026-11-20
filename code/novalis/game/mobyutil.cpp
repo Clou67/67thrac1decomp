@@ -417,7 +417,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", Lerp_vec4);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00270650);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", GainDampLimit);
+void GainDampLimit(float delta, float &speed, float gain, float damping, float limit)
+{
+    speed += gain * delta - damping * speed;
+    if (limit > 0.0f) {
+        if (speed > limit)
+            speed = limit;
+        else if (speed < -limit)
+            speed = -limit;
+    }
+
+    if (speed > FastAbsF(delta))
+        speed = FastAbsF(delta);
+    else if (speed < -FastAbsF(delta))
+        speed = -FastAbsF(delta);
+}
 
 float FastAbsF(float value);
 
