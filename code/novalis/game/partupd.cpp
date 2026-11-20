@@ -322,7 +322,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_072)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_072);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_073);
+void UpdatePart_073(PartInstance *part)
+{
+    part->rot += part->rotationMotion.rotationStep;
+    if (part->scale <= 0.0f) {
+        part->scale = 0.0f;
+        DeletePart(part);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_074);
 

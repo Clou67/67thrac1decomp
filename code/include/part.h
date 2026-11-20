@@ -82,4 +82,6 @@ void UpdatePart_060(PartInstance *part);
 
 void UpdatePart_071(PartInstance *part);
 
+void UpdatePart_073(PartInstance *part);
+
 #endif
