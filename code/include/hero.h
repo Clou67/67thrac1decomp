@@ -442,4 +442,23 @@ void Hero_SetNextAnimFrame(int animation, int frame);
 
 void Hero_PlayLoopSound(int slot, MobyInstance *moby, int soundId);
 
+struct HeroTweakValues {
+    char unk_00[0xA4];
+    float unk_A4;
+    float unk_A8;
+    char unk_AC[0xA8];
+    float unk_154;
+    float unk_158;
+    char unk_15C[0xA8];
+    float unk_204;
+    float unk_208;
+    char unk_20C[0xA8];
+    float unk_2B4;
+    float unk_2B8;
+};
+
+extern HeroTweakValues HeroTweaks;
+
+void Hero_SetTweakPair_97b44(float first, float second);
+
 #endif
