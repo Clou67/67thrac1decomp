@@ -303,3 +303,5 @@ Hero_UpdateOverlayAnimLayer__Fv = 0x0022E3A8;
 MB_CollLineDown__FP4Vec4fi = 0x0026E618;
 
 DeleteMoby__FP12MobyInstance = 0x002636C0;
+
+DrawMapFrame__Fv = 0x0025B1C0;

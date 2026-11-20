@@ -1,4 +1,6 @@
 #include "common.h"
+#include "gsregs.h"
+#include "vuchain.h"
 #include "fastfunc.h"
 #include "moby.h"
 #include "pause.h"
@@ -139,7 +141,17 @@ void GoldBolt_SpinMobyUpdate(MobyInstance *moby)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemInfo_DrawCost);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MapPage_Draw);
+void DrawMapFrame(void);
+enum { MAP_ALPHA_BLEND = 0x44, MAP_DRAW_RESULT = 8 };
+
+int MapPage_Draw(void)
+{
+    VU1_addGSregister(GS_REG_ALPHA_1, MAP_ALPHA_BLEND);
+    VU1_addGSregister(GS_REG_TEST_1, GS_TEST_ATE | GS_TEST_ATST_GEQUAL);
+
+    DrawMapFrame();
+    return MAP_DRAW_RESULT;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MapMenu_DrawOptions);
 

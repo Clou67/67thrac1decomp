@@ -20,4 +20,6 @@ void ItemView_SpinMobyUpdate(MobyInstance *moby);
 
 void GoldBolt_SpinMobyUpdate(MobyInstance *moby);
 
+int MapPage_Draw(void);
+
 #endif
