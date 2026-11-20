@@ -328,3 +328,7 @@ WaterSheet_DrawAll__FiP10WaterSheet = 0x002B96E0;
 RegisterMobyDraw__FPFP12MobyInstance_vP12MobyInstance = 0x0021AFE0;
 
 FastAbsF__Ff = 0x00221128;
+
+FastDecTimer__FRs = 0x00220EA8;
+
+DeletePart__FP12PartInstance = 0x0027C5E8;

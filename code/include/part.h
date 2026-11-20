@@ -19,4 +19,6 @@ struct PartInstance {
 
 void UpdatePart_018(PartInstance *part);
 
+void UpdatePart_034(PartInstance *part);
+
 #endif
