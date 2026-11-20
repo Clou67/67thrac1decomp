@@ -1075,9 +1075,9 @@ MB_ShowPersistentMessage = 0x00278F58; // type:func size:0xA4
 MB_RequestHelpMessage = 0x00279000; // type:func size:0x70
 MB_ClearHelpMessage = 0x00279070; // type:func size:0x60
 MB_GetUnspentGoldBolts__Fv = 0x002790D0; // type:func size:0x48
-MB_CountGoldWeapons__Fv = 0x00279118; // type:func size:0x70
-MB_CountSkillPoints__Fv = 0x00279188; // type:func size:0x48
-MB_CountGoldBolts__Fv = 0x002791D0; // type:func size:0x48
+MB_CountGoldBolts__Fv = 0x00279118; // type:func size:0x70
+MB_CountGoldWeapons__Fv = 0x00279188; // type:func size:0x48
+MB_CountSkillPoints__Fv = 0x002791D0; // type:func size:0x48
 SetupMobyFunctions = 0x00279218; // type:func size:0xB4
 UpdateMobysInitial = 0x002792D0; // type:func size:0x104
 UpdateMobyChain = 0x002793D8; // type:func size:0x94
@@ -2227,11 +2227,11 @@ WaterWaveTable = 0x001CAE60; // size:0x170
 
 WaterSheets = 0x001E2FC0; // size:0x320
 
-GoldBoltFlags = 0x0013D408; // size:0x20
+SkillPointFlags = 0x0013D408; // size:0x20
 
-GoldWeaponFlags = 0x0014BEC0; // size:0x50
+GoldBoltFlags = 0x0014BEC0; // size:0x50
 
-SkillPointFlags = 0x0013E520; // size:0x25
+GoldWeaponFlags = 0x0013E520; // size:0x25
 
 MobyGroupEntries = 0x001ABCC0; // size:0x400
 

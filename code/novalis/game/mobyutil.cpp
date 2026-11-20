@@ -754,13 +754,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RequestHelp
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ClearHelpMessage);
 
-int MB_CountGoldWeapons(void);
-int MB_CountSkillPoints(void);
+enum { GOLD_WEAPON_GOLD_BOLT_COST = 4 };
 
 int MB_GetUnspentGoldBolts(void)
 {
-    int goldWeapons = MB_CountGoldWeapons();
-    int balance = goldWeapons - MB_CountSkillPoints() * 4;
+    int goldBolts = MB_CountGoldBolts();
+    int balance = goldBolts - MB_CountGoldWeapons() * GOLD_WEAPON_GOLD_BOLT_COST;
 
     if (balance < 0)
         balance = 0;
@@ -769,16 +768,13 @@ int MB_GetUnspentGoldBolts(void)
     return balance;
 }
 
-enum { GOLD_WEAPON_LEVEL_COUNT = 20, GOLD_WEAPON_SLOTS = 4 };
-extern unsigned char GoldWeaponFlags[GOLD_WEAPON_LEVEL_COUNT][GOLD_WEAPON_SLOTS];
-
-int MB_CountGoldWeapons(void)
+int MB_CountGoldBolts(void)
 {
     int count = 0;
 
-    for (int level = 0; level < GOLD_WEAPON_LEVEL_COUNT; ++level) {
-        unsigned char *flag = GoldWeaponFlags[level];
-        for (int slot = GOLD_WEAPON_SLOTS - 1; slot >= 0; --slot) {
+    for (int level = 0; level < GOLD_BOLT_LEVEL_COUNT; ++level) {
+        unsigned char *flag = GoldBoltFlags[level];
+        for (int slot = GOLD_BOLT_SLOTS_PER_LEVEL - 1; slot >= 0; --slot) {
             if (*flag++)
                 ++count;
         }
@@ -791,14 +787,12 @@ int MB_CountGoldWeapons(void)
     return count;
 }
 
-extern unsigned char SkillPointFlags[37];
-
-int MB_CountSkillPoints(void)
+int MB_CountGoldWeapons(void)
 {
     int count = 0;
 
-    for (int index = 0; index < 37; ++index) {
-        if (SkillPointFlags[index])
+    for (int index = 0; index < GOLD_WEAPON_FLAG_COUNT; ++index) {
+        if (GoldWeaponFlags[index])
             ++count;
     }
 
@@ -809,14 +803,12 @@ int MB_CountSkillPoints(void)
     return count;
 }
 
-extern unsigned char GoldBoltFlags[32];
-
-int MB_CountGoldBolts(void)
+int MB_CountSkillPoints(void)
 {
     int count = 0;
 
-    for (int index = 0; index < 32; ++index) {
-        if (GoldBoltFlags[index])
+    for (int index = 0; index < SKILL_POINT_FLAG_COUNT; ++index) {
+        if (SkillPointFlags[index])
             ++count;
     }
 

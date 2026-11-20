@@ -76,6 +76,15 @@ void ClampVec3Magnitude(Vec4 *vector, float maximum);
 
 int MB_ScaledVecWrapper(Vec4 *vector, float radius);
 
+enum { GOLD_BOLT_LEVEL_COUNT = 20, GOLD_BOLT_SLOTS_PER_LEVEL = 4 };
+extern unsigned char GoldBoltFlags[GOLD_BOLT_LEVEL_COUNT][GOLD_BOLT_SLOTS_PER_LEVEL];
+
+enum { GOLD_WEAPON_FLAG_COUNT = 37 };
+extern unsigned char GoldWeaponFlags[GOLD_WEAPON_FLAG_COUNT];
+
+enum { SKILL_POINT_FLAG_COUNT = 32 };
+extern unsigned char SkillPointFlags[SKILL_POINT_FLAG_COUNT];
+
 int MB_CountGoldBolts(void);
 
 int MB_CountGoldWeapons(void);
