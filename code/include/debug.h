@@ -11,4 +11,6 @@ void STUB_00218810(void);
 
 void STUB_00218818(void);
 
+void STUB_00218820(void);
+
 #endif

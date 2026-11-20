@@ -45,7 +45,9 @@ void STUB_00218818(void)
 {
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218820);
+void STUB_00218820(void)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218828);
 
