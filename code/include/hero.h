@@ -152,10 +152,9 @@ struct HeroState {
     char unk21B8[0x20];
     short queuedSounds;
     char unk21DA[0x3E];
-    int loopSounds;
-    char unk221C[0x1C];
-    MobyInstance *loopSoundMobys;
-    char unk223C[0x3C];
+    int loopSounds[8];
+    MobyInstance *loopSoundMobys[8];
+    char unk2258[0x20];
     MobyInstance *animLinkMoby;
     int animLinkTable;
     char unk2280[4];
@@ -440,5 +439,7 @@ void Hero_AlignToVec(Vec4 *direction, Vec4 *out);
 void Hero_CollideSplineWall(void);
 
 void Hero_SetNextAnimFrame(int animation, int frame);
+
+void Hero_PlayLoopSound(int slot, MobyInstance *moby, int soundId);
 
 #endif

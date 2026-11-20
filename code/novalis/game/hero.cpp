@@ -462,7 +462,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ApplyFriction
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_PlaySound);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_PlayLoopSound);
+enum { HERO_LOOP_SOUND_FLAGS = 4 };
+int sound_PlayMobySound(int soundId, int flags, MobyInstance *moby);
+
+void Hero_PlayLoopSound(int slot, MobyInstance *moby, int soundId)
+{
+    if (Hero.loopSounds[slot] == -1)
+        Hero.loopSounds[slot] = sound_PlayMobySound(soundId, HERO_LOOP_SOUND_FLAGS, moby);
+
+    Hero.loopSoundMobys[slot] = moby;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_QueueSound);
 

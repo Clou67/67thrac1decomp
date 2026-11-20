@@ -431,3 +431,5 @@ DefaultDraw__Fv = 0x0021A1B8;
 VendorBoltsThousandsFormat = 0x00161158;
 
 VendorBoltsFormat = 0x00161160;
+
+sound_PlayMobySound__FiiP12MobyInstance = 0x002A1618;
