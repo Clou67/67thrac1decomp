@@ -255,7 +255,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00270650)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", GainDampLimit);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", Delt);
+float FastAbsF(float value);
+
+float Delt(float &value, float target, float step)
+{
+    float delta = target - value;
+
+    if (delta > step)
+        delta = step;
+    else if (delta < -step)
+        delta = -step;
+
+    value += delta;
+    return FastAbsF(target - value);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", AccelDelt);
 

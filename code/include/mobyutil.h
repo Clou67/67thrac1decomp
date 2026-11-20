@@ -62,4 +62,6 @@ int MB_GetPVarsField10(MobyInstance *moby);
 
 void MB_TransformToQuat(Vec4 *quaternion, Mtx4 *transform);
 
+float Delt(float &value, float target, float step);
+
 #endif
