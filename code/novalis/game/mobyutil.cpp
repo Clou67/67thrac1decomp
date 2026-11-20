@@ -674,7 +674,21 @@ int MB_IsInvalidOrClass502(MobyInstance *moby)
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_isCrate);
+extern MobyInstance *MobyInstanceEnd;
+
+enum { OCLASS_CRATE_FIRST = 500, OCLASS_CRATE_LAST = 540 };
+
+int MB_isCrate(MobyInstance *moby)
+{
+    if (!moby)
+        return 0;
+
+    if (moby < MobyInstances || moby > MobyInstanceEnd)
+        return 0;
+
+    return (unsigned int)(moby->oClass - OCLASS_CRATE_FIRST)
+        <= OCLASS_CRATE_LAST - OCLASS_CRATE_FIRST;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_isAmmo);
 

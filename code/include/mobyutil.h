@@ -155,4 +155,6 @@ void GainDampLimit(float delta, float &speed, float gain, float damping, float l
 
 void MB_CosineInterpolateAngVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to);
 
+int MB_isCrate(MobyInstance *moby);
+
 #endif
