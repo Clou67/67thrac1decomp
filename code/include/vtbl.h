@@ -245,4 +245,6 @@ void M280_BeginSucking(MobyInstance *moby);
 
 void M577_BeginSucking(MobyInstance *moby);
 
+int FUN_002c72c0(MobyInstance *moby);
+
 #endif
