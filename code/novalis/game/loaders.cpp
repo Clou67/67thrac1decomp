@@ -1,4 +1,5 @@
 #include "common.h"
+#include "moby.h"
 #include "loaders.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadByteGrid);
@@ -27,7 +28,23 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", SetUpVisGifView
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParsePermGsRam);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseMobySeq);
+void ParseMobySeq(MobyClass *mobyClass, int animation)
+{
+    MobySeq *sequence = mobyClass->animations[animation];
+    char *base = (char *)sequence;
+
+    if (sequence->triggers)
+        sequence->triggers = (short *)(base + (int)sequence->triggers);
+
+    if (sequence->frameCount) {
+        int index = 0;
+        MobySeqFrame **frame = sequence->frames;
+        do {
+            *frame = (MobySeqFrame *)(base + (int)*frame);
+            ++frame;
+        } while (++index < sequence->frameCount);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseMobyClass);
 
