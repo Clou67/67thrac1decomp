@@ -23,6 +23,11 @@ struct BSphere {
     float rad;
 };
 
+struct MobyCollPrims {
+    char unk00[8];
+    int count;
+};
+
 struct MobyClass;
 struct Manipulator;
 
@@ -94,7 +99,10 @@ struct MobyInstance {
     float zMax;
     char unk8C[4];
     unsigned int glowRgba;
-    unsigned short *collision;
+    union {
+        unsigned short *collision;
+        MobyCollPrims *pCollPrims;
+    };
     float *collisionMesh;
     int collQueryStamp;
     unsigned int collCount;

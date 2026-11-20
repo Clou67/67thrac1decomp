@@ -239,7 +239,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", PointInsideCom
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026E790);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_HasCollPrims);
+int MB_HasCollPrims(MobyInstance *moby)
+{
+    MobyCollPrims *prims = moby->pCollPrims;
+    if (prims && prims->count)
+        return 1;
+
+    return 0;
+}
 
 void FastVecZero(Vec4 *vector);
 

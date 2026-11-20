@@ -133,4 +133,6 @@ float MB_computeLobVelocity(Vec4 *from, Vec4 *to, float speed, float gravity, fl
 
 int MB_IsInvalidOrClass502(MobyInstance *moby);
 
+int MB_HasCollPrims(MobyInstance *moby);
+
 #endif
