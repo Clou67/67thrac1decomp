@@ -311,3 +311,5 @@ UpdateMobyFrameData__FP12MobyInstance = 0x00263718;
 snd_StreamSafeCdBreak__Fv = 0x0012EEA8;
 
 RandomNext__Fv = 0x001160D8;
+
+MB_SphericalToVector__FP4Vec4fff = 0x00277B50;

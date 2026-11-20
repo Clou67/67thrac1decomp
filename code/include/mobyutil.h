@@ -35,4 +35,6 @@ float MB_randRangeSigned(float low, float high);
 
 float MB_randRot(void);
 
+void MB_randVector(Vec4 *vector, float low, float high);
+
 #endif

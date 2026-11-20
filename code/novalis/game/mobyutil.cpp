@@ -55,7 +55,18 @@ float MB_randRot(void)
     return (float)(sample - 2048) * 3.14159265358979323846f * (1.0f / 2048.0f);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randVector);
+float MB_randRot(void);
+float MB_randRangeFloat(float low, float high);
+void MB_SphericalToVector(Vec4 *out, float radius, float azimuth, float elevation);
+
+void MB_randVector(Vec4 *vector, float low, float high)
+{
+    float azimuth = MB_randRot();
+    float elevation = MB_randRot();
+    float radius = MB_randRangeFloat(low, high);
+
+    MB_SphericalToVector(vector, radius, azimuth, elevation);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randSphere);
 
