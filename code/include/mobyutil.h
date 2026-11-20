@@ -29,4 +29,6 @@ int MB_randInt(int limit);
 
 int MB_randRange(int low, int high);
 
+float MB_randRangeFloat(float low, float high);
+
 #endif
