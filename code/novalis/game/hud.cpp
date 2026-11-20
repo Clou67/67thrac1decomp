@@ -80,7 +80,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Moby185Hud_Update);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_Moby185Meter);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_InitCounterSlide);
+void HudEntry_InitCounterSlide(HudEntry *entry)
+{
+    int timer = FastScaleRoundInt(10) + 30;
+    entry->offsetX = 0;
+    entry->offsetY = 0;
+    entry->timer = timer;
+    entry->width = 32;
+    entry->height = 32;
+    HudEntry_CalcNumberSize(entry);
+}
 
 void HudEntry_UpdateCounter(HudEntry *entry);
 

@@ -220,7 +220,6 @@ Draw_PromptMsg__FP8HudEntry = 0x0024C898;
 FastArcTan__Fff = 0x002217C0;
 FastDiffRots__Fff = 0x00222100;
 GetHelpLen__FPc = 0x0024CDB0;
-HudEntry_InitCounterSlide__FP8HudEntry = 0x0024C828;
 HudEntry_UpdateCounterWrap__Fv = 0x0024C878;
 Hud_DrawTexQuadUV_Fixed__Fv = 0x0024E8D0;
 Hud_SetEntryIconById__Fi = 0x0024AFA0;
