@@ -104,4 +104,6 @@ void MB_randOffset(Vec4 *vector, float range);
 
 void MB_QuatMultiply(Vec4 *out, Vec4 *vector, Vec4 *rotation);
 
+void MB_QuatToEuler(Vec4 *out, Vec4 *angles);
+
 #endif

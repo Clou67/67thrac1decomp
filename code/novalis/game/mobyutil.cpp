@@ -261,7 +261,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CollLineMul
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", CollWaterHeight);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_QuatToEuler);
+void FastQuatToEuler(Vec4 *out, float angle, int axis);
+void FastQuaternionMult(Vec4 *out, Vec4 *left, Vec4 *right);
+
+void MB_QuatToEuler(Vec4 *out, Vec4 *angles)
+{
+    Vec4 zRotation, yRotation, xRotation;
+
+    FastQuatToEuler(&xRotation, angles->x, 0);
+    FastQuatToEuler(&yRotation, angles->y, 1);
+    FastQuatToEuler(&zRotation, angles->z, 2);
+    FastQuaternionMult(out, &xRotation, &yRotation);
+    FastQuaternionMult(out, out, &zRotation);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RegisterLameShadow);
 
