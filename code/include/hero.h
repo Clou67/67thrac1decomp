@@ -90,7 +90,7 @@ struct HeroState {
     float animSpeed;
     char unkA94[0x14];
     float animFrame;
-    char unkAAC[4];
+    float animFrameWindow;
     int animLoopFrame;
     char unkAB4[4];
     int queuedFrameRequest;
@@ -402,5 +402,7 @@ void Hero_SyncBoardAnimSpeed(void);
 void Hero_GetHeroRelativePos(Vec4 *out, float x, float y, float z);
 
 void Hero_GetPolarOffset(Vec4 *out, float x, float y, float z);
+
+int Hero_AnimFrameInWindow(float frame);
 
 #endif

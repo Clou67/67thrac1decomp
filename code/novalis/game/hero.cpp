@@ -268,7 +268,13 @@ float Hero_GetPadMagnitude(void)
     return magnitude;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_AnimFrameInWindow);
+int Hero_AnimFrameInWindow(float frame)
+{
+    if (frame < Hero.animFrame)
+        return Hero.animFrame - frame <= Hero.animFrameWindow;
+
+    return 0;
+}
 
 void Hero_ZeroThrustVars(void)
 {
