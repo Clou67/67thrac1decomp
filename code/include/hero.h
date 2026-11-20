@@ -430,4 +430,6 @@ int Hero_DefaultByteIfFF(MobyInstance *moby, int animation);
 
 void Hero_Turn(float gain, float damping, float limit, int direction);
 
+float Hero_GetRotationHistory(int framesAgo);
+
 #endif

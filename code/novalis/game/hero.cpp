@@ -205,7 +205,17 @@ int Hero_DefaultByteIfFF(MobyInstance *moby, int animation)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetGadgetAnimBlend);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ClampGadgetLevel);
+enum { HERO_HISTORY_COUNT = 32 };
+
+float Hero_GetRotationHistory(int framesAgo)
+{
+    if (framesAgo >= HERO_HISTORY_COUNT)
+        framesAgo = HERO_HISTORY_COUNT - 1;
+    if (framesAgo > Hero.rotZHistoryCount)
+        framesAgo = Hero.rotZHistoryCount;
+
+    return Hero.rotZHistory[(Hero.rotZHistoryIdx - framesAgo + HERO_HISTORY_COUNT - 1) % HERO_HISTORY_COUNT];
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ComputeTargetScore);
 
