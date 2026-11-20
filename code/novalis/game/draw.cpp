@@ -265,7 +265,14 @@ int FontPrintCenterSmall(int x, int y, unsigned long rgba, char *text, int lengt
     return x;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintCenterLarge);
+int FontPrintCenterLarge(int x, int y, unsigned long rgba, char *text, int length)
+{
+    x -= (FontLenLarge(text, length) >> 1);
+    unsigned long tex0 = FontSet(FONT_LARGE);
+
+    FontPrint(x, y, rgba, text, length, tex0, FontLargeMetrics);
+    return x;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWrapped);
 
