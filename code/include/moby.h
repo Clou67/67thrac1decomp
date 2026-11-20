@@ -28,6 +28,18 @@ struct MobyCollPrims {
     int count;
 };
 
+struct MobySeqFrame {
+    char unk_00[4];
+    short time;
+};
+
+struct MobySeq {
+    char unk_00[0x10];
+    unsigned char frameCount;
+    char unk_11[0xB];
+    MobySeqFrame *frames[1];
+};
+
 struct MobyClass;
 struct Manipulator;
 
@@ -135,5 +147,7 @@ void RestoreMobyClassDists(void);
 void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out);
 
 void MB_GetBoneTransformation(MobyInstance *moby, int index, Mtx4 *out);
+
+int MB_FindNearestAnimTrigger(MobySeq *sequence, float time);
 
 #endif

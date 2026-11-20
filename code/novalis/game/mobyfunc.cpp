@@ -15,7 +15,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyFram
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_PlayMobyDesiredSound);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_FindNearestAnimTrigger);
+enum { ANIM_TICKS_PER_FRAME = 16 };
+
+int MB_FindNearestAnimTrigger(MobySeq *sequence, float time)
+{
+    short key = FastFloatToInt(time * ANIM_TICKS_PER_FRAME);
+    for (int index = 0; index < sequence->frameCount; ++index) {
+        int frameTime = sequence->frames[index]->time;
+        if (frameTime > key) {
+            if (index > 0 && key - sequence->frames[index - 1]->time < frameTime - key)
+                --index;
+            return index;
+        }
+    }
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", func_00263918);
 
