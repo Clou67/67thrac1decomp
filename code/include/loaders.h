@@ -9,4 +9,6 @@ void ParseMobySeq(MobyClass *mobyClass, int animation);
 
 void ParseWeaponSceneChunk(int chunk);
 
+void ParseSpaceSceneChunk(int chunk);
+
 #endif

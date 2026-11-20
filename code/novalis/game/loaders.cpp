@@ -98,7 +98,12 @@ void ParseWeaponSceneChunk(int chunk)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadSpaceScene);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseSpaceSceneChunk);
+void ParseSpaceSceneChunk(int chunk)
+{
+    SceneLoad.buffer = SceneLoad.chunks[chunk];
+    ParseNpcChunk();
+    SceneLoad.buffer = MemSlots.vu1_chain[1] + vu1_bufSize;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadMobyModel);
 
