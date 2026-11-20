@@ -40,12 +40,17 @@ struct HudEntry {
     char unk4C[0xC];
     int width;
     int height;
-    char unk60[8];
+    unsigned int alignFlags;
+    int id;
     int locked;
     char unk6C[0x10];
     int timer;
     short *counter;
+    char unk84[0xC];
 };
+
+enum { HUD_ENTRY_COUNT = 13 };
+extern HudEntry HudEntries[HUD_ENTRY_COUNT];
 
 int HudTex_GetFrame(int texture, int frame);
 void Hud_DrawFlatRect(int left, int top, int right, int bottom, unsigned long rgba, int mode);

@@ -68,7 +68,21 @@ void HudEntry_Restore(HudEntry *entry)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_UnregisterById);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_SetEntryIconById);
+enum { HUD_NO_ICON = 0xFFFF };
+
+int Hud_SetEntryIconById(int handle)
+{
+    int slot = 0;
+    while (slot < HUD_ENTRY_COUNT && HudEntries[slot].id != handle)
+        ++slot;
+
+    if (slot < HUD_ENTRY_COUNT) {
+        RegisterHUDCallback(slot, HUD_NO_ICON, 0, 0, 0, 0, 0);
+        return 1;
+    }
+
+    return 0;
+}
 
 int Hero_FindHudEntry(int id);
 

@@ -221,7 +221,6 @@ FastDiffRots__Fff = 0x00222100;
 GetHelpLen__FPc = 0x0024CDB0;
 HudEntry_UpdateCounterWrap__Fv = 0x0024C878;
 Hud_DrawTexQuadUV_Fixed__Fv = 0x0024E8D0;
-Hud_SetEntryIconById__Fi = 0x0024AFA0;
 Hud_SetEntryMinValueById__Fii = 0x0024B4B0;
 PlayInfobotMovie__Fi = 0x002ACF50;
 RegisterHUDCallback__FiiPFP8HudEntry_vN22Pvi = 0x0024AD98;
@@ -454,3 +453,5 @@ Hero_RegisterHealthHud__Fv = 0x0024A498;
 CollOutput = 0x001742C0;
 
 Hero_FindHudEntry__Fi = 0x0024A4E0;
+
+HudEntries = 0x0017E0D0;
