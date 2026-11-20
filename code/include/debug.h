@@ -5,4 +5,6 @@ void STUB_002187f8(void);
 
 void STUB_00218800(void);
 
+void STUB_00218808(void);
+
 #endif
