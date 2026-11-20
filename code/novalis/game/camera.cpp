@@ -24,7 +24,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Cam_InterpValues
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Cam_InterpAngles);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_DeactivateCurrent);
+void Camera_DeactivateCurrent(void)
+{
+    GameCamera.pCurrentUpdCam->activation.deactivate = 1;
+    GameCamera.pCurrentUpdCam->activation.activate = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", camera_HandleCollWithHero);
 

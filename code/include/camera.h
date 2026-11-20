@@ -5,7 +5,28 @@
 
 // Camera types from the PS3 project (game/camera.h); RC1 PS2 uses the same layout.
 
-struct UpdateCam;
+struct CameraControlActivation {
+    int activationType;
+    float blendSpeed;
+    char priority;
+    char activate;
+    short deactivate;
+    short repCam;
+    short orgCam;
+};
+
+struct UpdateCam {
+    char unk_00[0x74];
+    CameraControlActivation activation;
+    short importCameraIdx;
+    short type;
+    char subType;
+    char bumped;
+    short bumpOff;
+    short funcIdx;
+    short active;
+    char unk_90[0x10];
+};
 
 struct Vec3 {
     float x;
@@ -159,5 +180,7 @@ struct GAMECAMERA {
 extern GAMECAMERA GameCamera;
 
 void Camera_ClearPolar(float *polar);
+
+void Camera_DeactivateCurrent(void);
 
 #endif
