@@ -11,6 +11,8 @@ enum { HERO_TYPE_RATCHET = 0, HERO_TYPE_HOLOGUISE = 3 };
 #define HERO_RACE_MOBY_LAP_OFFSET 0xBC
 
 // The hero. Field names from the PS3 project's hero globals (same layout), plus RC1-only fields.
+extern int WeaponAmmo[];
+
 struct HeroState {
     Mtx4 mtx;
     Mtx4 gravityMtx;
@@ -410,5 +412,7 @@ void Hero_ApplyRootMotion(float x, float y, float z);
 int Hero_GetJumpHoldTime(void);
 
 int STUB_00226fa0(int animation);
+
+int Hero_GetWeaponAmmo(int item);
 
 #endif

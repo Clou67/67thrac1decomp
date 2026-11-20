@@ -1,4 +1,5 @@
 #include "common.h"
+#include "npc.h"
 #include "mobyutil.h"
 #include "fastfunc.h"
 #include "hero.h"
@@ -612,7 +613,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", hero_ConsumeAmmo);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", hero_GiveAmmo);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetWeaponAmmo);
+int Hero_GetWeaponAmmo(int item)
+{
+    if (item == -1)
+        item = Hero.currentWeapon;
+
+    if (!VendorPrices[item].maxAmmo)
+        return 1;
+
+    return WeaponAmmo[item];
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_StartHit);
 
