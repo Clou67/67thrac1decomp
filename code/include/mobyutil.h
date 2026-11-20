@@ -167,4 +167,6 @@ int MB_HeroStandingOnMoby(MobyInstance *moby);
 
 int MB_MayaFrameTrigger(MobyInstance *moby, float frame);
 
+void MB_SetZBoundsFromGround(MobyInstance *moby);
+
 #endif

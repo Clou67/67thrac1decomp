@@ -372,7 +372,39 @@ void MB_SetZBoundsFromPos(MobyInstance *moby, float z)
     moby->zMax = z + padding;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetZBoundsFromGround);
+struct CollisionOutput {
+    char unk_00[0x20];
+    Vec4 position;
+};
+
+extern CollisionOutput CollOutput;
+
+void MB_SetZBoundsFromGround(MobyInstance *moby)
+{
+    Vec4 ground;
+    Vec4 start;
+    const float clearance = 0.5f;
+    const float depth = 16.0f;
+    const float padding = 0.2f;
+
+    CopyVec4Inline(&ground, &moby->pos);
+    ground.z -= depth;
+    if (ground.z < clearance)
+        ground.z = clearance;
+
+    CopyVec4Inline(&start, &moby->pos);
+    start.z += clearance;
+
+    if (CollLine(&start, &ground, COLLISION_PROBE_FLAGS | COLL_LINE_GROUND_QUERY, 0, 0)) {
+        moby->zMin = CollOutput.position.z - padding;
+        moby->zMax = CollOutput.position.z + padding;
+    }
+
+    else {
+        moby->zMin = 0.0f;
+        moby->zMax = 0.0f;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetZBoundsFromFloorCeil);
 
