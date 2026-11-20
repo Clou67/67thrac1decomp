@@ -36,7 +36,17 @@ float MB_randRangeFloat(float low, float high)
     return low + (float)sample * range * (1.0f / 32768.0f);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randRangeSigned);
+float MB_randRangeSigned(float low, float high)
+{
+    int sample = RandomNext() >> 16;
+    float range = high - low;
+    float value = low + (float)(sample & 0xFFF) * range * (1.0f / 4096.0f);
+
+    if (sample & 1)
+        value = -value;
+
+    return value;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randRot);
 
