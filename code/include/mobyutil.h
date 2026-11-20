@@ -159,4 +159,6 @@ int MB_isCrate(MobyInstance *moby);
 
 void MB_DistributeBoltsNearHero(MobyInstance *moby);
 
+float AccelDeltAng(float &angle, float target, float &speed, float gain, float damping, float limit, int direction);
+
 #endif

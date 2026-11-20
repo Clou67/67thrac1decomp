@@ -499,7 +499,27 @@ float DeltAng(float &angle, float target, float speed, int direction)
     return SubRots(target, angle, direction);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", AccelDeltAng);
+enum { TURN_DIRECTION_AUTO = 2 };
+
+float AccelDeltAng(float &angle, float target, float &speed, float gain, float damping, float limit, int direction)
+{
+    if (direction == TURN_DIRECTION_AUTO) {
+        if ((target > 0.0f && angle < 0.0f) || (target < 0.0f && angle > 0.0f))
+            direction = target < 0.0f ? -1 : 1;
+        else
+            direction = 0;
+    }
+
+    GainDampLimit(SubRots(target, angle, direction), speed, gain, damping, limit);
+    angle = FastAddRots(angle, speed);
+    float remaining = SubRots(target, angle, direction);
+    if (FastAbsF(remaining) < limit * 0.01f) {
+        angle = target;
+        speed = 0.0f;
+        return speed;
+    }
+    return remaining;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", OrganicDeltAng);
 
