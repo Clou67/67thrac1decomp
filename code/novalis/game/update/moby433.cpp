@@ -1,3 +1,6 @@
 #include "common.h"
+#include "vtbl.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby433", UpdateMoby_433);
+void UpdateMoby_433(MobyInstance *moby)
+{
+}
