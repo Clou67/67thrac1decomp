@@ -47,7 +47,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DefaultDraw);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDraw);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDrawMovie);
+extern int CutscenePlaying;
+extern int RenderFlags __attribute__((section(".sdata")));
+void DefaultDraw(void);
+
+void SetupDefaultDrawMovie(int black)
+{
+    if (!CutscenePlaying) {
+        ClearDrawBufferLarge(black);
+        RenderFlags = 0x7F;
+        DefaultDraw();
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDrawFreeze);
 

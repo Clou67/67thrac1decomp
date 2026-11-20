@@ -425,3 +425,5 @@ VendorDudeVisible = 0x00161188;
 FastVec3DistLen__FP4Vec4T0 = 0x00221398;
 
 MB_DistributeBolts__FP12MobyInstanceiiUii = 0x00275988;
+
+DefaultDraw__Fv = 0x0021A1B8;
