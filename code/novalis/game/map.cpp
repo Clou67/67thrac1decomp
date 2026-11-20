@@ -7,7 +7,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_LoadPlanetMap);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_OnPauseMenuOpen);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_FindFreeCacheSlot);
+int Map_FindFreeCacheSlot(int fromTop)
+{
+    for (int index = 0; index < MAP_CACHE_SLOT_COUNT; ++index) {
+        int slot = fromTop ? MAP_CACHE_SLOT_COUNT - 1 - index : index;
+        if (MapPage.cacheBuffers[slot] && MapPage.cacheIds[slot] == -1)
+            return slot;
+    }
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetFreeCacheSlotCompact);
 

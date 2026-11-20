@@ -21,4 +21,6 @@ void Map_MoveCacheSlot(int destination, int source);
 
 int Map_GetGalacticMapIndex(int id);
 
+int Map_FindFreeCacheSlot(int fromTop);
+
 #endif
