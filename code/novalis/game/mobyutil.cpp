@@ -371,7 +371,13 @@ void MB_CopyHeroLights(MobyInstance *moby)
     moby->lights = Hero.moby->lights;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_AxisAngleToQuat);
+void MB_AxisAngleToQuat(Vec4 *quaternion, Vec4 *axis, float angle)
+{
+    float halfAngle = angle * 0.5f;
+
+    FastVec3Scale(quaternion, axis, FastAngleCosF(halfAngle));
+    quaternion->w = FastAngleSinF(halfAngle);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ClampVecToPlanes);
 

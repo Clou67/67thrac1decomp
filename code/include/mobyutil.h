@@ -64,4 +64,6 @@ void MB_TransformToQuat(Vec4 *quaternion, Mtx4 *transform);
 
 float Delt(float &value, float target, float step);
 
+void MB_AxisAngleToQuat(Vec4 *quaternion, Vec4 *axis, float angle);
+
 #endif
