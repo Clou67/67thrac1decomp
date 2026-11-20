@@ -230,7 +230,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_056)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_056);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_057);
+void UpdatePart_057(PartInstance *part)
+{
+    PartSpinMotion *motion = &part->spinMotion;
+    FastVec3Scale(&motion->velocity, &motion->velocity, 0.975f);
+    FastVec3Add(&part->pos, &part->pos, &motion->velocity);
+
+    part->scale += 6300.0f;
+    int intensity = (part->rgba & 0xFF) - 4;
+    if (intensity <= 0)
+        DeletePart(part);
+    else
+        part->rgba = 0x60000000 | (intensity << 16) | (intensity << 8) | intensity;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_057);
 
