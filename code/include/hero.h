@@ -415,4 +415,6 @@ int STUB_00226fa0(int animation);
 
 int Hero_GetWeaponAmmo(int item);
 
+int Hero_GetOverlayAnimId(int overlay);
+
 #endif

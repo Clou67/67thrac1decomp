@@ -187,7 +187,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ComputeTarget
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetAutoTargetMoby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetOverlayAnimId);
+int Hero_GetOverlayAnimId(int overlay)
+{
+    switch (overlay) {
+    case 1:
+        return 121;
+    case 2:
+        return 119;
+    case 3:
+        return 117;
+    default:
+        return 0;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateOverlayAnimLayer);
 
