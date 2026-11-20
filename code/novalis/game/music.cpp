@@ -35,7 +35,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StartTrackB
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Transition);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_SetTransition);
+void music_SetTransition(int track, int transition)
+{
+    if (musicTransition.primary_track == track && musicTransition.requested_track == -1)
+        return;
+
+    if (!musicTransition.primary_bank && !musicTransition.transition_bank)
+        musicTransition.primary_track = track;
+
+    else {
+        musicTransition.requested_track = track;
+        musicTransition.requested_transition = transition;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Stop);
 

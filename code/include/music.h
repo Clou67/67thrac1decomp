@@ -9,9 +9,11 @@ struct MusicTransition {
     int unk1C;
     char unk20[2];
     signed char requested_track;
-    char unk23[0x15];
+    signed char requested_transition;
+    char unk24[0x14];
     short primary_track;
-    char unk3A[6];
+    char unk3A[4];
+    short primary_bank;
     short primary_command;
     short primary_unpause;
     char unk44[0xC];
@@ -22,7 +24,8 @@ struct MusicTransition {
     short state;
     short secondary_command;
     short secondary_unpause;
-    char unk60[0x18];
+    char unk60[0x16];
+    short transition_bank;
     short transition_command;
     short transition_unpause;
 };
@@ -53,5 +56,7 @@ void music_UnpauseDelay(int frames);
 void music_LoadBankCB(int reason);
 
 void music_StopLoad(void);
+
+void music_SetTransition(int track, int transition);
 
 #endif
