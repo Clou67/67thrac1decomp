@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 #include "music.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Init);
@@ -163,6 +164,24 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AEC8);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AF20);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StopCB);
+static const unsigned int MUSIC_STOP_PENDING = 0xFFFFFFFF;
+enum { MUSIC_STOP_COMPLETE = 7 };
+
+extern const char MusicUnexpectedStopHandle[];
+
+void music_StopCB(unsigned int result, unsigned long long data)
+{
+    MusicPlaying *playing = (MusicPlaying *)(int)data;
+    if (playing) {
+        if (playing->handle != MUSIC_STOP_PENDING)
+            printf_stub(MusicUnexpectedStopHandle);
+
+        else {
+            playing->handle = result;
+            if (!result)
+                playing->status = MUSIC_STOP_COMPLETE;
+        }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AFB8);

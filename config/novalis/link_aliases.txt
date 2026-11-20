@@ -443,3 +443,5 @@ sound_FootstepPlay__FiiiiP12MobyInstance = 0x002A1898;
 music_PreseekTrack__Fiii = 0x00279ED0;
 
 music_StartSpeech__Fiii = 0x00279CD8;
+
+MusicUnexpectedStopHandle = 0x00160128;
