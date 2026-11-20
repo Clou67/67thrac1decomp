@@ -397,7 +397,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", OrganicDelt);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", SubRots);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", DeltAng);
+float SubRots(float target, float angle, int direction);
+
+float DeltAng(float &angle, float target, float speed, int direction)
+{
+    float delta = SubRots(target, angle, direction);
+    if (delta > speed)
+        delta = speed;
+    else if (delta < -speed)
+        delta = -speed;
+    angle = FastAddRots(angle, delta);
+    return SubRots(target, angle, direction);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", AccelDeltAng);
 

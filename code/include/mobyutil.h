@@ -137,4 +137,6 @@ int MB_HasCollPrims(MobyInstance *moby);
 
 float MB_CollLineDown(Vec4 *position, float height, int flags);
 
+float DeltAng(float &angle, float target, float speed, int direction);
+
 #endif
