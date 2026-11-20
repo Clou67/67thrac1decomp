@@ -155,10 +155,15 @@ struct GAMECAMERA {
     Mtx4 mtx2;
     Mtx4 mtx3;
     Mtx4 mtx4;
-    float posX;
-    float posY;
-    float posZ;
-    float posW;
+    union {
+        Vec4 position;
+        struct {
+            float posX;
+            float posY;
+            float posZ;
+            float posW;
+        };
+    };
     // radius holds the yaw.
     PolarSm rot;
     float rotW;

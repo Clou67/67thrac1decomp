@@ -19,6 +19,7 @@ extern int gsFrame;
 // Nonzero when the console is running in PAL mode.
 extern int videoModePal;
 
+extern float screenFade;
 void FadeToBlack(int frames);
 
 // Which scene layers are drawn, and whether their textures are paged into GS memory this frame.

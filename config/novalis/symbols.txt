@@ -3,6 +3,7 @@
 // Movie code (0x31A260..) is byte-identical to the boot ELF movie code shifted by +0xDFEA8; names copied from config/symbols.txt.
 RenderFlags = 0x0015F3F4; // size:0x4
 gsFrame = 0x0015F3F8; // size:0x4
+screenFade = 0x0015F3FC; // size:0x4
 GifLoadCnt = 0x0015F418; // size:0x4
 MobyFnListCnt = 0x0015F424; // size:0x4
 PreDrawCnt = 0x0015F428; // size:0x4

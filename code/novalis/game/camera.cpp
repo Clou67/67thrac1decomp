@@ -1,4 +1,5 @@
 #include "common.h"
+#include "draw.h"
 #include "fastfunc.h"
 #include "mathfunc_inline.h"
 #include "vtbl.h"
@@ -49,7 +50,7 @@ void camera_HandleCollWithHero(UpdateCam *camera)
 
     if (!camera->type) {
         if (!statics->pCamColl)
-            statics->pCamColl = SpawnMoby_1007((Vec4 *)&GameCamera.posX);
+            statics->pCamColl = SpawnMoby_1007(&GameCamera.position);
     }
     else if (statics->pCamColl) {
         DeleteMoby(statics->pCamColl);
@@ -127,8 +128,6 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_UpdateUnd
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", func_0020EB38);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_SetCollFlags);
-
-extern float screenFade;
 
 void Camera_HandleScreenFade(void)
 {

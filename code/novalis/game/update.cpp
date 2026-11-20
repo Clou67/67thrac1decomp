@@ -37,16 +37,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update", UpdateCinematic)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update", mode_creditsInit);
 
-extern int CutscenePlaying;
-extern float screenFade;
-
 void mode_creditsUnInit(void)
 {
     VU1_syncChain(1);
     FadeToBlack(12);
     music_StopLoad();
 
-    gameMode = 0;
+    gameMode = GAME_MODE_NORMAL;
     CutscenePlaying = 1;
     screenFade = 0.0f;
     VU1_setBufSizeByLevel();

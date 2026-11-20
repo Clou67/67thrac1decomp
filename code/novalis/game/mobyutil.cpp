@@ -223,7 +223,7 @@ void MB_BallisticPosAtTicks(Vec4 *out, Vec4 *start, Vec4 *velocity, float gravit
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SolveQuad);
 
-enum { COLL_LINE_USE_TERRAIN = 2 };
+enum { COLL_LINE_GROUND_QUERY = 2 };
 int CollLine(Vec4 *start, Vec4 *end, int flags, MobyInstance *ignore, MobyInstance *ignoreOther);
 
 float MB_CollLineDown(Vec4 *position, float height, int flags)
@@ -235,12 +235,10 @@ float MB_CollLineDown(Vec4 *position, float height, int flags)
     CopyVec4Inline(&start, position);
     start.z += height;
 
-    if (CollLine(&start, &ground, flags | COLL_LINE_USE_TERRAIN, 0, 0))
+    if (CollLine(&start, &ground, flags | COLL_LINE_GROUND_QUERY, 0, 0))
         return MemSlots.collisionPoint.z;
     return 0.0f;
 }
-
-float MB_CollLineDown(Vec4 *position, float distance, int flags);
 
 enum { COLLISION_PROBE_FLAGS = 0x20 };
 
