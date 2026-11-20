@@ -546,7 +546,21 @@ void MB_QuatMultiply(Vec4 *out, Vec4 *vector, Vec4 *rotation)
     FastQuaternionMult(out, &rotated, &inverse);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RotateQuatAxisAngle);
+void MB_QuatMultiply(Vec4 *out, Vec4 *vector, Vec4 *rotation);
+
+void MB_RotateQuatAxisAngle(Vec4 *out, Vec4 *vector, Vec4 *axis, float angle)
+{
+    Vec4 rotation;
+
+    if (FastAbsF(angle) < 0.00001f) {
+        CopyVec4Inline(out, vector);
+        return;
+    }
+
+    FastVec3Normalize(&rotation, axis, 1.0f);
+    MB_AxisAngleToQuat(&rotation, &rotation, angle);
+    MB_QuatMultiply(out, vector, &rotation);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00274B70);
 

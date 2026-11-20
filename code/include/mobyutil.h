@@ -106,4 +106,6 @@ void MB_QuatMultiply(Vec4 *out, Vec4 *vector, Vec4 *rotation);
 
 void MB_QuatToEuler(Vec4 *out, Vec4 *angles);
 
+void MB_RotateQuatAxisAngle(Vec4 *out, Vec4 *vector, Vec4 *axis, float angle);
+
 #endif
