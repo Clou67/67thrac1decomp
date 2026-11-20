@@ -201,4 +201,6 @@ void Camera_CopyHeroPosition(MobyInstance *target, Vec4 *position);
 
 void FUN_00318ad0(UpdateCam *camera);
 
+void camera_HandleCollWithHero(UpdateCam *camera);
+
 #endif

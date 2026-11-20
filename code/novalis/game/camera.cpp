@@ -40,7 +40,22 @@ void Camera_DeactivateCurrent(void)
     GameCamera.pCurrentUpdCam->activation.activate = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", camera_HandleCollWithHero);
+MobyInstance *SpawnMoby_1007(Vec4 *position);
+void DeleteMoby(MobyInstance *moby);
+
+void camera_HandleCollWithHero(UpdateCam *camera)
+{
+    CameraStatics *statics = &GameCamera.camStatics;
+
+    if (!camera->type) {
+        if (!statics->pCamColl)
+            statics->pCamColl = SpawnMoby_1007((Vec4 *)&GameCamera.posX);
+    }
+    else if (statics->pCamColl) {
+        DeleteMoby(statics->pCamColl);
+        statics->pCamColl = 0;
+    }
+}
 
 void Camera_runSetupToNewCam(UpdateCam *camera)
 {
