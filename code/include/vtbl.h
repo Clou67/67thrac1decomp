@@ -235,4 +235,6 @@ void M676_DrawWaterSheets(MobyInstance *moby);
 
 int M806_IsActive(MobyInstance *moby);
 
+void M751_DrawWaterTiles(MobyInstance *moby);
+
 #endif
