@@ -216,7 +216,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00295208);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00295310);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_SetClipRect);
+void DrawGalaxyMap(int left, int right, int top, int bottom);
+enum { MENU_WIDGET_DRAW_CLIPPED = 2 };
+
+int Menu_SetClipRect(MenuClipWidget *widget)
+{
+    DrawGalaxyMap(widget->x, widget->x + widget->width, widget->y, widget->y + widget->height);
+    return MENU_WIDGET_DRAW_CLIPPED;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", PlanetSelect_Update);
 

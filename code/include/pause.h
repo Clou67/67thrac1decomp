@@ -32,6 +32,14 @@ struct MenuStreamBuffer {
 
 extern MenuStreamBuffer MenuStreamBuffers[MENU_STREAM_BUFFER_COUNT];
 
+struct MenuClipWidget {
+    char unk_00[0x18];
+    int x;
+    int y;
+    int width;
+    int height;
+};
+
 extern int pauseActionListMode;
 
 // State of the pause menu's map page; only the level being shown is known so far.
@@ -58,5 +66,7 @@ int GoldBoltWidget_DeleteMoby(GoldBoltWidget *widget);
 int ImageWidget_OnExit(ImageWidget *widget);
 
 int Menu_GetStreamBufferSize(void *data);
+
+int Menu_SetClipRect(MenuClipWidget *widget);
 
 #endif
