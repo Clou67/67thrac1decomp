@@ -1,4 +1,5 @@
 #include "common.h"
+#include "path.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", InitFollower);
 
@@ -16,7 +17,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", PathFollower_GetPn
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", PathFollower_WrapIdx);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", PathFollower_Advance);
+int PathFollower_Advance(PathFollower *follower)
+{
+    int last = 0;
+    if (follower->pathId >= 0)
+        last = follower->path->pointCount - 1;
+
+    int index = follower->index + 1;
+    if (index > last)
+        index %= last + 1;
+    follower->index = index;
+    return index;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", Spline_CalcTan);
 
