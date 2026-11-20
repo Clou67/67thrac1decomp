@@ -304,6 +304,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RemoveVecCo
 
 struct MobySpecialVars {
     void *pVars;
+    char unk_04[4];
+    MobyInstance *platformParent;
+    char unk_0C[4];
+    int unk_10;
 };
 
 void *MB_GetPvarsIfMobyHasThem(MobyInstance *moby)
@@ -317,7 +321,16 @@ void *MB_GetPvarsIfMobyHasThem(MobyInstance *moby)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetPVarsField10);
+int MB_GetPVarsField10(MobyInstance *moby)
+{
+    if (!moby)
+        return 0;
+
+    if (moby->modeBits & HAS_SPECIAL_VARS)
+        return ((MobySpecialVars *)moby->pVar)->unk_10;
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_MistDeathEffect);
 

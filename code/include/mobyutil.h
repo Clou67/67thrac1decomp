@@ -57,4 +57,6 @@ void SetCollDamIn_2(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags,
 
 void ReorderRGB_Swap(int *red, int *green, int *blue, int mask);
 
+int MB_GetPVarsField10(MobyInstance *moby);
+
 #endif
