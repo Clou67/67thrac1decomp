@@ -131,7 +131,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026D608)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_PushOutOfWalls);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_PushMobyOutOfWalls);
+int MB_PushOutOfWalls(MobyInstance *moby, Vec4 *move, float height, float radius, float stepHeight, int flags);
+
+int MB_PushMobyOutOfWalls(MobyInstance *moby, Vec4 *move, float height, float stepHeight, int radiusFixed, int flags)
+{
+    float radius = FastIntToFloat(radiusFixed) * (1.0f / 1024.0f);
+    return MB_PushOutOfWalls(moby, move, height, radius, stepHeight, flags);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_InitDefaultParams);
 

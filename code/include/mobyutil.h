@@ -125,4 +125,6 @@ unsigned int ReorderRGB(unsigned int rgba, int mask);
 
 void MB_SetStateByGroup(int group, int value);
 
+int MB_PushMobyOutOfWalls(MobyInstance *moby, Vec4 *move, float height, float stepHeight, int radiusFixed, int flags);
+
 #endif
