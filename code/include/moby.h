@@ -185,6 +185,9 @@ struct MobyInstance {
     Mtx4 transform;
 };
 
+enum { ANIM_CACHE_COUNT = 16 };
+extern MobyInstance *AnimationCacheRegistry[ANIM_CACHE_COUNT];
+
 void SetLevelFlag(int flag);
 
 extern int StashedMobyClassDists[];
@@ -206,5 +209,7 @@ void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joi
 int M849_CallClassCallback04(MobyInstance *moby);
 
 int M849_CallClassCallback0C(MobyInstance *moby);
+
+int AnimCache_Register(MobyInstance *moby);
 
 #endif

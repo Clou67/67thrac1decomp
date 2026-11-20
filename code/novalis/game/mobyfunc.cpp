@@ -57,7 +57,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", AttachManipula
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DetachManipulator);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", AnimCache_Register);
+int AnimCache_Register(MobyInstance *moby)
+{
+    int index = 0;
+    MobyInstance **entry = AnimationCacheRegistry;
+
+    for (; index < ANIM_CACHE_COUNT; ++index, ++entry) {
+        if (!*entry || *entry == moby) {
+            *entry = moby;
+            return index;
+        }
+    }
+
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CleanAnimationCache);
 
