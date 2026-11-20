@@ -455,3 +455,7 @@ CollOutput = 0x001742C0;
 Hero_FindHudEntry__Fi = 0x0024A4E0;
 
 HudEntries = 0x0017E0D0;
+
+SceneLoad = 0x0016CCE0;
+
+ParseNpcChunk__Fv = 0x00259288;

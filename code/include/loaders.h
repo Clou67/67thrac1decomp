@@ -7,4 +7,6 @@ void STUB_RET_255950(void *data, int count);
 
 void ParseMobySeq(MobyClass *mobyClass, int animation);
 
+void ParseWeaponSceneChunk(int chunk);
+
 #endif

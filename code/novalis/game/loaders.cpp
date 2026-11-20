@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 #include "moby.h"
 #include "loaders.h"
 
@@ -78,7 +79,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseNpcChunk);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadWeaponCutscene);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseWeaponSceneChunk);
+struct SceneLoadState {
+    char unk_00[0x58];
+    unsigned char *decodedChunk;
+    unsigned char *buffer;
+    unsigned char *chunks[1];
+};
+
+extern SceneLoadState SceneLoad;
+void ParseNpcChunk(void);
+
+void ParseWeaponSceneChunk(int chunk)
+{
+    SceneLoad.buffer = SceneLoad.chunks[chunk];
+    ParseNpcChunk();
+    SceneLoad.buffer = MemSlots.vu1_chain[1] + vu1_bufSize;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadSpaceScene);
 
