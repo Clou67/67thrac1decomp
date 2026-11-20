@@ -236,7 +236,7 @@ RegisterMobyDraw__FPFP12MobyInstance_vP12MobyInstance = 0x0021AFE0; // type:func
 ExecuteRegisteredMobyFuncs = 0x0021B030; // type:func size:0x78
 ExecutePostDraws = 0x0021B0A8; // type:func size:0x78
 ExecutePostPreDraws = 0x0021B120; // type:func size:0x78
-RegisterPreDraw = 0x0021B198; // type:func size:0x50
+RegisterPreDraw__FPFP12MobyInstance_vP12MobyInstance = 0x0021B198; // type:func size:0x50
 ExecutePreDraws = 0x0021B1E8; // type:func size:0x78
 DrawLameShadows = 0x0021B260; // type:func size:0x1D8
 FadeToBlack = 0x0021B438; // type:func size:0x188
@@ -2236,3 +2236,7 @@ SkillPointFlags = 0x0013E520; // size:0x25
 MobyGroupEntries = 0x001ABCC0; // size:0x400
 
 MenuStreamBuffers = 0x001BA638; // size:0x28
+
+PreDrawCallbacks = 0x0016DF00; // size:0x100
+
+PreDrawArgs = 0x0016E000; // size:0x100

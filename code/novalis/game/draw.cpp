@@ -87,7 +87,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ExecutePostDraws);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ExecutePostPreDraws);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", RegisterPreDraw);
+extern int PreDrawCnt;
+extern DrawMobyCallback PreDrawCallbacks[];
+extern MobyInstance *PreDrawArgs[];
+
+void RegisterPreDraw(DrawMobyCallback draw, MobyInstance *moby)
+{
+    int slot = PreDrawCnt;
+
+    if (slot < DRAW_CALLBACK_LIMIT) {
+        PreDrawCallbacks[slot] = draw;
+        PreDrawArgs[slot] = moby;
+        PreDrawCnt = slot + 1;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ExecutePreDraws);
 

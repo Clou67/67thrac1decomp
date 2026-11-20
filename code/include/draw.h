@@ -57,4 +57,6 @@ void EndAuxDrawMode(void);
 
 void RegisterMobyDraw(DrawMobyCallback draw, MobyInstance *moby);
 
+void RegisterPreDraw(DrawMobyCallback draw, MobyInstance *moby);
+
 #endif
