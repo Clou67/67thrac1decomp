@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 #include "mathfunc_inline.h"
 #include "fastfunc.h"
 #include "moby.h"
@@ -222,7 +223,22 @@ void MB_BallisticPosAtTicks(Vec4 *out, Vec4 *start, Vec4 *velocity, float gravit
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SolveQuad);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CollLineDown);
+enum { COLL_LINE_USE_TERRAIN = 2 };
+int CollLine(Vec4 *start, Vec4 *end, int flags, MobyInstance *ignore, MobyInstance *ignoreOther);
+
+float MB_CollLineDown(Vec4 *position, float height, int flags)
+{
+    Vec4 ground;
+    Vec4 start;
+    CopyVec4Inline(&ground, position);
+    ground.z = 0.01f;
+    CopyVec4Inline(&start, position);
+    start.z += height;
+
+    if (CollLine(&start, &ground, flags | COLL_LINE_USE_TERRAIN, 0, 0))
+        return MemSlots.collisionPoint.z;
+    return 0.0f;
+}
 
 float MB_CollLineDown(Vec4 *position, float distance, int flags);
 

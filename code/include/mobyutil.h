@@ -135,4 +135,6 @@ int MB_IsInvalidOrClass502(MobyInstance *moby);
 
 int MB_HasCollPrims(MobyInstance *moby);
 
+float MB_CollLineDown(Vec4 *position, float height, int flags);
+
 #endif

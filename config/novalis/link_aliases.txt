@@ -286,7 +286,6 @@ Hero_UpdateGadgetAnimLayers__Fv = 0x0022E660;
 Hero_UpdateFiringAnimLayer__Fv = 0x0022F068;
 Hero_UpdateOverlayAnimLayer__Fv = 0x0022E3A8;
 
-MB_CollLineDown__FP4Vec4fi = 0x0026E618;
 
 DeleteMoby__FP12MobyInstance = 0x002636C0;
 
@@ -392,3 +391,5 @@ MB_isCrate__FP12MobyInstance = 0x00273278;
 screenFade = 0x0015F3FC;
 
 SpawnMoby_1007__FP4Vec4 = 0x002BA760;
+
+CollLine__FP4Vec4T0iP12MobyInstanceT3 = 0x00211870;

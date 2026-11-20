@@ -1,6 +1,8 @@
 #ifndef VUCHAIN_H
 #define VUCHAIN_H
 
+#include "moby.h"
+
 #include "sce.h"
 #include "eekernel.h"
 #include "eeregs.h"
@@ -61,6 +63,8 @@ extern int vu1_bufSize;
 struct MEMSLOTS {
     void *base;
     unsigned char *vu1_chain[2];
+    unsigned char unk_0C[0x54];
+    Vec4 collisionPoint;
 };
 
 extern MEMSLOTS MemSlots;
