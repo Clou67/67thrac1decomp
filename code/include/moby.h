@@ -212,4 +212,6 @@ int M849_CallClassCallback0C(MobyInstance *moby);
 
 int AnimCache_Register(MobyInstance *moby);
 
+void GetMobyJointsWorldPos(MobyInstance *moby, int count, int *joints, Vec4 *out);
+
 #endif

@@ -106,7 +106,23 @@ void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out)
     FastVec3Add(out, out, &moby->pos);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", GetMobyJointsWorldPos);
+void MB_ComputeSelectedJointPos(MobyInstance *moby, int count, int *joints, Vec4 *out);
+void FastVec3Add(Vec4 *out, Vec4 *left, Vec4 *right);
+
+void GetMobyJointsWorldPos(MobyInstance *moby, int count, int *joints, Vec4 *out)
+{
+    float scale = moby->scale * (1.0f / 1024.0f);
+    MB_ComputeSelectedJointPos(moby, count, joints, out);
+
+    if (count > 0) {
+        do {
+            FastVec3Scale(out, out, scale);
+            FastVecMtx3Mult(out, out, &moby->transform);
+            FastVec3Add(out, out, &moby->pos);
+            ++out;
+        } while (--count);
+    }
+}
 
 void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joints)
 {

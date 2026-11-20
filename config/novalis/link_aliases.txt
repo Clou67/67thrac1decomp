@@ -469,3 +469,5 @@ CylinderVolumes = 0x001600FC;
 BackupCamera = 0x001693D0;
 
 CameraControls = 0x00169590;
+
+MB_ComputeSelectedJointPos__FP12MobyInstanceiPiP4Vec4 = 0x00268C28;
