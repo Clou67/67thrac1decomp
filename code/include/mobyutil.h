@@ -92,4 +92,6 @@ float MB_BallisticTicksToHeight(Vec4 *start, Vec4 *velocity, float gravity, int 
 
 void MB_BallisticPosAtTicks(Vec4 *out, Vec4 *start, Vec4 *velocity, float gravity, int ticks);
 
+void MB_RemoveVecComponent(Vec4 *out, Vec4 *vector, Vec4 *axis, float weight);
+
 #endif

@@ -363,7 +363,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_NormalizeMt
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetNormalizedMtxElem);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RemoveVecComponent);
+void FastVec3Normalize(Vec4 *out, Vec4 *vector, float magnitude);
+float FastVec3Dot(Vec4 *first, Vec4 *second);
+void FastSubVec3(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void MB_RemoveVecComponent(Vec4 *out, Vec4 *vector, Vec4 *axis, float weight)
+{
+    Vec4 component;
+    Vec4 unitAxis;
+
+    FastVec3Normalize(&unitAxis, axis, 1.0f);
+    float scale = FastVec3Dot(&unitAxis, vector) * weight;
+    FastVec3Scale(&component, &unitAxis, scale);
+    FastSubVec3(out, vector, &component);
+}
 
 struct MobySpecialVars {
     void *pVars;

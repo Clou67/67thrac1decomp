@@ -349,3 +349,7 @@ FontPrint__FiiUlPciUlPUc = 0x0021CCF0;
 Hero_GetBoardAnim__FiPi = 0x00247898;
 
 FastSubRots__Fff = 0x00222040;
+
+FastVec3Dot__FP4Vec4T0 = 0x002212A8;
+
+FastSubVec3__FP4Vec4N20 = 0x002211B8;
