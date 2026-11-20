@@ -17,4 +17,6 @@ extern int gameLanguage;
 // Play time in game frames.
 extern int TotalPlayTime;
 
+void mode_creditsUnInit(void);
+
 #endif

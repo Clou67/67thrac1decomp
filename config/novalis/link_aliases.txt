@@ -388,3 +388,5 @@ FUN_00318900__FP9UpdateCam = 0x00318900;
 BoltHudCounter = 0x0015FAB8;
 
 MB_isCrate__FP12MobyInstance = 0x00273278;
+
+screenFade = 0x0015F3FC;

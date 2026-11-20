@@ -1,4 +1,8 @@
 #include "common.h"
+#include "gameglobals.h"
+#include "vuchain.h"
+#include "music.h"
+#include "draw.h"
 #include "update.h"
 
 void update_stub(void)
@@ -33,6 +37,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update", UpdateCinematic)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update", mode_creditsInit);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update", mode_creditsUnInit);
+extern int CutscenePlaying;
+extern float screenFade;
+
+void mode_creditsUnInit(void)
+{
+    VU1_syncChain(1);
+    FadeToBlack(12);
+    music_StopLoad();
+
+    gameMode = 0;
+    CutscenePlaying = 1;
+    screenFade = 0.0f;
+    VU1_setBufSizeByLevel();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update", UpdateCredits);
