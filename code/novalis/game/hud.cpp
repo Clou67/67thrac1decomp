@@ -1,4 +1,5 @@
 #include "common.h"
+#include "hero.h"
 #include "vuchain.h"
 #include "fastfunc.h"
 #include "hud.h"
@@ -18,6 +19,8 @@ struct HudStateData {
     char unk_00[0x10];
     unsigned char *heapCursor;
     unsigned char *heapEnd;
+    char unk18[4];
+    HudIconTableEntry *icons;
 };
 extern HudStateData HudState;
 
@@ -53,7 +56,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_UnregisterById)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_SetEntryIconById);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_SetIcon);
+int Hero_FindHudEntry(int id);
+
+void HudEntry_SetIcon(HudEntry *entry, unsigned int id)
+{
+    int index = Hero_FindHudEntry(id);
+    unsigned short iconId = HudState.icons[index].id;
+
+    entry->iconTableIndex = index;
+    entry->iconId = iconId;
+    entry->iconBaseIndex = HudState.icons[index].baseIndex;
+    entry->iconVariantCount = HudState.icons[index].variantCount;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", func_0024B088);
 

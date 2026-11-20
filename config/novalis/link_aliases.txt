@@ -452,3 +452,5 @@ MB_BlendAnimFrame__FP12MobyInstance = 0x00263920;
 Hero_RegisterHealthHud__Fv = 0x0024A498;
 
 CollOutput = 0x001742C0;
+
+Hero_FindHudEntry__Fi = 0x0024A4E0;

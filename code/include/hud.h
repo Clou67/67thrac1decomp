@@ -1,8 +1,23 @@
 #ifndef HUD_H
 #define HUD_H
 
+struct HudIconTableEntry {
+    unsigned short id;
+    unsigned short unk_02;
+    unsigned short variantCount;
+    unsigned char baseIndex;
+    unsigned char unk_07;
+};
+
+extern HudIconTableEntry *HudIconTable;
+
 struct HudEntry {
-    char unk00[0x48];
+    int iconId;
+    char unk04[0x3C];
+    short iconTableIndex;
+    unsigned char iconBaseIndex;
+    unsigned char unk43;
+    int iconVariantCount;
     short offsetX;
     short offsetY;
     char unk4C[0xC];
@@ -54,5 +69,7 @@ void HudEntry_InitCounter32(HudEntry *entry);
 void HudHeap_Reset(void);
 
 void *HudHeap_Alloc(int size);
+
+void HudEntry_SetIcon(HudEntry *entry, unsigned int id);
 
 #endif
