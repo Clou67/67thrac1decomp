@@ -51,4 +51,6 @@ void Hud_DrawTexQuadUV_Fixed(HudEntry *entry);
 
 void HudEntry_InitCounter32(HudEntry *entry);
 
+void HudScratch_Reset(void);
+
 #endif

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 #include "fastfunc.h"
 #include "hud.h"
 
@@ -12,7 +13,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_ClearBank);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_UploadBankIcons);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudScratch_Reset);
+enum { HUD_SCRATCH_SIZE = 0x64000 };
+struct HudStateData {
+    char unk_00[0x10];
+    unsigned char *scratch;
+    unsigned char *scratchEnd;
+};
+extern HudStateData HudState;
+
+void HudScratch_Reset(void)
+{
+    unsigned char *base = MemSlots.hudScratch;
+    HudState.scratch = base;
+    HudState.scratchEnd = base + HUD_SCRATCH_SIZE;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudScratch_Alloc);
 
