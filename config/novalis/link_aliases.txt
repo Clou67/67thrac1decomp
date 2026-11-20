@@ -448,3 +448,5 @@ MusicUnexpectedStopHandle = 0x00160128;
 snd_ContinueVAGStream__FUi = 0x0012ECA0;
 
 MB_BlendAnimFrame__FP12MobyInstance = 0x00263920;
+
+Hero_RegisterHealthHud__Fv = 0x0024A498;

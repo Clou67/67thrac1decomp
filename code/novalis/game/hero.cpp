@@ -17,7 +17,21 @@ int STUB_00226fa0(int animation)
     return animation;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", TakeDamage);
+void Hero_RegisterHealthHud(void);
+
+void TakeDamage(int damage)
+{
+    if (damage) {
+        if (damage > 1)
+            damage = 1;
+
+        Hero.health -= damage;
+        if (Hero.health < 0)
+            Hero.health = 0;
+
+        Hero_RegisterHealthHud();
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetTweakerMoby);
 

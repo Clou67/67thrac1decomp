@@ -473,4 +473,6 @@ void Hero_SetTweak_721e84(float first, float second);
 
 void Hero_PlayFootStep(int groundType, int whichFoot, int playSound);
 
+void TakeDamage(int damage);
+
 #endif
