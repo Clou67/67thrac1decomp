@@ -68,7 +68,9 @@ struct HeroState {
     short framesNotGrounded;
     char unk310[0x108];
     int dustHoverState;
-    char unk41C[0x144];
+    char unk41C[0xDC];
+    MobyInstance *ledgeMoby;
+    char unk4FC[0x64];
     // The data of the grind path the hero is on.
     int grindPath;
     char unk564[0x308];

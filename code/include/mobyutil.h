@@ -163,4 +163,6 @@ float AccelDeltAng(float &angle, float target, float &speed, float gain, float d
 
 bool MB_isAmmo(MobyInstance *moby);
 
+int MB_HeroStandingOnMoby(MobyInstance *moby);
+
 #endif

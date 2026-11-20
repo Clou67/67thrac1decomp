@@ -970,7 +970,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ToastMessag
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_PathEvalSpline);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_HeroStandingOnMoby);
+enum { HERO_STATE_TYPE_LEDGE = 3 };
+
+int MB_HeroStandingOnMoby(MobyInstance *moby)
+{
+    if (Hero.stateType == HERO_STATE_TYPE_LEDGE || Hero.state == PLAYER_STATE_EDGE_JUMP) {
+        if (Hero.ledgeMoby == moby)
+            return 1;
+    }
+
+    else if (Hero.framesNotGrounded == 0 && Hero.standingOnMoby == moby)
+        return 1;
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00278010);
 
