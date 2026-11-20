@@ -274,7 +274,11 @@ int SaveLoad_OnEnter(SaveLoadWidget *widget)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveLoad_OnExit);
+int SaveLoad_OnExit(SaveLoadWidget *widget)
+{
+    widget->streamBuffer = Menu_FreeStreamBuffer(widget->streamBuffer);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveGame_Update);
 

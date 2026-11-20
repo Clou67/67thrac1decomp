@@ -84,4 +84,6 @@ int MessageBox_OnExit(MessageBoxWidget *widget);
 
 int SaveLoad_OnEnter(SaveLoadWidget *widget);
 
+int SaveLoad_OnExit(SaveLoadWidget *widget);
+
 #endif
