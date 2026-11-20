@@ -73,4 +73,6 @@ void ResetDebugEnables(void);
 
 void SetupDefaultDrawMovie(int black);
 
+void ResetLevelCounters(void);
+
 #endif

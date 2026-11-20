@@ -435,3 +435,5 @@ VendorBoltsFormat = 0x00161160;
 sound_PlayMobySound__FiiP12MobyInstance = 0x002A1618;
 
 HeroTweaks = 0x0017AB00;
+
+LevelDrawCounters = 0x0016A100;
