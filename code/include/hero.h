@@ -424,4 +424,6 @@ void Hero_RegisterGlowDraw(void);
 
 void Hero_RotateByEuler(float xAngle, float yAngle, float zAngle);
 
+int Hero_DefaultByteIfFF(MobyInstance *moby, int animation);
+
 #endif

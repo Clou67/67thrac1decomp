@@ -195,7 +195,13 @@ int Hero_IsInSpecialMovementState(void)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_DefaultByteIfFF);
+int Hero_DefaultByteIfFF(MobyInstance *moby, int animation)
+{
+    if (animation == 0xFF)
+        animation = static_cast<unsigned char>(moby->previousAnimationId);
+
+    return animation;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetGadgetAnimBlend);
 
