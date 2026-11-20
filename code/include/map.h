@@ -11,4 +11,6 @@ void map_SaveRevealMask(char *mask);
 
 int Map_PointSideOfLine(int endX, int endY, int startX, int startY, int pointX, int pointY);
 
+int Map_RegionVisible_cc08(int endX, int endY);
+
 #endif

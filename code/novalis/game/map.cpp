@@ -31,7 +31,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DecodeLayerRow)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", DrawMapFrame_Part2);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_RegionVisible_cc08);
+int Map_RegionVisible_cc08(int endX, int endY)
+{
+    return Map_PointSideOfLine(endX, endY, 211, 219, 297, 249);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", func_0025CC30);
 
