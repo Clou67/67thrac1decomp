@@ -59,10 +59,15 @@ struct ItemViewWidget {
 
 extern int pauseActionListMode;
 
-// State of the pause menu's map page; only the level being shown is known so far.
+enum { MAP_CACHE_SLOT_COUNT = 5 };
 struct MapPageState {
     char unk0[0x224];
     int level;
+    char unk228[0x50];
+    void *cacheBuffers[MAP_CACHE_SLOT_COUNT];
+    int cacheIds[MAP_CACHE_SLOT_COUNT];
+    char unk2A0[4];
+    int cacheSizes[MAP_CACHE_SLOT_COUNT];
 };
 
 extern MapPageState MapPage;

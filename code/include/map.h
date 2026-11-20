@@ -15,4 +15,6 @@ int Map_RegionVisible_cc08(int endX, int endY);
 
 void map_stub(void);
 
+int Map_FindCacheSlotById(int id);
+
 #endif

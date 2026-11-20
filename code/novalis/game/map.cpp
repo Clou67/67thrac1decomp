@@ -1,4 +1,5 @@
 #include "common.h"
+#include "pause.h"
 #include "map.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_LoadPlanetMap);
@@ -11,7 +12,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetFreeCacheSlo
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_MoveCacheSlot);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_FindCacheSlotById);
+int Map_FindCacheSlotById(int id)
+{
+    for (int slot = 0; slot < MAP_CACHE_SLOT_COUNT; ++slot) {
+        if (MapPage.cacheBuffers[slot] && MapPage.cacheIds[slot] == id)
+            return slot;
+    }
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetNextMapToPrefetch);
 
