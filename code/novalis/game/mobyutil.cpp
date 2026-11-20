@@ -823,11 +823,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineInter
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineCrossCheck);
 
 enum { SPLINE_MASK_BITS = 32 };
-extern MobySpline *Splines[];
+extern MobyPath *Splines[];
 
 unsigned int MB_SplineSegmentsReachable(int spline, unsigned int targets, unsigned int from)
 {
-    MobySpline *path = Splines[spline];
+    MobyPath *path = Splines[spline];
     int reached = from;
     for (int step = 0; step < SPLINE_MASK_BITS; ++step) {
         if (targets & reached)

@@ -10,23 +10,24 @@ struct SplineNode {
     unsigned int mask;
 };
 
-struct MobySpline {
-    int pointCount;
-    char unk_04[12];
-    SplineNode nodes[1];
-};
-
 struct MobyPath {
     int pointCount;
     char unk_04[0xC];
-    Vec4 points[1];
+    union {
+        Vec4 points[1];
+        SplineNode nodes[1];
+    };
 };
 
 struct PathFollower {
     int index;
     signed char pathId;
-    char unk_05[0xB];
+    unsigned char state;
+    unsigned short flags;
+    float timer;
+    float distance;
     MobyPath *path;
+    int splineIdx;
 };
 
 int PathFollower_Advance(PathFollower *follower);
@@ -34,5 +35,7 @@ int PathFollower_Advance(PathFollower *follower);
 int PathFollower_WrapIdx(PathFollower *follower, int index);
 
 int PathFindClosestPnt(float distance, Vec4 *position, MobyPath *path);
+
+void InitFollower(PathFollower *follower);
 
 #endif

@@ -2,7 +2,22 @@
 #include "fastfunc.h"
 #include "path.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", InitFollower);
+enum { PATH_FOLLOW_START = 0 };
+extern MobyPath *Splines[];
+
+void InitFollower(PathFollower *follower)
+{
+    follower->state = PATH_FOLLOW_START;
+    follower->timer = 0.0f;
+    follower->path = Splines[follower->splineIdx];
+
+    for (int index = 0; index < follower->path->pointCount; ++index) {
+        int next = (index + 1) % follower->path->pointCount;
+        follower->path->points[index].w = FastVec3Dist(&follower->path->points[index], &follower->path->points[next]);
+        follower->path->points[index].z += 0.5f;
+        follower->path->points[index].z -= 0.5f;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", func_0028B508);
 
