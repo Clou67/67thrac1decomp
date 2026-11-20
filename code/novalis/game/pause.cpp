@@ -173,7 +173,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ImageWidget_Draw)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ImageWidget_OnEnter);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ImageWidget_OnExit);
+void *Menu_FreeStreamBuffer(void *buffer);
+
+int ImageWidget_OnExit(ImageWidget *widget)
+{
+    widget->streamBuffers[0] = Menu_FreeStreamBuffer(widget->streamBuffers[0]);
+    widget->streamBuffers[1] = Menu_FreeStreamBuffer(widget->streamBuffers[1]);
+
+    widget->unk_50 = -1;
+    widget->unk_54 = -1;
+    widget->image = -1;
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", UpdateOptionsMenus);
 
