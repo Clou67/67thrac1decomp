@@ -136,7 +136,13 @@ void MB_CosineInterpolateUnitVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to
     FastVec3Add(out, from, &delta);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CosineInterpolateAngVec);
+void MB_CosineInterpolateAngVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to)
+{
+    float weight = (1.0f - FastAngleSinF(fraction * 3.141592653589793f)) * 0.5f;
+    out->x = FastAddRots(from->x, FastSubRots(to->x, from->x) * weight);
+    out->y = FastAddRots(from->y, FastSubRots(to->y, from->y) * weight);
+    out->z = FastAddRots(from->z, FastSubRots(to->z, from->z) * weight);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DeltAngSpeed);
 

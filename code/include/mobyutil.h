@@ -153,4 +153,6 @@ unsigned int MB_SplineSegmentsReachable(int spline, unsigned int targets, unsign
 
 void GainDampLimit(float delta, float &speed, float gain, float damping, float limit);
 
+void MB_CosineInterpolateAngVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to);
+
 #endif
