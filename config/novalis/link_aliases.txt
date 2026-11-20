@@ -338,3 +338,5 @@ FastVec3RSqrtScale__FP4Vec4T0f = 0x00221460;
 FastVec3Length2__FP4Vec4 = 0x002212E8;
 
 FastVec3Normalize__FP4Vec4T0f = 0x00221410;
+
+FastBsphereCheck__FP4Vec4f = 0x002221F0;

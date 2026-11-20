@@ -72,4 +72,6 @@ MobyInstance *MB_GetPlatformParent(MobyInstance *moby);
 
 void ClampVec3Magnitude(Vec4 *vector, float maximum);
 
+int MB_ScaledVecWrapper(Vec4 *vector, float radius);
+
 #endif

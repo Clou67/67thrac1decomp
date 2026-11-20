@@ -473,7 +473,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_PlatformWor
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetOrientation);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ScaledVecWrapper);
+int FastBsphereCheck(Vec4 *sphere, float radius);
+
+int MB_ScaledVecWrapper(Vec4 *vector, float radius)
+{
+    Vec4 scaled;
+
+    FastScaleVec4(&scaled, vector, 1.0f / 1024.0f);
+    return FastBsphereCheck(&scaled, radius);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_UnlockLevel);
 
