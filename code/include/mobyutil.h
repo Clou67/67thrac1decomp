@@ -131,4 +131,6 @@ void MB_RotateMoby(MobyInstance *moby, float xAngle, float yAngle, float zAngle)
 
 float MB_computeLobVelocity(Vec4 *from, Vec4 *to, float speed, float gravity, float *timeOut);
 
+int MB_IsInvalidOrClass502(MobyInstance *moby);
+
 #endif

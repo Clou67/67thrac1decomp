@@ -538,7 +538,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_002731C0)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_WrapRot);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsInvalidOrClass502);
+int MB_isCrate(MobyInstance *moby);
+enum { MOBY_CLASS_502 = 502 };
+
+int MB_IsInvalidOrClass502(MobyInstance *moby)
+{
+    if (!moby)
+        return 0;
+    if (MB_isCrate(moby))
+        return static_cast<short>(moby->oClass) == MOBY_CLASS_502;
+
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_isCrate);
 
