@@ -1,7 +1,10 @@
 #include "common.h"
 #include "vtbl.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040b8);
+int FUN_003040b8(MobyInstance *moby)
+{
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040c0);
 
