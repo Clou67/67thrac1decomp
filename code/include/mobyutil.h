@@ -139,4 +139,6 @@ float MB_CollLineDown(Vec4 *position, float height, int flags);
 
 float DeltAng(float &angle, float target, float speed, int direction);
 
+float AccelDelt(float &value, float target, float &speed, float gain, float damping, float limit);
+
 #endif

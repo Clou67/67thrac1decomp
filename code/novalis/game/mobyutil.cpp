@@ -391,7 +391,20 @@ float Delt(float &value, float target, float step)
     return FastAbsF(target - value);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", AccelDelt);
+void GainDampLimit(float delta, float &speed, float gain, float damping, float limit);
+
+float AccelDelt(float &value, float target, float &speed, float gain, float damping, float limit)
+{
+    GainDampLimit(target - value, speed, gain, damping, limit);
+    value += speed;
+    float remaining = target - value;
+    if (FastAbsF(remaining) < limit * 0.01f) {
+        value = target;
+        speed = 0.0f;
+        return speed;
+    }
+    return remaining;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", OrganicDelt);
 
