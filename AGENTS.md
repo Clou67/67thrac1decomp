@@ -121,7 +121,7 @@ Rules:
     - Return type: a call declared `void` that really returns `int` leaves `$v0` free, so a nearby temporary lands in `v0` instead of `v1` (`FontPrintCenter` returns `int`).
     - Parameter order: EABI fills int and float argument registers separately, so a wrong order can still put every argument in the right register. But the scheduler breaks ties by argument order, so the argument moves around the `jal` come out in a different order (`Hud_DrawRotatedSprite16(float cx, float cy, float width, float height, float theta, int texW, int texH, unsigned long tex0)`).
 - Try natural rewrites only: different but equally readable code. Rule 3 applies.
-- If the function still does not match, leave it as `INCLUDE_ASM` with a short note under `decomp_state/notes/<file>_<function>.md` giving the closest attempt, the remaining diff and the ideas already tried. A clean note is better than a hacked match.
+- If the function still does not match, leave it as `INCLUDE_ASM` with a short note under `../decomp_state/notes/<file>_<function>.md` (next to the repository) giving the closest attempt, the remaining diff and the ideas already tried. A clean note is better than a hacked match.
 
 ## Overlay specifics (Novalis and other levels)
 
