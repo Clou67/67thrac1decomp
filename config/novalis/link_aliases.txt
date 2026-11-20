@@ -375,3 +375,5 @@ FastEulerToMtx1__FP4Mtx4P4Vec4 = 0x00221980;
 MB_GetOrientationMtx__FP4Mtx4P4Vec4 = 0x002721F0;
 
 MB_PushOutOfWalls__FP12MobyInstanceP4Vec4fffi = 0x0026D610;
+
+HudEntry_InitCounter__FP8HudEntry = 0x0024B418;

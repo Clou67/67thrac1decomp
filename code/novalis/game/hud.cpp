@@ -1,4 +1,5 @@
 #include "common.h"
+#include "hud.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", hud_InitBanks);
 
@@ -66,7 +67,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_PromptMsg);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", GetHelpLen);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_GetTexIndex);
+void HudEntry_InitCounter(HudEntry *entry);
+
+void Hud_GetTexIndex(HudEntry *entry)
+{
+    HudEntry_InitCounter(entry);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Moby849Hud_Update);
 

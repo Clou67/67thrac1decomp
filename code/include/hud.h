@@ -1,6 +1,17 @@
 #ifndef HUD_H
 #define HUD_H
 
+struct HudEntry {
+    char unk00[0x48];
+    short offsetX;
+    short offsetY;
+    char unk4C[0xC];
+    int width;
+    int height;
+    char unk60[0x1C];
+    int timer;
+};
+
 int HudTex_GetFrame(int texture, int frame);
 void Hud_DrawFlatRect(int left, int top, int right, int bottom, unsigned long rgba, int mode);
 void Hud_DrawFlatRectFixed(int left, int top, int right, int bottom, unsigned long rgba, int mode);
@@ -26,5 +37,7 @@ void BoltHud_Update(void);
 void Draw_BoltCountUI(void);
 // Shows a help prompt with the given text.
 void GetHelpLen(char *text);
+
+void Hud_GetTexIndex(HudEntry *entry);
 
 #endif
