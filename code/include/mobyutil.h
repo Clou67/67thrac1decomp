@@ -53,4 +53,6 @@ void MB_randVector(Vec4 *vector, float low, float high);
 
 void SetCollDamIn(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags, float damageHp);
 
+void SetCollDamIn_2(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags, float damageHp, Vec4 *momentum);
+
 #endif

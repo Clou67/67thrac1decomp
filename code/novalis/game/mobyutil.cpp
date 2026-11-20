@@ -1,4 +1,5 @@
 #include "common.h"
+#include "mathfunc_inline.h"
 #include "fastfunc.h"
 #include "moby.h"
 #include "hero.h"
@@ -177,7 +178,17 @@ void SetCollDamIn(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags, f
     FastVecZero(&damage.momentum);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", SetCollDamIn_2);
+enum { COLL_DAMAGE_HAS_MOMENTUM = 1 };
+
+void SetCollDamIn_2(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags, float damageHp, Vec4 *momentum)
+{
+    damage.pMoby = damager;
+    damage.damageFlags = damageFlags;
+    damage.damageHp = damageHp;
+    damage.flags = COLL_DAMAGE_HAS_MOMENTUM;
+
+    CopyVec4Inline(&damage.momentum, momentum);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", DamageSphereAtPos);
 
