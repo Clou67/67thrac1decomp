@@ -113,7 +113,7 @@ int InfobotHint_Update(MobyInstance *moby, InfobotHint *hint)
     }
 
     if (Hud_SetEntryMinValueById(BoltHudHandle, HUD_PROMPT_FRAMES))
-        BoltHudHandle = RegisterHUDCallback(HUD_TYPE_PROMPT, 0, HudEntry_InitCounterSlide, HudEntry_UpdateCounterWrap, Draw_PromptMsg, 0, 0);
+        BoltHudHandle = RegisterHUDCallback(HUD_TYPE_PROMPT, 0, HudEntry_InitCounterSlide, reinterpret_cast<HudFunction>(HudEntry_UpdateCounterWrap), Draw_PromptMsg, 0, 0);
 
     // Entries with a bolt price also show the bolt counter.
     {

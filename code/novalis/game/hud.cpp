@@ -61,7 +61,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_Moby185Meter);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_InitCounterSlide);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_UpdateCounterWrap);
+void HudEntry_UpdateCounter(HudEntry *entry);
+
+void HudEntry_UpdateCounterWrap(HudEntry *entry)
+{
+    HudEntry_UpdateCounter(entry);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_PromptMsg);
 

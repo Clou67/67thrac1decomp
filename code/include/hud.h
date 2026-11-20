@@ -30,7 +30,7 @@ int RegisterHUDCallback(int type, int texture, HudFunction init, HudFunction upd
 int Hud_SetEntryMinValueById(int handle, int frames);
 int Hud_SetEntryIconById(int handle);
 void HudEntry_InitCounterSlide(void);
-void HudEntry_UpdateCounterWrap(void);
+
 void Draw_PromptMsg(void);
 void Hud_DrawTexQuadUV_Fixed(void);
 void BoltHud_Update(void);
@@ -39,5 +39,7 @@ void Draw_BoltCountUI(void);
 void GetHelpLen(char *text);
 
 void Hud_GetTexIndex(HudEntry *entry);
+
+void HudEntry_UpdateCounterWrap(HudEntry *entry);
 
 #endif
