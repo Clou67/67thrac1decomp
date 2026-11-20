@@ -120,7 +120,7 @@ int InfobotHint_Update(MobyInstance *moby, InfobotHint *hint)
         InfobotHintEntry *priced = &hint->entries[hint->entry];
 
         if (priced->condition == INFOBOT_HINT_ENOUGH_BOLTS || priced->condition == INFOBOT_HINT_PRICE) {
-            handle = RegisterHUDCallback(HUD_TYPE_BOLT_COUNTER, BOLT_COUNTER_TEXTURE, Hud_DrawTexQuadUV_Fixed, BoltHud_Update, Draw_BoltCountUI, &HeroBolts, BOLT_COUNTER_MAXIMUM);
+            handle = RegisterHUDCallback(HUD_TYPE_BOLT_COUNTER, BOLT_COUNTER_TEXTURE, reinterpret_cast<HudFunction>(Hud_DrawTexQuadUV_Fixed), BoltHud_Update, Draw_BoltCountUI, &HeroBolts, BOLT_COUNTER_MAXIMUM);
             Hud_SetEntryMinValueById(handle, FastScaleRoundInt(BOLT_COUNTER_FRAMES));
         }
     }

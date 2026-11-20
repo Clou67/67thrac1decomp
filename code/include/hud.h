@@ -10,6 +10,7 @@ struct HudEntry {
     int height;
     char unk60[0x1C];
     int timer;
+    short *counter;
 };
 
 int HudTex_GetFrame(int texture, int frame);
@@ -32,7 +33,7 @@ int Hud_SetEntryIconById(int handle);
 void HudEntry_InitCounterSlide(void);
 
 void Draw_PromptMsg(void);
-void Hud_DrawTexQuadUV_Fixed(void);
+
 void BoltHud_Update(void);
 void Draw_BoltCountUI(void);
 // Shows a help prompt with the given text.
@@ -45,5 +46,7 @@ void HudEntry_UpdateCounterWrap(HudEntry *entry);
 void HudEntry_InitCounter(HudEntry *entry);
 
 void HudEntry_RoundFixed(HudEntry *entry);
+
+void Hud_DrawTexQuadUV_Fixed(HudEntry *entry);
 
 #endif

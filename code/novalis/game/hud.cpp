@@ -105,7 +105,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_DrawIcon);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_NanotechUI);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawTexQuadUV_Fixed);
+extern short BoltHudCounter;
+
+void Hud_DrawTexQuadUV_Fixed(HudEntry *entry)
+{
+    HudEntry_RoundFixed(entry);
+    entry->counter = &BoltHudCounter;
+    BoltHudCounter = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", BoltHud_Update);
 
