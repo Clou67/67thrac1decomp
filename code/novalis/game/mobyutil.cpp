@@ -1,4 +1,5 @@
 #include "common.h"
+#include "path.h"
 #include "vuchain.h"
 #include "mathfunc_inline.h"
 #include "fastfunc.h"
@@ -114,9 +115,34 @@ float MB_lerpRotCosine(float start, float end, float weight)
     return FastAddRots(start, delta * blend);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CosineInterpolateUnitVec);
+void FastSubVec3(Vec4 *out, Vec4 *first, Vec4 *second);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CosineInterpolateAngVec);
+void MB_CosineInterpolateUnitVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to)
+{
+    if (fraction == 0.0f) {
+        CopyVec4Inline(out, from);
+        return;
+    }
+    if (fraction == 1.0f) {
+        CopyVec4Inline(out, to);
+        return;
+    }
+
+    float weight = (1.0f - FastAngleSinF(fraction * 3.141592653589793f)) * 0.5f;
+    Vec4 delta;
+    FastSubVec3(&delta, to, from);
+    FastVec3Scale(&delta, &delta, weight);
+    FastVec3Add(out, from, &delta);
+}
+
+void MB_CosineInterpolateAngVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to)
+{
+    float weight = (1.0f - FastAngleSinF(fraction * 3.141592653589793f)) * 0.5f;
+    out->x = FastAddRots(from->x, FastSubRots(to->x, from->x) * weight);
+    out->y = FastAddRots(from->y, FastSubRots(to->y, from->y) * weight);
+    out->z = FastAddRots(from->z, FastSubRots(to->z, from->z) * weight);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DeltAngSpeed);
 
@@ -221,7 +247,30 @@ void MB_BallisticPosAtTicks(Vec4 *out, Vec4 *start, Vec4 *velocity, float gravit
     FastVec3Add(out, start, &displacement);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SolveQuad);
+float FastAbsF(float value);
+float FastFSqrt(float value);
+
+int MB_SolveQuad(float first, float second, float third, float *largerRoot, float *smallerRoot)
+{
+    float discriminant = second * second - first * 4.0f * third;
+    if (discriminant == 0.0f) {
+        *largerRoot = -second / (first + first);
+        return 1;
+    }
+
+    float root = FastFSqrt(FastAbsF(discriminant));
+    float denominator = first + first;
+    *largerRoot = (-second + root) / denominator;
+    *smallerRoot = (-second - root) / denominator;
+
+    if (*largerRoot < *smallerRoot) {
+        float value = *largerRoot;
+        float other = *smallerRoot;
+        *smallerRoot = value;
+        *largerRoot = other;
+    }
+    return discriminant > 0.0f ? 2 : 0;
+}
 
 enum { COLL_LINE_GROUND_QUERY = 2 };
 int CollLine(Vec4 *start, Vec4 *end, int flags, MobyInstance *ignore, MobyInstance *ignoreOther);
@@ -323,7 +372,39 @@ void MB_SetZBoundsFromPos(MobyInstance *moby, float z)
     moby->zMax = z + padding;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetZBoundsFromGround);
+struct CollisionOutput {
+    char unk_00[0x20];
+    Vec4 position;
+};
+
+extern CollisionOutput CollOutput;
+
+void MB_SetZBoundsFromGround(MobyInstance *moby)
+{
+    Vec4 ground;
+    Vec4 start;
+    const float clearance = 0.5f;
+    const float depth = 16.0f;
+    const float padding = 0.2f;
+
+    CopyVec4Inline(&ground, &moby->pos);
+    ground.z -= depth;
+    if (ground.z < clearance)
+        ground.z = clearance;
+
+    CopyVec4Inline(&start, &moby->pos);
+    start.z += clearance;
+
+    if (CollLine(&start, &ground, COLLISION_PROBE_FLAGS | COLL_LINE_GROUND_QUERY, 0, 0)) {
+        moby->zMin = CollOutput.position.z - padding;
+        moby->zMax = CollOutput.position.z + padding;
+    }
+
+    else {
+        moby->zMin = 0.0f;
+        moby->zMax = 0.0f;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetZBoundsFromFloorCeil);
 
@@ -340,7 +421,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026F868)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DamageMobyList);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ReadDamagePush);
+static const float DAMAGE_PUSH_TAG = 5627.9248046875f;
+
+void MB_ReadDamagePush(Vec4 impact, float *angle, float *speed, float *height)
+{
+    if (impact.w != DAMAGE_PUSH_TAG)
+        *angle = FastArcTan(impact.x, impact.y);
+
+    else {
+        *angle = FastArcTan(impact.x, impact.y);
+        float length = FastVec3Length(&impact.x);
+        impact.w = 0.0f;
+        *speed *= length;
+        *height *= impact.z;
+    }
+}
 
 void FastSubVec3(Vec4 *out, Vec4 *first, Vec4 *second);
 
@@ -374,7 +469,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", Lerp_vec4);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00270650);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", GainDampLimit);
+void GainDampLimit(float delta, float &speed, float gain, float damping, float limit)
+{
+    speed += gain * delta - damping * speed;
+    if (limit > 0.0f) {
+        if (speed > limit)
+            speed = limit;
+        else if (speed < -limit)
+            speed = -limit;
+    }
+
+    if (speed > FastAbsF(delta))
+        speed = FastAbsF(delta);
+    else if (speed < -FastAbsF(delta))
+        speed = -FastAbsF(delta);
+}
 
 float FastAbsF(float value);
 
@@ -391,15 +500,72 @@ float Delt(float &value, float target, float step)
     return FastAbsF(target - value);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", AccelDelt);
+void GainDampLimit(float delta, float &speed, float gain, float damping, float limit);
+
+float AccelDelt(float &value, float target, float &speed, float gain, float damping, float limit)
+{
+    GainDampLimit(target - value, speed, gain, damping, limit);
+    value += speed;
+    float remaining = target - value;
+    if (FastAbsF(remaining) < limit * 0.01f) {
+        value = target;
+        speed = 0.0f;
+        return speed;
+    }
+    return remaining;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", OrganicDelt);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", SubRots);
+static const float SAME_ANGLE = 0.001745329238474369f;
+static const float FULL_ROTATION = 6.283185307179586f;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", DeltAng);
+float SubRots(float target, float angle, int direction)
+{
+    float delta = FastSubRots(target, angle);
+    if (!direction || delta * direction > 0.0f)
+        return delta;
+    if (FastAbsF(delta) <= SAME_ANGLE)
+        return 0.0f;
+    if (delta > 0.0f)
+        return delta - FULL_ROTATION;
+    return delta + FULL_ROTATION;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", AccelDeltAng);
+float SubRots(float target, float angle, int direction);
+
+float DeltAng(float &angle, float target, float speed, int direction)
+{
+    float delta = SubRots(target, angle, direction);
+    if (delta > speed)
+        delta = speed;
+    else if (delta < -speed)
+        delta = -speed;
+    angle = FastAddRots(angle, delta);
+    return SubRots(target, angle, direction);
+}
+
+enum { TURN_DIRECTION_AUTO = 2 };
+
+float AccelDeltAng(float &angle, float target, float &speed, float gain, float damping, float limit, int direction)
+{
+    if (direction == TURN_DIRECTION_AUTO) {
+        if ((target > 0.0f && angle < 0.0f) || (target < 0.0f && angle > 0.0f))
+            direction = target < 0.0f ? -1 : 1;
+        else
+            direction = 0;
+    }
+
+    GainDampLimit(SubRots(target, angle, direction), speed, gain, damping, limit);
+    angle = FastAddRots(angle, speed);
+    float remaining = SubRots(target, angle, direction);
+    if (FastAbsF(remaining) < limit * 0.01f) {
+        angle = target;
+        speed = 0.0f;
+        return speed;
+    }
+    return remaining;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", OrganicDeltAng);
 
@@ -574,9 +740,45 @@ int MB_IsInvalidOrClass502(MobyInstance *moby)
     return 1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_isCrate);
+extern MobyInstance *MobyInstanceEnd;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_isAmmo);
+enum { OCLASS_CRATE_FIRST = 500, OCLASS_CRATE_LAST = 540 };
+
+int MB_isCrate(MobyInstance *moby)
+{
+    if (!moby)
+        return 0;
+
+    if (moby < MobyInstances || moby > MobyInstanceEnd)
+        return 0;
+
+    return (unsigned int)(moby->oClass - OCLASS_CRATE_FIRST)
+        <= OCLASS_CRATE_LAST - OCLASS_CRATE_FIRST;
+}
+
+enum {
+    OCLASS_DEVASTATOR_AMMO = 204,
+    OCLASS_TESLA_CLAW_AMMO = 213,
+    OCLASS_PYROCITOR_AMMO = 214,
+    OCLASS_VISIBOMB_AMMO = 222,
+    OCLASS_GLOVE_OF_DOOM_AMMO = 223,
+    OCLASS_MINE_GLOVE_AMMO = 225,
+    OCLASS_BOMB_GLOVE_AMMO = 226,
+    OCLASS_BLASTER_AMMO = 1006
+};
+
+bool MB_isAmmo(MobyInstance *moby)
+{
+    short oClass = moby->oClass;
+
+    if (oClass == OCLASS_BOMB_GLOVE_AMMO || oClass == OCLASS_DEVASTATOR_AMMO ||
+        oClass == OCLASS_VISIBOMB_AMMO || oClass == OCLASS_BLASTER_AMMO ||
+        oClass == OCLASS_PYROCITOR_AMMO || oClass == OCLASS_MINE_GLOVE_AMMO ||
+        oClass == OCLASS_TESLA_CLAW_AMMO || oClass == OCLASS_GLOVE_OF_DOOM_AMMO)
+        return true;
+
+    return false;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_genericExplosion);
 
@@ -608,11 +810,70 @@ void MB_randOffset(Vec4 *vector, float range)
     vector->z += MB_randRangeFloat(-range, range);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsPntInCuboid);
+extern MobyVolume *CuboidVolumes;
+void FastVecMtx3Mult(Vec4 *out, Vec4 *vector, Mtx4 *matrix);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsPntInCylinder);
+int MB_IsPntInCuboid(Vec4 *point, int index)
+{
+    if (index == -1)
+        return 0;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsPntInSphere);
+    MobyVolume *volume = &CuboidVolumes[index];
+    Vec4 offset;
+    Vec4 local;
+
+    FastSubVec3(&offset, point, &volume->origin);
+    offset.w = 0.0f;
+    FastVecMtx3Mult(&local, &offset, &volume->inverseTransform);
+
+    if (local.x >= -1.0f && local.x <= 1.0f && local.y >= -1.0f && local.y <= 1.0f && local.z >= -1.0f && local.z <= 1.0f)
+        return 1;
+
+    return 0;
+}
+
+extern MobyVolume *CylinderVolumes;
+
+int MB_IsPntInCylinder(Vec4 *point, int index)
+{
+    if (index < 0)
+        return 0;
+
+    MobyVolume *volume = &CylinderVolumes[index];
+    Vec4 offset;
+    Vec4 local;
+
+    FastSubVec3(&offset, point, &volume->origin);
+    offset.w = 0.0f;
+    FastVecMtx3Mult(&local, &offset, &volume->inverseTransform);
+
+    if (FastVec3Length(&local.x) < 1.0f && local.z >= -1.0f && local.z <= 1.0f)
+        return 1;
+
+    return 0;
+}
+
+extern MobyVolume *SphereVolumes;
+void FastVecMtx3Mult(Vec4 *out, Vec4 *vector, Mtx4 *matrix);
+
+int MB_IsPntInSphere(Vec4 *point, int index)
+{
+    if (index < 0)
+        return 0;
+
+    MobyVolume *volume = &SphereVolumes[index];
+    Vec4 offset;
+    Vec4 local;
+
+    FastSubVec3(&offset, point, &volume->origin);
+    offset.w = 0.0f;
+    FastVecMtx3Mult(&local, &offset, &volume->inverseTransform);
+
+    if (FastVec3Length2(&local) < 1.0f)
+        return 1;
+
+    return 0;
+}
 
 void FastQuaternionMult(Vec4 *out, Vec4 *left, Vec4 *right);
 
@@ -698,9 +959,38 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_compressVec
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_decompressVector);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RoundToDecimals);
+float MB_RoundToDecimals(float value, int digits)
+{
+    int scale = 1;
+    if (digits > 0) {
+        do {
+            scale *= 10;
+        } while (--digits);
+    }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_MayaFrameTrigger);
+    float factor = scale;
+    value += 1.0f / (factor + factor);
+    value *= factor;
+    value = FastFloatToInt(value);
+    return value / factor;
+}
+
+float MB_BlendAnimFrame(MobyInstance *moby);
+float MB_RoundToDecimals(float value, int digits);
+
+int MB_MayaFrameTrigger(MobyInstance *moby, float frame)
+{
+    float current = MB_BlendAnimFrame(moby);
+    float offset = MB_RoundToDecimals(current - frame, 4);
+    float step = MB_RoundToDecimals(moby->unk58 * moby->frameSpeed, 4);
+
+    if (frame <= current) {
+        if (offset < step)
+            return 1;
+    }
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_LineCrossesSpline);
 
@@ -708,7 +998,26 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineInter
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineCrossCheck);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineSegmentsReachable);
+enum { SPLINE_MASK_BITS = 32 };
+extern MobyPath *Splines[];
+
+unsigned int MB_SplineSegmentsReachable(int spline, unsigned int targets, unsigned int from)
+{
+    MobyPath *path = Splines[spline];
+    int reached = from;
+    for (int step = 0; step < SPLINE_MASK_BITS; ++step) {
+        if (targets & reached)
+            return targets & reached;
+
+        int expanded = reached;
+        for (int node = 0; node < SPLINE_MASK_BITS; ++node) {
+            if ((reached >> node) & 1)
+                expanded |= path->nodes[node].mask;
+        }
+        reached = expanded;
+    }
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00276CB0);
 
@@ -781,7 +1090,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ToastMessag
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_PathEvalSpline);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_HeroStandingOnMoby);
+enum { HERO_STATE_TYPE_LEDGE = 3 };
+
+int MB_HeroStandingOnMoby(MobyInstance *moby)
+{
+    if (Hero.stateType == HERO_STATE_TYPE_LEDGE || Hero.state == PLAYER_STATE_EDGE_JUMP) {
+        if (Hero.ledgeMoby == moby)
+            return 1;
+    }
+
+    else if (Hero.framesNotGrounded == 0 && Hero.standingOnMoby == moby)
+        return 1;
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00278010);
 
@@ -801,7 +1123,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ToggleManip
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00278790);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DistributeBoltsNearHero);
+enum { BOLTS_SPAWN = 2 };
+
+extern Vec4 HeroPosition;
+float FastVec3DistLen(Vec4 *first, Vec4 *second);
+void MB_DistributeBolts(MobyInstance *moby, int minimum, int maximum, unsigned int flags, int splineIndex);
+
+void MB_DistributeBoltsNearHero(MobyInstance *moby)
+{
+    int flags = 0;
+    if (FastVec3DistLen(&moby->pos, &HeroPosition) < 7.0f)
+        flags = BOLTS_SPAWN;
+
+    MB_DistributeBolts(moby, 4, 7, flags, -1);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SpawnSparksPair);
 

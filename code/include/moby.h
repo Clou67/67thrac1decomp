@@ -28,7 +28,70 @@ struct MobyCollPrims {
     int count;
 };
 
-struct MobyClass;
+struct MobySeqFrame {
+    char unk_00[4];
+    short time;
+};
+
+// The frame pointer table follows the 0x1C-byte RaC1 sequence header.
+struct MobySeq {
+    BSphere bSphere;              // 0x00
+    unsigned char frameCount;    // 0x10
+    signed char sound;           // 0x11
+    unsigned char triggerCount;  // 0x12
+    unsigned char unk_13;
+    short *triggers;              // 0x14
+    unsigned int unk_18;
+    MobySeqFrame *frames[1];      // 0x1C, frameCount entries
+};
+
+struct MobyPacket;
+struct MobyGifUsage;
+struct SoundDef;
+
+// The animation pointer table follows the 0x48-byte RaC1 class header.
+struct MobyInstance;
+typedef int (*MobyClassCallback)(MobyInstance *moby);
+
+struct MobyClassCallbacks {
+    int unk_00;
+    MobyClassCallback callback04;
+    MobyClassCallback callback08;
+    MobyClassCallback callback0C;
+};
+
+struct MobyClass {
+    MobyPacket *packets;                // 0x00
+    unsigned char packetCount0;        // 0x04
+    unsigned char packetCount1;        // 0x05
+    unsigned char metalCount;          // 0x06
+    unsigned char unk_07;
+    unsigned char jointCount;          // 0x08
+    unsigned char unk_09;
+    unsigned char unk_0A;
+    unsigned char unk_0B;
+    unsigned char sequenceCount;       // 0x0C
+    unsigned char soundCount;          // 0x0D
+    unsigned char lodTransition;       // 0x0E
+    unsigned char shadowCount;         // 0x0F
+    MobyCollPrims *collision;           // 0x10
+    void *skeleton;                     // 0x14
+    Vec4 *commonTranslations;           // 0x18
+    void *animationJoints;              // 0x1C
+    MobyGifUsage *gifUsage;              // 0x20
+    float scale;                        // 0x24
+    SoundDef *soundDefs;                // 0x28
+    // The loader saves mipDistance before the runtime slot can hold callbacks.
+    union {                             // 0x2C
+        unsigned int mipDistance;
+        MobyClassCallbacks *callbacks;
+    };
+    BSphere bSphere;                    // 0x30
+    unsigned int glowRgba;              // 0x40
+    unsigned short modeBits;            // 0x44
+    short type;                         // 0x46
+    MobySeq *animations[1];              // 0x48, sequenceCount entries
+};
 struct Manipulator;
 
 // Bits of MobyInstance::modeBits.
@@ -122,6 +185,9 @@ struct MobyInstance {
     Mtx4 transform;
 };
 
+enum { ANIM_CACHE_COUNT = 16 };
+extern MobyInstance *AnimationCacheRegistry[ANIM_CACHE_COUNT];
+
 void SetLevelFlag(int flag);
 
 extern int StashedMobyClassDists[];
@@ -135,5 +201,17 @@ void RestoreMobyClassDists(void);
 void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out);
 
 void MB_GetBoneTransformation(MobyInstance *moby, int index, Mtx4 *out);
+
+int MB_FindNearestAnimTrigger(MobySeq *sequence, float time);
+
+void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
+
+int M849_CallClassCallback04(MobyInstance *moby);
+
+int M849_CallClassCallback0C(MobyInstance *moby);
+
+int AnimCache_Register(MobyInstance *moby);
+
+void GetMobyJointsWorldPos(MobyInstance *moby, int count, int *joints, Vec4 *out);
 
 #endif

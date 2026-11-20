@@ -1,4 +1,5 @@
 #include "common.h"
+#include "moby.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_003027e8);
 
@@ -6,9 +7,33 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_0030
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_003028c8);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_00302a50);
+int M849_CallClassCallback0C(MobyInstance *moby)
+{
+    MobyClassCallback callback = moby->pClass->callbacks->callback0C;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_00302a88);
+    int result;
+    if (!callback)
+        result = 1;
+
+    else
+        result = callback(moby);
+
+    return result;
+}
+
+int M849_CallClassCallback04(MobyInstance *moby)
+{
+    MobyClassCallback callback = moby->pClass->callbacks->callback04;
+
+    int result;
+    if (!callback)
+        result = 1;
+
+    else
+        result = callback(moby);
+
+    return result;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_00302ac0);
 

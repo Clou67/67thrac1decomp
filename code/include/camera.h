@@ -15,8 +15,11 @@ struct CameraControlActivation {
     short orgCam;
 };
 
+struct CameraControlBlock;
+
 struct UpdateCam {
-    char unk_00[0x74];
+    char unk_00[0x70];
+    CameraControlBlock *control;
     CameraControlActivation activation;
     short importCameraIdx;
     short type;
@@ -209,5 +212,13 @@ void FUN_00318ad0(UpdateCam *camera);
 void camera_HandleCollWithHero(UpdateCam *camera);
 
 void Camera_HandleScreenFade(void);
+
+void FUN_0030f338(UpdateCam *camera);
+
+void FUN_00311008(UpdateCam *camera);
+
+void FUN_0030f600(UpdateCam *camera, void *work);
+
+void BackupCurrentCam(void);
 
 #endif

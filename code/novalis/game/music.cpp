@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 #include "music.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Init);
@@ -25,7 +26,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StartSpeech
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StartSpeech);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_PlayPreseekedSpeech);
+enum { MUSIC_STATE_PLAYING = 4 };
+
+void snd_ContinueVAGStream(unsigned int handle);
+
+int music_PlayPreseekedSpeech(void)
+{
+    if (musicTransition.speechHandle && musicTransition.state == MUSIC_STATE_READY) {
+        snd_ContinueVAGStream(musicTransition.speechHandle);
+        musicTransition.state = MUSIC_STATE_PLAYING;
+        return 1;
+    }
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_PreseekTrack);
 
@@ -123,9 +137,39 @@ void music_LoadBankCB(int reason)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AD88);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_SpeechPreseekCB);
+void music_StartSpeech(int track, int flags, int volume);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_PreseekTrackCB);
+void music_SpeechPreseekCB(unsigned int result, unsigned long long data)
+{
+    MusicPlaying *playing = (MusicPlaying *)(int)data;
+    if (playing) {
+        playing->handle = result;
+        if (result) {
+            if (playing->status == MUSIC_PRESEEK_PENDING)
+                playing->status = MUSIC_PRESEEK_COMPLETE;
+        }
+
+        else
+            music_StartSpeech(musicTransition.speechId, musicTransition.speechFlags, musicTransition.speechVolume);
+    }
+}
+
+void music_PreseekTrack(int track, int flags, int volume);
+
+void music_PreseekTrackCB(unsigned int result, unsigned long long data)
+{
+    MusicPlaying *playing = (MusicPlaying *)(int)data;
+    if (playing) {
+        playing->handle = result;
+        if (result) {
+            if (playing->status == MUSIC_PRESEEK_PENDING)
+                playing->status = MUSIC_PRESEEK_COMPLETE;
+        }
+
+        else
+            music_PreseekTrack(musicTransition.primary_track, musicTransition.primaryFlags, musicTransition.primaryVolume);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AE78);
 
@@ -133,6 +177,24 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AEC8);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AF20);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StopCB);
+static const unsigned int MUSIC_STOP_PENDING = 0xFFFFFFFF;
+enum { MUSIC_STOP_COMPLETE = 7 };
+
+extern const char MusicUnexpectedStopHandle[];
+
+void music_StopCB(unsigned int result, unsigned long long data)
+{
+    MusicPlaying *playing = (MusicPlaying *)(int)data;
+    if (playing) {
+        if (playing->handle != MUSIC_STOP_PENDING)
+            printf_stub(MusicUnexpectedStopHandle);
+
+        else {
+            playing->handle = result;
+            if (!result)
+                playing->status = MUSIC_STOP_COMPLETE;
+        }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AFB8);

@@ -1,4 +1,6 @@
 #include "common.h"
+#include "vuchain.h"
+#include "moby.h"
 #include "loaders.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadByteGrid);
@@ -27,7 +29,23 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", SetUpVisGifView
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParsePermGsRam);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseMobySeq);
+void ParseMobySeq(MobyClass *mobyClass, int animation)
+{
+    MobySeq *sequence = mobyClass->animations[animation];
+    char *base = (char *)sequence;
+
+    if (sequence->triggers)
+        sequence->triggers = (short *)(base + (int)sequence->triggers);
+
+    if (sequence->frameCount) {
+        int index = 0;
+        MobySeqFrame **frame = sequence->frames;
+        do {
+            *frame = (MobySeqFrame *)(base + (int)*frame);
+            ++frame;
+        } while (++index < sequence->frameCount);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseMobyClass);
 
@@ -61,11 +79,31 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseNpcChunk);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadWeaponCutscene);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseWeaponSceneChunk);
+struct SceneLoadState {
+    char unk_00[0x58];
+    unsigned char *decodedChunk;
+    unsigned char *buffer;
+    unsigned char *chunks[1];
+};
+
+extern SceneLoadState SceneLoad;
+void ParseNpcChunk(void);
+
+void ParseWeaponSceneChunk(int chunk)
+{
+    SceneLoad.buffer = SceneLoad.chunks[chunk];
+    ParseNpcChunk();
+    SceneLoad.buffer = MemSlots.vu1_chain[1] + vu1_bufSize;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadSpaceScene);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseSpaceSceneChunk);
+void ParseSpaceSceneChunk(int chunk)
+{
+    SceneLoad.buffer = SceneLoad.chunks[chunk];
+    ParseNpcChunk();
+    SceneLoad.buffer = MemSlots.vu1_chain[1] + vu1_bufSize;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadMobyModel);
 

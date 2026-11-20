@@ -1,4 +1,6 @@
 #include "common.h"
+#include "hero.h"
+#include "vuchain.h"
 #include "fastfunc.h"
 #include "hud.h"
 
@@ -12,21 +14,88 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_ClearBank);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_UploadBankIcons);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudScratch_Reset);
+enum { HUD_HEAP_SIZE = 0x64000 };
+struct HudStateData {
+    char unk_00[0x10];
+    unsigned char *heapCursor;
+    unsigned char *heapEnd;
+    char unk18[4];
+    HudIconTableEntry *icons;
+};
+extern HudStateData HudState;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudScratch_Alloc);
+void HudHeap_Reset(void)
+{
+    unsigned char *base = MemSlots.hudHeap;
+    HudState.heapCursor = base;
+    HudState.heapEnd = base + HUD_HEAP_SIZE;
+}
+
+void *HudHeap_Alloc(int size)
+{
+    if (!HudState.heapCursor)
+        HudHeap_Reset();
+
+    unsigned char *end = HudState.heapEnd;
+    unsigned char *allocation = HudState.heapCursor;
+    if (end - allocation < size)
+        return 0;
+
+    size = (size + 15) & ~15u;
+    HudState.heapCursor = allocation + size;
+    return allocation;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_SwapMobyBank);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", RegisterHUDCallback);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_Restore);
+void HudEntry_Restore(HudEntry *entry)
+{
+    HudEntry_SetIcon(entry, entry->registeredIcon);
+
+    entry->flags = entry->registeredFlags;
+    entry->update = entry->registeredUpdate;
+    entry->draw = entry->registeredDraw;
+    entry->value = entry->registeredValue;
+    entry->maximum = entry->registeredMaximum;
+    entry->init = entry->registeredInit;
+    if (entry->init)
+        entry->init(entry);
+
+    entry->locked = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_UnregisterById);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_SetEntryIconById);
+enum { HUD_NO_ICON = 0xFFFF };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_SetIcon);
+int Hud_SetEntryIconById(int handle)
+{
+    int slot = 0;
+    while (slot < HUD_ENTRY_COUNT && HudEntries[slot].id != handle)
+        ++slot;
+
+    if (slot < HUD_ENTRY_COUNT) {
+        RegisterHUDCallback(slot, HUD_NO_ICON, 0, 0, 0, 0, 0);
+        return 1;
+    }
+
+    return 0;
+}
+
+int Hero_FindHudEntry(int id);
+
+void HudEntry_SetIcon(HudEntry *entry, unsigned int id)
+{
+    int index = Hero_FindHudEntry(id);
+    unsigned short iconId = HudState.icons[index].id;
+
+    entry->iconTableIndex = index;
+    entry->iconId = iconId;
+    entry->iconBaseIndex = HudState.icons[index].baseIndex;
+    entry->iconVariantCount = HudState.icons[index].variantCount;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", func_0024B088);
 

@@ -1,6 +1,8 @@
 #include <stddef.h>
 
 #include "common.h"
+#include "camera.h"
+#include "fastfunc.h"
 #include "sound.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_CamOfs);
@@ -9,7 +11,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_Occl);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_GetFade);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_GetFadeChannel);
+int sound_GetFade(SoundDef *definition, float distance, float nearDistance, float farDistance);
+
+int sound_GetFadeChannel(SoundData *channel, Vec4 *position)
+{
+    float distance = FastVec3Dist(position, &GameCamera.position);
+    SoundDef *definition = channel->pSoundDef;
+    return sound_GetFade(definition, distance, definition->minRange, definition->maxRange);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_GetPan);
 

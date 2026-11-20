@@ -3,7 +3,9 @@
 #include "mathfunc_inline.h"
 #include "vtbl.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f338);
+void FUN_0030f338(UpdateCam *camera)
+{
+}
 
 extern Vec4 HeroPosition;
 
@@ -18,7 +20,9 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f498);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f600);
+void FUN_0030f600(UpdateCam *camera, void *work)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f608);
 
@@ -42,7 +46,9 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0031
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_00310a08);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_00311008);
+void FUN_00311008(UpdateCam *camera)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_00311010);
 

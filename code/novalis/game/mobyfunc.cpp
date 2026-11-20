@@ -15,7 +15,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyFram
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_PlayMobyDesiredSound);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_FindNearestAnimTrigger);
+enum { ANIM_TICKS_PER_FRAME = 16 };
+
+int MB_FindNearestAnimTrigger(MobySeq *sequence, float time)
+{
+    short key = FastFloatToInt(time * ANIM_TICKS_PER_FRAME);
+    for (int index = 0; index < sequence->frameCount; ++index) {
+        int frameTime = sequence->frames[index]->time;
+        if (frameTime > key) {
+            if (index > 0 && key - sequence->frames[index - 1]->time < frameTime - key)
+                --index;
+            return index;
+        }
+    }
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", func_00263918);
 
@@ -43,7 +57,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", AttachManipula
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DetachManipulator);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", AnimCache_Register);
+int AnimCache_Register(MobyInstance *moby)
+{
+    int index = 0;
+    MobyInstance **entry = AnimationCacheRegistry;
+
+    for (; index < ANIM_CACHE_COUNT; ++index, ++entry) {
+        if (!*entry || *entry == moby) {
+            *entry = moby;
+            return index;
+        }
+    }
+
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CleanAnimationCache);
 
@@ -79,9 +106,38 @@ void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out)
     FastVec3Add(out, out, &moby->pos);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", GetMobyJointsWorldPos);
+void MB_ComputeSelectedJointPos(MobyInstance *moby, int count, int *joints, Vec4 *out);
+void FastVec3Add(Vec4 *out, Vec4 *left, Vec4 *right);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetJointsWorldMtx);
+void GetMobyJointsWorldPos(MobyInstance *moby, int count, int *joints, Vec4 *out)
+{
+    float scale = moby->scale * (1.0f / 1024.0f);
+    MB_ComputeSelectedJointPos(moby, count, joints, out);
+
+    if (count > 0) {
+        do {
+            FastVec3Scale(out, out, scale);
+            FastVecMtx3Mult(out, out, &moby->transform);
+            FastVec3Add(out, out, &moby->pos);
+            ++out;
+        } while (--count);
+    }
+}
+
+void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joints)
+{
+    Mtx4 world;
+    float scale = moby->scale * (1.0f / 1024.0f);
+
+    FastMtx3x4Copy(&world, &moby->transform);
+    MobyComputeSelectedJoints(moby, count, indices, joints);
+    for (int index = 0; index < count; ++index) {
+        Mtx4 *joint = &joints[index];
+        FastMtxTransform(joint, &world, joint);
+        FastVec3Scale(&joint->v3, &joint->v3, scale);
+        FastVec3Add(&joint->v3, &joint->v3, &moby->pos);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DmaMobyTextures);
 

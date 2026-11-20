@@ -25,6 +25,14 @@ struct COLL_DAM_IN {
     int shotUID;
     int pad;
 };
+struct MobyVolume {
+    Vec4 axisX;
+    Vec4 axisY;
+    Vec4 axisZ;
+    Vec4 origin;
+    Mtx4 inverseTransform;
+};
+
 struct Vec4;
 struct Mtx4;
 
@@ -136,5 +144,45 @@ int MB_IsInvalidOrClass502(MobyInstance *moby);
 int MB_HasCollPrims(MobyInstance *moby);
 
 float MB_CollLineDown(Vec4 *position, float height, int flags);
+
+float DeltAng(float &angle, float target, float speed, int direction);
+
+float AccelDelt(float &value, float target, float &speed, float gain, float damping, float limit);
+
+float MB_RoundToDecimals(float value, int digits);
+
+float SubRots(float target, float angle, int direction);
+
+int MB_SolveQuad(float first, float second, float third, float *largerRoot, float *smallerRoot);
+
+void MB_CosineInterpolateUnitVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to);
+
+unsigned int MB_SplineSegmentsReachable(int spline, unsigned int targets, unsigned int from);
+
+void GainDampLimit(float delta, float &speed, float gain, float damping, float limit);
+
+void MB_CosineInterpolateAngVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to);
+
+int MB_isCrate(MobyInstance *moby);
+
+void MB_DistributeBoltsNearHero(MobyInstance *moby);
+
+float AccelDeltAng(float &angle, float target, float &speed, float gain, float damping, float limit, int direction);
+
+bool MB_isAmmo(MobyInstance *moby);
+
+int MB_HeroStandingOnMoby(MobyInstance *moby);
+
+int MB_MayaFrameTrigger(MobyInstance *moby, float frame);
+
+void MB_SetZBoundsFromGround(MobyInstance *moby);
+
+int MB_IsPntInSphere(Vec4 *point, int index);
+
+int MB_IsPntInCuboid(Vec4 *point, int index);
+
+int MB_IsPntInCylinder(Vec4 *point, int index);
+
+void MB_ReadDamagePush(Vec4 impact, float *angle, float *speed, float *height);
 
 #endif

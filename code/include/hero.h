@@ -30,7 +30,9 @@ struct HeroState {
     Vec4 externalMomentum;
     char unk160[0x20];
     float idealRotZ;
-    char unk184[0xC];
+    float turnSpeed;
+    float turnDelta;
+    char unk18C[4];
     float idealSpeed;
     float storedNeutralSpeed;
     int stateTimer;
@@ -39,7 +41,9 @@ struct HeroState {
     int ghostFrames;
     char unk1D0[0x16];
     short swingshotReleasedTimer;
-    char unk1E8[0x38];
+    char unk1E8[0xE];
+    short splineWallHitTimer;
+    char unk1F8[0x28];
     float collTop;
     float collBottom;
     char unk228[0xC];
@@ -64,7 +68,9 @@ struct HeroState {
     short framesNotGrounded;
     char unk310[0x108];
     int dustHoverState;
-    char unk41C[0x144];
+    char unk41C[0xDC];
+    MobyInstance *ledgeMoby;
+    char unk4FC[0x64];
     // The data of the grind path the hero is on.
     int grindPath;
     char unk564[0x308];
@@ -93,14 +99,16 @@ struct HeroState {
     char unkA94[0x14];
     float animFrame;
     float animFrameWindow;
-    int animLoopFrame;
-    char unkAB4[4];
+    int nextAnimation;
+    int nextAnimationFrame;
     int queuedFrameRequest;
     char unkABC[0x5D4];
     MobyInstance *currentWeaponMoby;
     char unk1094[0x24];
     int currentWeapon;
-    char unk10BC[0x224];
+    char unk10BC[0x24];
+    MobyInstance *bootMoby;
+    char unk10E4[0x1FC];
     short groundType;
     char unk12E2[0x2];
     // The hero is in water.
@@ -148,10 +156,9 @@ struct HeroState {
     char unk21B8[0x20];
     short queuedSounds;
     char unk21DA[0x3E];
-    int loopSounds;
-    char unk221C[0x1C];
-    MobyInstance *loopSoundMobys;
-    char unk223C[0x3C];
+    int loopSounds[8];
+    MobyInstance *loopSoundMobys[8];
+    char unk2258[0x20];
     MobyInstance *animLinkMoby;
     int animLinkTable;
     char unk2280[4];
@@ -169,7 +176,8 @@ struct HeroState {
     short requestedState;
     char unk22CE[0xA];
     short hasClank;
-    char unk22DA[0x36];
+    short splineWall;
+    char unk22DC[0x34];
 };
 
 // Hero states (the PS3 project's PlayerState).
@@ -425,5 +433,46 @@ void Hero_RegisterGlowDraw(void);
 void Hero_RotateByEuler(float xAngle, float yAngle, float zAngle);
 
 int Hero_DefaultByteIfFF(MobyInstance *moby, int animation);
+
+void Hero_Turn(float gain, float damping, float limit, int direction);
+
+float Hero_GetRotationHistory(int framesAgo);
+
+void Hero_AlignToVec(Vec4 *direction, Vec4 *out);
+
+void Hero_CollideSplineWall(void);
+
+void Hero_SetNextAnimFrame(int animation, int frame);
+
+void Hero_PlayLoopSound(int slot, MobyInstance *moby, int soundId);
+
+struct HeroTweakValues {
+    char unk_00[0xA4];
+    float unk_A4;
+    float unk_A8;
+    char unk_AC[0xA8];
+    float unk_154;
+    float unk_158;
+    char unk_15C[0xA8];
+    float unk_204;
+    float unk_208;
+    char unk_20C[0xA8];
+    float unk_2B4;
+    float unk_2B8;
+};
+
+extern HeroTweakValues HeroTweaks;
+
+void Hero_SetTweakPair_97b44(float first, float second);
+
+void Hero_SetTweakPair_929e8(float first, float second);
+
+void Hero_SetTweak_721dd4(float first, float second);
+
+void Hero_SetTweak_721e84(float first, float second);
+
+void Hero_PlayFootStep(int groundType, int whichFoot, int playSound);
+
+void TakeDamage(int damage);
 
 #endif

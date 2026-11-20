@@ -170,7 +170,6 @@ DrawTextShadow__Fiiiii = 0x0021C958;
 DrawSprite__FiiiiiiiiUlUl = 0x0021BE90;
 FontSet__Fi = 0x0021AE98;
 MB_RequestHelpMessage__Fii = 0x00279000;
-music_PlayPreseekedSpeech__Fv = 0x00279E78;
 sound_LevelPlay__Fiii = 0x002A1770;
 
 snd_PauseAllSoundsInGroup__Fi = 0x0012E3E8;
@@ -222,7 +221,6 @@ FastDiffRots__Fff = 0x00222100;
 GetHelpLen__FPc = 0x0024CDB0;
 HudEntry_UpdateCounterWrap__Fv = 0x0024C878;
 Hud_DrawTexQuadUV_Fixed__Fv = 0x0024E8D0;
-Hud_SetEntryIconById__Fi = 0x0024AFA0;
 Hud_SetEntryMinValueById__Fii = 0x0024B4B0;
 PlayInfobotMovie__Fi = 0x002ACF50;
 RegisterHUDCallback__FiiPFP8HudEntry_vN22Pvi = 0x0024AD98;
@@ -385,9 +383,91 @@ FUN_00318900__FP9UpdateCam = 0x00318900;
 
 BoltHudCounter = 0x0015FAB8;
 
-MB_isCrate__FP12MobyInstance = 0x00273278;
 
 
 SpawnMoby_1007__FP4Vec4 = 0x002BA760;
 
 CollLine__FP4Vec4T0iP12MobyInstanceT3 = 0x00211870;
+
+GalacticMapIds = 0x001602A0;
+
+Hero_Turn3D__Ffffi = 0x002323D8;
+
+
+HudState = 0x0017E958;
+
+
+
+FastFSqrt__Ff = 0x002210F0;
+
+Splines = 0x001B0930;
+
+FastMtx3Transpose__FP4Mtx4T0 = 0x00221C08;
+
+MB_CollideSplineWall__FifP4Vec4T2 = 0x00276CB8;
+
+MapWorldToMap = 0x00182EF0;
+
+Map_DecompressMapImage_Rle__FPUcT0i = 0x0025DFD8;
+
+Map_DecompressMapImage_Raw__FPUcT0 = 0x0025E208;
+
+sound_GetFade__FP8SoundDeffff = 0x002A02E0;
+
+VendorScrollFormat = 0x0020A510;
+
+VendorRender = 0x001CA940;
+
+VendorDudeVisible = 0x00161188;
+
+FastVec3DistLen__FP4Vec4T0 = 0x00221398;
+
+MB_DistributeBolts__FP12MobyInstanceiiUii = 0x00275988;
+
+DefaultDraw__Fv = 0x0021A1B8;
+
+VendorBoltsThousandsFormat = 0x00161158;
+
+VendorBoltsFormat = 0x00161160;
+
+sound_PlayMobySound__FiiP12MobyInstance = 0x002A1618;
+
+HeroTweaks = 0x0017AB00;
+
+LevelDrawCounters = 0x0016A100;
+
+sound_FootstepPlay__FiiiiP12MobyInstance = 0x002A1898;
+
+music_PreseekTrack__Fiii = 0x00279ED0;
+
+music_StartSpeech__Fiii = 0x00279CD8;
+
+MusicUnexpectedStopHandle = 0x00160128;
+
+snd_ContinueVAGStream__FUi = 0x0012ECA0;
+
+MB_BlendAnimFrame__FP12MobyInstance = 0x00263920;
+
+Hero_RegisterHealthHud__Fv = 0x0024A498;
+
+CollOutput = 0x001742C0;
+
+Hero_FindHudEntry__Fi = 0x0024A4E0;
+
+HudEntries = 0x0017E0D0;
+
+SceneLoad = 0x0016CCE0;
+
+ParseNpcChunk__Fv = 0x00259288;
+
+SphereVolumes = 0x001600F4;
+
+CuboidVolumes = 0x001600EC;
+
+CylinderVolumes = 0x001600FC;
+
+BackupCamera = 0x001693D0;
+
+CameraControls = 0x00169590;
+
+MB_ComputeSelectedJointPos__FP12MobyInstanceiPiP4Vec4 = 0x00268C28;

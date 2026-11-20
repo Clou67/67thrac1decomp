@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 #include "draw.h"
 #include "fastfunc.h"
 #include "mathfunc_inline.h"
@@ -23,7 +24,25 @@ void Cam_CopyRotWrapped(float *out, float *polar, float yawOffset)
     out[4] = polar[4];
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", BackupCurrentCam);
+struct CameraControlBlock {
+    unsigned char data[0x280];
+};
+
+struct CameraControlBuffers {
+    CameraControlBlock current;
+    CameraControlBlock unk_280;
+    CameraControlBlock backup;
+};
+
+extern UpdateCam BackupCamera;
+extern CameraControlBuffers CameraControls;
+
+void BackupCurrentCam(void)
+{
+    FastMemCopy16(&BackupCamera, GameCamera.pCurrentUpdCam, sizeof(BackupCamera));
+    FastMemCopy16(&CameraControls.backup, &CameraControls.current, sizeof(CameraControls.backup));
+    BackupCamera.control = &CameraControls.backup;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", ExecuteCamPostUpdFuncs);
 

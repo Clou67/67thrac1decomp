@@ -5,7 +5,23 @@
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ScreenPosFromWorldSpace);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ResetLevelCounters);
+struct LevelDrawCounterState {
+    char unk_00[0x1B0];
+    int unk_1B0;
+    char unk_1B4[0x1B0];
+    int frameCount;
+    int previousFrameCount;
+};
+
+extern LevelDrawCounterState LevelDrawCounters;
+
+void ResetLevelCounters(void)
+{
+    int frameCount = LevelDrawCounters.frameCount;
+    LevelDrawCounters.unk_1B0 = 0;
+    LevelDrawCounters.previousFrameCount = frameCount;
+    LevelDrawCounters.frameCount = 0;
+}
 
 void STUB_00218990(void)
 {
@@ -47,7 +63,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", DefaultDraw);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDraw);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDrawMovie);
+extern int CutscenePlaying;
+extern int RenderFlags __attribute__((section(".sdata")));
+void DefaultDraw(void);
+
+void SetupDefaultDrawMovie(int black)
+{
+    if (!CutscenePlaying) {
+        ClearDrawBufferLarge(black);
+        RenderFlags = 0x7F;
+        DefaultDraw();
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", SetupDefaultDrawFreeze);
 

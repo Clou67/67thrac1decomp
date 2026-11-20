@@ -2,6 +2,7 @@
 #define PAUSE_H
 
 struct MobyInstance;
+struct FontWindow;
 
 enum { GAME_COMPLETE_MOBY_COUNT = 24 };
 
@@ -61,7 +62,9 @@ extern int pauseActionListMode;
 
 enum { MAP_CACHE_SLOT_COUNT = 5 };
 struct MapPageState {
-    char unk0[0x224];
+    char unk0[0x28];
+    int available;
+    char unk2C[0x1F8];
     int level;
     char unk228[0x50];
     void *cacheBuffers[MAP_CACHE_SLOT_COUNT];
@@ -98,5 +101,7 @@ int SaveLoad_OnEnter(SaveLoadWidget *widget);
 int SaveLoad_OnExit(SaveLoadWidget *widget);
 
 int ItemView_OnExit(ItemViewWidget *widget);
+
+void Menu_InitSpriteRect(FontWindow *window, MenuClipWidget *widget);
 
 #endif

@@ -7,9 +7,32 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_LoadPlanetMap);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_OnPauseMenuOpen);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_FindFreeCacheSlot);
+int Map_FindFreeCacheSlot(int fromTop)
+{
+    for (int index = 0; index < MAP_CACHE_SLOT_COUNT; ++index) {
+        int slot = fromTop ? MAP_CACHE_SLOT_COUNT - 1 - index : index;
+        if (MapPage.cacheBuffers[slot] && MapPage.cacheIds[slot] == -1)
+            return slot;
+    }
+    return -1;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetFreeCacheSlotCompact);
+enum { MAP_CACHE_KEEP_IN_SLOT = 0x1000 };
+
+int Map_GetFreeCacheSlotCompact(void)
+{
+    int slot = Map_FindFreeCacheSlot(1);
+    if (slot != 0)
+        return slot;
+
+    for (slot = 1; slot < MAP_CACHE_SLOT_COUNT; ++slot) {
+        if (!(MapPage.cacheIds[slot] & MAP_CACHE_KEEP_IN_SLOT) && MapPage.cacheBuffers[slot])
+            break;
+    }
+
+    Map_MoveCacheSlot(0, slot);
+    return slot;
+}
 
 void Map_MoveCacheSlot(int destination, int source)
 {
@@ -30,7 +53,18 @@ int Map_FindCacheSlotById(int id)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetNextMapToPrefetch);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetGalacticMapIndex);
+enum { GALACTIC_MAP_LEVEL_COUNT = 20 };
+extern int *GalacticMapIds;
+
+int Map_GetGalacticMapIndex(int id)
+{
+    int *entry = GalacticMapIds;
+    for (int index = 0; *entry && index < GALACTIC_MAP_LEVEL_COUNT; ++index, ++entry) {
+        if (GalacticMapIds[index] == id)
+            return index;
+    }
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_ChooseCacheSlotToEvict);
 
@@ -159,7 +193,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_FindDecodedLaye
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_SaveRevealMask);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DecompressMapImage);
+enum { MAP_IMAGE_RLE = 1 };
+void Map_DecompressMapImage_Rle(unsigned char *out, unsigned char *data, int layer);
+void Map_DecompressMapImage_Raw(unsigned char *out, unsigned char *data);
+
+void Map_DecompressMapImage(unsigned char *out, unsigned char *data, int layer)
+{
+    map_stub();
+    if (MapPage.available) {
+        if (*data & MAP_IMAGE_RLE)
+            Map_DecompressMapImage_Rle(out, data, layer);
+        else
+            Map_DecompressMapImage_Raw(out, data);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DecompressMapImage_Rle);
 
@@ -173,7 +220,39 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetIconLabel);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_RegisterLevelObject);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_WorldToMapCoords);
+enum { MAP_ROTATED_LEVEL_OFFSET = 100, MAP_ROTATED_LEVEL = 6, MAP_TRANSFORM_LAST_LEVEL = 18 };
+static const float MAP_COORD_SCALE = 1.0f / 512.0f;
+struct MapTransform {
+    float offsetU;
+    float scaleU;
+    float offsetV;
+    float scaleV;
+};
+extern MapTransform MapWorldToMap[];
+
+void Map_WorldToMapCoords(float x, float y, float *outU, float *outV, int level)
+{
+    int rotated = 0;
+    if (level >= MAP_ROTATED_LEVEL_OFFSET) {
+        level -= MAP_ROTATED_LEVEL_OFFSET;
+        rotated = 1;
+    }
+    if (level == -1)
+        level = Level;
+    if (level < 0)
+        level = 0;
+    if (level > MAP_TRANSFORM_LAST_LEVEL)
+        level = 0;
+
+    if (level == MAP_ROTATED_LEVEL && rotated) {
+        *outU = (MapWorldToMap[MAP_ROTATED_LEVEL].scaleV * y + 1053.0f) * MAP_COORD_SCALE;
+        *outV = (740.0f - MapWorldToMap[MAP_ROTATED_LEVEL].scaleU * x) * MAP_COORD_SCALE;
+    }
+    else {
+        *outU = (MapWorldToMap[level].offsetU + MapWorldToMap[level].scaleU * x) * MAP_COORD_SCALE;
+        *outV = (MapWorldToMap[level].offsetV + MapWorldToMap[level].scaleV * y) * MAP_COORD_SCALE;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", func_0025E8F8);
 

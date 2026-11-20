@@ -71,4 +71,8 @@ void STUB_00218990(void);
 
 void ResetDebugEnables(void);
 
+void SetupDefaultDrawMovie(int black);
+
+void ResetLevelCounters(void);
+
 #endif

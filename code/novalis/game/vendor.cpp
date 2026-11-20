@@ -1,4 +1,6 @@
 #include "common.h"
+#include "moby.h"
+#include "libc.h"
 #include "framebuf.h"
 #include "draw.h"
 #include "vendor.h"
@@ -21,7 +23,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_StartWeap
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_SetScrollText);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_CopyScrollString);
+extern const char VendorScrollFormat[];
+
+void Vendor_CopyScrollString(char *text)
+{
+    sprintf(VendorRender.scrollText, VendorScrollFormat, text);
+    VendorRender.scrollPosition = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_UpdateDude);
 
@@ -37,9 +45,26 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_DrawScrol
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_UpdateScrollText);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_DrawDudeMoby);
+void DrawMobyListProc(MobyInstance *moby, int count);
+extern int VendorDudeVisible;
+enum { VENDOR_PREVIEW_WIDTH = 512, VENDOR_PREVIEW_HEIGHT = 128 };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_FormatBolts);
+void Vendor_DrawDudeMoby(void)
+{
+    DrawFilledRectGS(0, 0, VENDOR_PREVIEW_WIDTH, VENDOR_PREVIEW_HEIGHT, VENDOR_PREVIEW_WIDTH, VENDOR_PREVIEW_HEIGHT, 0);
+    if (VendorDudeVisible == 1)
+        DrawMobyListProc(VendorRender.dudeMoby, 1);
+}
+
+extern const char VendorBoltsThousandsFormat[];
+extern const char VendorBoltsFormat[];
+
+int Vendor_FormatBolts(char *text, int bolts)
+{
+    if (bolts < 1000)
+        return sprintf(text, VendorBoltsFormat, bolts);
+    return sprintf(text, VendorBoltsThousandsFormat, bolts / 1000, bolts % 1000);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", DrawVendorHintFrame);
 
