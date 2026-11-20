@@ -710,7 +710,29 @@ int MB_isCrate(MobyInstance *moby)
         <= OCLASS_CRATE_LAST - OCLASS_CRATE_FIRST;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_isAmmo);
+enum {
+    OCLASS_DEVASTATOR_AMMO = 204,
+    OCLASS_TESLA_CLAW_AMMO = 213,
+    OCLASS_PYROCITOR_AMMO = 214,
+    OCLASS_VISIBOMB_AMMO = 222,
+    OCLASS_GLOVE_OF_DOOM_AMMO = 223,
+    OCLASS_MINE_GLOVE_AMMO = 225,
+    OCLASS_BOMB_GLOVE_AMMO = 226,
+    OCLASS_BLASTER_AMMO = 1006
+};
+
+bool MB_isAmmo(MobyInstance *moby)
+{
+    short oClass = moby->oClass;
+
+    if (oClass == OCLASS_BOMB_GLOVE_AMMO || oClass == OCLASS_DEVASTATOR_AMMO ||
+        oClass == OCLASS_VISIBOMB_AMMO || oClass == OCLASS_BLASTER_AMMO ||
+        oClass == OCLASS_PYROCITOR_AMMO || oClass == OCLASS_MINE_GLOVE_AMMO ||
+        oClass == OCLASS_TESLA_CLAW_AMMO || oClass == OCLASS_GLOVE_OF_DOOM_AMMO)
+        return true;
+
+    return false;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_genericExplosion);
 
