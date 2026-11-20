@@ -1,4 +1,5 @@
 #include "common.h"
+#include "fastfunc.h"
 #include "part.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", ResetParticles);
@@ -77,7 +78,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_019)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_019);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_020);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+int FastDecTimer(short &timer);
+void DeletePart(PartInstance *part);
+
+void UpdatePart_020(PartInstance *part)
+{
+    FastVec3Add(&part->pos, &part->pos, &part->motion20.velocity);
+    FastVec3Add(&part->motion20.origin, &part->motion20.origin, &part->motion20.velocity);
+
+    part->rgba -= 6 << 24;
+    part->rgbaScale = part->rgba;
+    if (part->rgba < 0)
+        DeletePart(part);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_021);
 
