@@ -1,4 +1,5 @@
 #include "common.h"
+#include "part.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", ResetParticles);
 
@@ -66,7 +67,9 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_016);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_017);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_018);
+void UpdatePart_018(PartInstance *part)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_018);
 
