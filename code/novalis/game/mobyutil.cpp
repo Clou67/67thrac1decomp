@@ -447,7 +447,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_getTargetIn
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00275280);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetPlatformParent);
+MobyInstance *MB_GetPlatformParent(MobyInstance *moby)
+{
+    if (!moby)
+        return 0;
+
+    if (!(moby->modeBits & HAS_SPECIAL_VARS))
+        return 0;
+
+    return ((MobySpecialVars *)moby->pVar)->platformParent;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_TransformBetweenFrames);
 

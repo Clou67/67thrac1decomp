@@ -68,4 +68,6 @@ void MB_AxisAngleToQuat(Vec4 *quaternion, Vec4 *axis, float angle);
 
 void MB_AddVectorSphere(Vec4 *out, Vec4 *origin, float radius, float azimuth, float elevation);
 
+MobyInstance *MB_GetPlatformParent(MobyInstance *moby);
+
 #endif
