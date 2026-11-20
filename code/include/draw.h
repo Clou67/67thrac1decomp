@@ -1,6 +1,11 @@
 #ifndef DRAW_H
 #define DRAW_H
 
+struct MobyInstance;
+typedef void (*DrawMobyCallback)(MobyInstance *moby);
+
+enum { DRAW_CALLBACK_LIMIT = 64 };
+
 void DrawRoundedRect(int top, int bottom, int left, int right, int rgba);
 void DrawTextShadow(int top, int bot, int left, int right, int alpha);
 void DrawSprite(int sc_x, int sc_y, int sc_w, int sc_h, int tx_u, int tx_v, int tx_w, int tx_h, unsigned long rgba, unsigned long tex0);
@@ -49,5 +54,7 @@ void CallDrawOverlayIfNoCutscene(void);
 int FontLenWithTable(char *text, int length, unsigned char *metrics);
 
 void EndAuxDrawMode(void);
+
+void RegisterMobyDraw(DrawMobyCallback draw, MobyInstance *moby);
 
 #endif

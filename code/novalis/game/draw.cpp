@@ -66,7 +66,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FinalizeVU1FramePa
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontSet);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", RegisterMobyDraw);
+extern int MobyFnListCnt;
+extern DrawMobyCallback MobyFnList[];
+extern MobyInstance *MobyFnListArgs[];
+
+void RegisterMobyDraw(DrawMobyCallback draw, MobyInstance *moby)
+{
+    int slot = MobyFnListCnt;
+
+    if (slot < DRAW_CALLBACK_LIMIT) {
+        MobyFnList[slot] = draw;
+        MobyFnListArgs[slot] = moby;
+        MobyFnListCnt = slot + 1;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", ExecuteRegisteredMobyFuncs);
 

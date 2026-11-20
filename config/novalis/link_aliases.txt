@@ -322,7 +322,6 @@ MB_MtxToQuat__FP4Vec4P4Mtx4 = 0x00271DB0;
 
 WaterSheet_DrawAll__FiP10WaterSheet = 0x002B96E0;
 
-RegisterMobyDraw__FPFP12MobyInstance_vP12MobyInstance = 0x0021AFE0;
 
 FastAbsF__Ff = 0x00221128;
 
