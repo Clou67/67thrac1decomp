@@ -1,7 +1,13 @@
 #include "common.h"
+#include "draw.h"
 #include "debug.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", ResetDebugEnables);
+void ResetDebugEnables(void)
+{
+    int enabled = 1;
+    for (int flag = DRAW_CONFIG_ENABLE_COUNT - 1; flag >= 0; --flag)
+        drawConfig.enables[flag] = enabled;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", func_00215278);
 

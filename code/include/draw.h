@@ -22,16 +22,23 @@ extern int videoModePal;
 void FadeToBlack(int frames);
 
 // Which scene layers are drawn, and whether their textures are paged into GS memory this frame.
+enum { DRAW_CONFIG_ENABLE_COUNT = 20 };
+
 struct DrawConfig {
-    int unk_00;
-    int sky_texture_paging;
-    int sky;
-    int tfrag_texture_paging;
-    int tfrag;
-    int tie_texture_paging;
-    int tie;
-    int shrub_texture_paging;
-    int shrub;
+    union {
+        int enables[DRAW_CONFIG_ENABLE_COUNT];
+        struct {
+            int unk_00;
+            int sky_texture_paging;
+            int sky;
+            int tfrag_texture_paging;
+            int tfrag;
+            int tie_texture_paging;
+            int tie;
+            int shrub_texture_paging;
+            int shrub;
+        };
+    };
 };
 
 extern DrawConfig drawConfig;
@@ -60,5 +67,7 @@ void RegisterMobyDraw(DrawMobyCallback draw, MobyInstance *moby);
 void RegisterPreDraw(DrawMobyCallback draw, MobyInstance *moby);
 
 void STUB_00218990(void);
+
+void ResetDebugEnables(void);
 
 #endif
