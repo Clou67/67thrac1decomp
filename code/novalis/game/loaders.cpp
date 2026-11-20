@@ -1,4 +1,5 @@
 #include "common.h"
+#include "loaders.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", LoadByteGrid);
 
@@ -42,7 +43,9 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ParseColl);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", PrintMobyMemory);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", STUB_RET_255950);
+void STUB_RET_255950(void *data, int count)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/loaders", ResetLevelData);
 
