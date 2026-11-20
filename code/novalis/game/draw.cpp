@@ -276,7 +276,13 @@ int FontPrintCenterLarge(int x, int y, unsigned long rgba, char *text, int lengt
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWrapped);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWrappedSmall);
+int FontPrintWrapped(int x, int y, unsigned long rgba, char *text, int length, int width, int spacing, unsigned long tex0, unsigned char *metrics);
+
+int FontPrintWrappedSmall(int x, int y, unsigned long rgba, char *text, int length, int width, int spacing)
+{
+    unsigned long tex0 = FontSet(FONT_SMALL);
+    return FontPrintWrapped(x, y, rgba, text, length, width, spacing, tex0, FontSmallMetrics);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021DB28);
 
