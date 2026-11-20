@@ -1,4 +1,5 @@
 #include "common.h"
+#include "mathfunc_inline.h"
 #include "vtbl.h"
 #include "camera.h"
 
@@ -61,7 +62,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_InitBlend
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_CopyLastQuatToPolar);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_CopyLastPolarToQuat);
+void Camera_CopyLastPolarToQuat(void)
+{
+    CamBlender *blender = &GameCamera.blender;
+
+    if (blender->type) {
+        CopyVec4Inline(&blender->blendData.posData.pos, &blender->blendData.polarData.pos);
+        CopyVec4Inline(&blender->blendData.posData.q, &blender->blendData.polarData.q);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_InitBlender);
 

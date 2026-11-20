@@ -187,4 +187,6 @@ void Camera_runSetupToNewCam(UpdateCam *camera);
 
 void Camera_Exit(UpdateCam *camera);
 
+void Camera_CopyLastPolarToQuat(void);
+
 #endif
