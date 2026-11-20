@@ -114,7 +114,26 @@ float MB_lerpRotCosine(float start, float end, float weight)
     return FastAddRots(start, delta * blend);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CosineInterpolateUnitVec);
+void FastSubVec3(Vec4 *out, Vec4 *first, Vec4 *second);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void MB_CosineInterpolateUnitVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to)
+{
+    if (fraction == 0.0f) {
+        CopyVec4Inline(out, from);
+        return;
+    }
+    if (fraction == 1.0f) {
+        CopyVec4Inline(out, to);
+        return;
+    }
+
+    float weight = (1.0f - FastAngleSinF(fraction * 3.141592653589793f)) * 0.5f;
+    Vec4 delta;
+    FastSubVec3(&delta, to, from);
+    FastVec3Scale(&delta, &delta, weight);
+    FastVec3Add(out, from, &delta);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CosineInterpolateAngVec);
 

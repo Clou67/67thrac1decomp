@@ -147,4 +147,6 @@ float SubRots(float target, float angle, int direction);
 
 int MB_SolveQuad(float first, float second, float third, float *largerRoot, float *smallerRoot);
 
+void MB_CosineInterpolateUnitVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to);
+
 #endif
