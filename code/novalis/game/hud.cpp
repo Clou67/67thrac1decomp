@@ -49,7 +49,18 @@ void HudEntry_InitCounter(HudEntry *entry)
     HudEntry_CalcNumberSize(entry);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_InitCounter32);
+void HudEntry_InitCounter32(HudEntry *entry)
+{
+    int timer = FastScaleRoundInt(180) + 30;
+    entry->offsetX = 0;
+    entry->offsetY = 0;
+    entry->timer = timer;
+    entry->width = 32;
+    entry->height = 32;
+    HudEntry_CalcNumberSize(entry);
+}
+
+TEXT_PADDING(0, 0);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_SetEntryMinValueById);
 

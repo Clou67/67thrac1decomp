@@ -49,4 +49,6 @@ void HudEntry_RoundFixed(HudEntry *entry);
 
 void Hud_DrawTexQuadUV_Fixed(HudEntry *entry);
 
+void HudEntry_InitCounter32(HudEntry *entry);
+
 #endif
