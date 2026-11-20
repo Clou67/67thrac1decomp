@@ -170,7 +170,6 @@ DrawTextShadow__Fiiiii = 0x0021C958;
 DrawSprite__FiiiiiiiiUlUl = 0x0021BE90;
 FontSet__Fi = 0x0021AE98;
 MB_RequestHelpMessage__Fii = 0x00279000;
-music_PlayPreseekedSpeech__Fv = 0x00279E78;
 sound_LevelPlay__Fiii = 0x002A1770;
 
 snd_PauseAllSoundsInGroup__Fi = 0x0012E3E8;
@@ -445,3 +444,5 @@ music_PreseekTrack__Fiii = 0x00279ED0;
 music_StartSpeech__Fiii = 0x00279CD8;
 
 MusicUnexpectedStopHandle = 0x00160128;
+
+snd_ContinueVAGStream__FUi = 0x0012ECA0;

@@ -26,7 +26,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StartSpeech
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StartSpeech);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_PlayPreseekedSpeech);
+enum { MUSIC_STATE_PLAYING = 4 };
+
+void snd_ContinueVAGStream(unsigned int handle);
+
+int music_PlayPreseekedSpeech(void)
+{
+    if (musicTransition.speechHandle && musicTransition.state == MUSIC_STATE_READY) {
+        snd_ContinueVAGStream(musicTransition.speechHandle);
+        musicTransition.state = MUSIC_STATE_PLAYING;
+        return 1;
+    }
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_PreseekTrack);
 

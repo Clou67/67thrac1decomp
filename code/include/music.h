@@ -26,7 +26,7 @@ struct MusicTransition {
     short primary_command;
     short primary_unpause;
     char unk44[0xC];
-    int unk50;
+    unsigned int speechHandle;
     short speechId;
     short speechVolume;
     short speechFlags;
@@ -53,7 +53,7 @@ void music_Sync(int wait);
 void music_Pause(int includeSpeech);
 void music_Unpause(void);
 void music_RegisterBankCB(void);
-void music_PlayPreseekedSpeech(void);
+int music_PlayPreseekedSpeech(void);
 // Nonzero while a music_LoadFile read is still streaming in.
 extern short CdReadActive[];
 
