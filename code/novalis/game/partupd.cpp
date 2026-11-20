@@ -305,7 +305,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_069)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_070);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_071);
+void UpdatePart_071(PartInstance *part)
+{
+    if (--part->timer == 0) {
+        part->rgba -= 1 << 24;
+        part->timer = 2;
+    }
+
+    if (!(part->rgba & 0xFF000000))
+        DeletePart(part);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", func_0028A0D8);
 
