@@ -53,4 +53,6 @@ void HudEntry_InitCounter32(HudEntry *entry);
 
 void HudScratch_Reset(void);
 
+void *HudScratch_Alloc(int size);
+
 #endif

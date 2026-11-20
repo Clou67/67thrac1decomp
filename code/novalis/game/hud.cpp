@@ -28,7 +28,20 @@ void HudScratch_Reset(void)
     HudState.scratchEnd = base + HUD_SCRATCH_SIZE;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudScratch_Alloc);
+void *HudScratch_Alloc(int size)
+{
+    if (!HudState.scratch)
+        HudScratch_Reset();
+
+    unsigned char *end = HudState.scratchEnd;
+    unsigned char *allocation = HudState.scratch;
+    if (end - allocation < size)
+        return 0;
+
+    size = (size + 15) & ~15u;
+    HudState.scratch = allocation + size;
+    return allocation;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_SwapMobyBank);
 
