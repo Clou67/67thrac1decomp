@@ -1,4 +1,7 @@
 #include "common.h"
+#include "vuchain.h"
+#include "fastfunc.h"
+#include "moby.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
 
@@ -44,9 +47,37 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", AnimCache_Regi
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CleanAnimationCache);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetBoneTransformation);
+void MobyComputeSelectedJoints(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
+void FastMtx3x4Copy(Mtx4 *out, Mtx4 *source);
+void FastMtxTransform(Mtx4 *out, Mtx4 *left, Mtx4 *right);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetBonePos);
+void MB_GetBoneTransformation(MobyInstance *moby, int index, Mtx4 *out)
+{
+    Mtx4 world;
+    float scale = moby->scale * (1.0f / 1024.0f);
+
+    MobyComputeSelectedJoints(moby, 1, &index, out);
+    FastVec3Scale(&out->v3, &out->v3, scale);
+    FastMtx3x4Copy(&world, &moby->transform);
+    FastMtxTransform(out, &world, out);
+    FastVec3Add(&out->v3, &out->v3, &moby->pos);
+}
+
+void MobyComputeSelectedJoints(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
+void FastVecMtx3Mult(Vec4 *out, Vec4 *vector, Mtx4 *matrix);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out)
+{
+    Mtx4 joint;
+    float scale = moby->scale * (1.0f / 1024.0f);
+
+    MobyComputeSelectedJoints(moby, 1, &index, &joint);
+    FastVec3Scale(out, &joint.v3, scale);
+    FastVecMtx3Mult(out, out, &moby->transform);
+    FastVec3Add(out, out, &moby->pos);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", GetMobyJointsWorldPos);
 
@@ -62,11 +93,24 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobyShadow
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", ProcessMobyAnimData);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", InitMobyClassDists);
+enum { DEFAULT_MOBY_CLASS_DISTANCE = 0x40000000, MOBY_CLASS_DISTS_SIZE = 0x380 };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", StashMobyClassDists);
+static int *const MobyClassDists = (int *)0x70003A00;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", RestoreMobyClassDists);
+void InitMobyClassDists(void)
+{
+    FastMemSet(MobyClassDists, DEFAULT_MOBY_CLASS_DISTANCE, MOBY_CLASS_DISTS_SIZE);
+}
+
+void StashMobyClassDists(void)
+{
+    FastMemCopy16(StashedMobyClassDists, MobyClassDists, MOBY_CLASS_DISTS_SIZE);
+}
+
+void RestoreMobyClassDists(void)
+{
+    FastMemCopy16(MobyClassDists, StashedMobyClassDists, MOBY_CLASS_DISTS_SIZE);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobysSetup);
 
@@ -78,7 +122,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobys);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_SetLightsFromEnvSample);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", SetLevelFlag);
+extern int Level;
+extern unsigned char occlCharTable[][16];
+
+void SetLevelFlag(int flag)
+{
+    if (flag != 0xFF)
+        occlCharTable[Level][flag] = 0xFF;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", SetColorOfMoby);
 

@@ -1,8 +1,15 @@
 #include "common.h"
+#include "music.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Init);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_RegisterBankCB);
+void snd_StreamSafeCdCallback(void (*callback)(int reason));
+void music_LoadBankCB(int reason);
+
+void music_RegisterBankCB(void)
+{
+    snd_StreamSafeCdCallback(music_LoadBankCB);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StartSpeech_Helpgirl);
 
@@ -28,21 +35,71 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StartTrackB
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Transition);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_SetTransition);
+void music_SetTransition(int track, int transition)
+{
+    if (musicTransition.primary_track == track && musicTransition.requested_track == -1)
+        return;
+
+    if (!musicTransition.primary_bank && !musicTransition.transition_bank)
+        musicTransition.primary_track = track;
+
+    else {
+        musicTransition.requested_track = track;
+        musicTransition.requested_transition = transition;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Stop);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Pause);
+enum { MUSIC_COMMAND_PAUSE = -0x8000 };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Unpause);
+void music_Pause(int includeSpeech)
+{
+    if (includeSpeech) {
+        musicTransition.secondary_command = MUSIC_COMMAND_PAUSE;
+        musicTransition.secondary_unpause = 0;
+    }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_UnpauseDelay);
+    musicTransition.primary_command = MUSIC_COMMAND_PAUSE;
+    musicTransition.primary_unpause = 0;
+    musicTransition.transition_command = MUSIC_COMMAND_PAUSE;
+    musicTransition.transition_unpause = 0;
+}
+
+enum { MUSIC_COMMAND_RESUME = 4 };
+
+void music_Unpause(void)
+{
+    musicTransition.primary_command = MUSIC_COMMAND_RESUME;
+    musicTransition.transition_command = MUSIC_COMMAND_RESUME;
+    musicTransition.secondary_command = MUSIC_COMMAND_RESUME;
+}
+
+enum { MUSIC_PAUSED_FLAG = 0x8000 };
+
+void music_UnpauseDelay(int frames)
+{
+    if (musicTransition.primary_command & MUSIC_PAUSED_FLAG)
+        musicTransition.primary_unpause = frames;
+    if (musicTransition.transition_command & MUSIC_PAUSED_FLAG)
+        musicTransition.transition_unpause = frames;
+    if (musicTransition.secondary_command & MUSIC_PAUSED_FLAG)
+        musicTransition.secondary_unpause = frames;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_UpdateStream);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Update);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StopLoad);
+int snd_StreamSafeCdBreak(void);
+
+void music_StopLoad(void)
+{
+    if (musicTransition.read_state != 0) {
+        snd_StreamSafeCdBreak();
+        musicTransition.cancel_read = 1;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_LoadBankFromEE);
 
@@ -52,7 +109,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_LoadFileSyn
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Sync);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_LoadBankCB);
+int snd_StreamSafeCdGetError(void);
+enum { MUSIC_READ_COMPLETE = 1, MUSIC_READ_IDLE = 0, MUSIC_READ_FAILED = 2 };
+
+void music_LoadBankCB(int reason)
+{
+    if (reason == MUSIC_READ_COMPLETE) {
+        musicTransition.read_state = MUSIC_READ_IDLE;
+        if (snd_StreamSafeCdGetError() != 0)
+            musicTransition.read_state = MUSIC_READ_FAILED;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AD88);
 

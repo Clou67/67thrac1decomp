@@ -7,6 +7,15 @@ struct ReadBuf;
 struct sceMpeg;
 struct sceMpegCbData;
 
+struct sceMpegCbDataStr {
+    int type;
+    int channel;
+    unsigned char *data;
+    int length;
+    long pts;
+    long dts;
+};
+
 struct sceMpegCbDataTimeStamp {
     int type;
     long pts;
@@ -158,7 +167,20 @@ struct sceGifTag {
 // Sony libgraph.h register value builder.
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
+struct EeSemaParam {
+    int count;
+    int maxCount;
+    int initialCount;
+    int waitThreads;
+    unsigned int attributes;
+    unsigned int option;
+};
+
 extern "C" {
+int CreateSema(EeSemaParam *parameters);
+int DeleteSema(int semaphore);
+int SignalSema(int semaphore);
+int WaitSema(int semaphore);
 int sceMpegIsEnd(sceMpeg *mpeg);
 int sceMpegGetPicture(sceMpeg *mpeg, struct VoData *frame, int stride);
 int sceMpegReset(sceMpeg *mpeg);

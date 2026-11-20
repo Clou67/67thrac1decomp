@@ -1,8 +1,27 @@
 #include "common.h"
+#include "draw.h"
+#include "fastfunc.h"
+#include "mathfunc_inline.h"
+#include "vtbl.h"
+#include "camera.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_ClearPolar);
+void Camera_ClearPolar(float *polar)
+{
+    polar[0] = 0.0f;
+    polar[1] = 0.0f;
+    polar[2] = 0.0f;
+    polar[3] = 0.0f;
+    polar[4] = 0.0f;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Cam_CopyRotWrapped);
+void Cam_CopyRotWrapped(float *out, float *polar, float yawOffset)
+{
+    out[0] = FastAddRots(polar[0], yawOffset);
+    out[1] = polar[1];
+    out[2] = polar[2];
+    out[3] = polar[3];
+    out[4] = polar[4];
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", BackupCurrentCam);
 
@@ -16,17 +35,48 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Cam_InterpValues
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Cam_InterpAngles);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_DeactivateCurrent);
+void Camera_DeactivateCurrent(void)
+{
+    GameCamera.pCurrentUpdCam->activation.deactivate = 1;
+    GameCamera.pCurrentUpdCam->activation.activate = 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", camera_HandleCollWithHero);
+MobyInstance *SpawnMoby_1007(Vec4 *position);
+void DeleteMoby(MobyInstance *moby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_runSetupToNewCam);
+void camera_HandleCollWithHero(UpdateCam *camera)
+{
+    CameraStatics *statics = &GameCamera.camStatics;
+
+    if (!camera->type) {
+        if (!statics->pCamColl)
+            statics->pCamColl = SpawnMoby_1007(&GameCamera.position);
+    }
+    else if (statics->pCamColl) {
+        DeleteMoby(statics->pCamColl);
+        statics->pCamColl = 0;
+    }
+}
+
+void Camera_runSetupToNewCam(UpdateCam *camera)
+{
+    void (*callback)(UpdateCam *) = cameraupdate_vtbl[camera->funcIdx].activate;
+
+    if (callback)
+        callback(camera);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_switchtoNewCam);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_ActivationCheckPriority);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Exit);
+void Camera_Exit(UpdateCam *camera)
+{
+    void (*callback)(UpdateCam *) = cameraupdate_vtbl[camera->funcIdx].exit;
+
+    if (callback)
+        callback(camera);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", UpdateAllCameras);
 
@@ -34,9 +84,32 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Pos2Polar
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_InitBlenderPolarHero);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_CopyLastQuatToPolar);
+extern Vec4 camPosOffset;
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+enum { CAMERA_BLEND_WITH_POSITION_OFFSET = 2 };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_CopyLastPolarToQuat);
+void Camera_CopyLastQuatToPolar(void)
+{
+    CamBlender *blender = &GameCamera.blender;
+
+    if (!blender->type) {
+        Vec4 *position = &blender->blendData.polarData.pos;
+        CopyVec4Inline(position, &blender->blendData.posData.pos);
+        if (blender->reqType == CAMERA_BLEND_WITH_POSITION_OFFSET)
+            FastVec3Add(position, &camPosOffset, position);
+        CopyVec4Inline(&blender->blendData.polarData.q, &blender->blendData.posData.q);
+    }
+}
+
+void Camera_CopyLastPolarToQuat(void)
+{
+    CamBlender *blender = &GameCamera.blender;
+
+    if (blender->type) {
+        CopyVec4Inline(&blender->blendData.posData.pos, &blender->blendData.polarData.pos);
+        CopyVec4Inline(&blender->blendData.posData.q, &blender->blendData.polarData.q);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_InitBlender);
 
@@ -56,7 +129,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", func_0020EB38);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_SetCollFlags);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_HandleScreenFade);
+void Camera_HandleScreenFade(void)
+{
+    if (GameCamera.camStatics.fadeSpeed != 0.0f) {
+        screenFade -= GameCamera.camStatics.fadeSpeed;
+        if (screenFade <= 0.0f) {
+            GameCamera.camStatics.fadeSpeed = 0.0f;
+            screenFade = 0.0f;
+        }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", UpdateCameras);
 
@@ -66,9 +148,32 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_resetToFo
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", InitCameras);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Polar2Pos);
+void Camera_Polar2Pos(Vec4 *out, PolarSm *polar, Vec4 *origin)
+{
+    out->x = polar->radius * FastAngleSinF(polar->elevation) * FastAngleSinF(polar->azimuth);
+    out->y = polar->radius * FastAngleSinF(polar->elevation) * FastAngleCosF(polar->azimuth);
+    out->z = polar->radius * FastAngleCosF(polar->elevation);
+    out->w = 0.0f;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Pos2Polar);
+    FastVec3Add(out, out, origin);
+}
+
+void FastSubVec3(Vec4 *out, Vec4 *first, Vec4 *second);
+float FastSubRots(float first, float second);
+float FastVec3Length2(Vec4 *vector);
+
+int Camera_Pos2Polar(PolarSm *out, Vec4 *position, Vec4 *origin)
+{
+    Vec4 delta;
+    FastSubVec3(&delta, position, origin);
+    out->elevation = FastArcTan(FastVec3Length(&delta.x), delta.z);
+    float azimuth = FastArcTan(delta.x, delta.y);
+    FastSubRots(azimuth, out->azimuth);
+    out->azimuth = azimuth;
+    out->radius = FastVec3Length2(&delta);
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_CollSphereBump);
 

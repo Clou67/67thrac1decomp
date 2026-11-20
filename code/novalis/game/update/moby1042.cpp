@@ -1,16 +1,37 @@
 #include "common.h"
+#include "vtbl.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040b8);
+int FUN_003040b8(MobyInstance *moby)
+{
+    return 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040c0);
+int FUN_003040c0(MobyInstance *moby)
+{
+    return 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040c8);
+int FUN_003040c8(MobyInstance *moby, int damageKind, int flags, float amount)
+{
+    return 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040d0);
+int FUN_003040d0(MobyInstance *moby)
+{
+    return 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", DeleteMoby_Thunk);
+void DeleteMoby(MobyInstance *moby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040f8);
+void DeleteMoby_Thunk(MobyInstance *moby)
+{
+    DeleteMoby(moby);
+}
+
+int FUN_003040f8(MobyInstance *moby)
+{
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_00304100);
 

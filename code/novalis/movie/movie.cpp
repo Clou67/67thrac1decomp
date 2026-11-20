@@ -84,7 +84,7 @@ int readMpeg(VideoDec *decoder, ReadBuf *buffer, StrFile *file)
             int skip;
 
             if ((skip_mode == MOVIE_SKIP_ANY_BUTTON && movieButtonPressed(&padState, -1)) ||
-                ((movieSkipEnabled != 0 || ChallengeMode != 0 || decodeMode != 0 || Level <= 0) &&
+                ((GoodiesMenuUnlocked != 0 || ChallengeMode != 0 || decodeMode != 0 || Level <= 0) &&
                  movieButtonPressed(&padState, PAD_START)))
                 skip = 1;
 

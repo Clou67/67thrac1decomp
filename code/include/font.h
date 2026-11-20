@@ -1,6 +1,8 @@
 #ifndef FONT_H
 #define FONT_H
 
+enum { FONT_MEDIUM = 1, FONT_SMALL = 2, FONT_LARGE = 3 };
+
 struct FontWindow {
     short win_top;
     short win_bot;
@@ -24,7 +26,23 @@ void SetFontWindow(FontWindow *window, int win_top, int win_bot, int win_left, i
 // The window printers take the font's TEX0 value and its width table.
 void FontPrintWindow(FontWindow *window, unsigned long rgba, char *text, int length, unsigned long tex0, void *metrics);
 void FontPrintWindowMedium(FontWindow *window, unsigned long rgba, char *text, int length);
-int FontPrintCenter(int xpos, int ypos, unsigned long rgba, char *s, int len);
+int FontPrintCenter(int x, int y, unsigned long rgba, char *text, int length);
 void FontPrintWindowSmall(FontWindow *window, unsigned long rgba, char *text, int length);
+
+void FontPrintSmallLeft(int x, int y, unsigned long rgba, char *text, int length);
+
+void FontPrintLarge(int x, int y, unsigned long rgba, char *text, int length);
+
+void FontPrintMediumRight(int x, int y, unsigned long rgba, char *text, int length);
+
+void FontPrintSmallRight(int x, int y, unsigned long rgba, char *text, int length);
+
+int FontPrintCenterSmall(int x, int y, unsigned long rgba, char *text, int length);
+
+void FontPrintLargeRight(int x, int y, unsigned long rgba, char *text, int length);
+
+int FontPrintCenterLarge(int x, int y, unsigned long rgba, char *text, int length);
+
+int FontPrintWrappedSmall(int x, int y, unsigned long rgba, char *text, int length, int width, int spacing);
 
 #endif

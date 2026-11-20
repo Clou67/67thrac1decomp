@@ -1,4 +1,7 @@
+#include <stddef.h>
+
 #include "common.h"
+#include "sound.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_CamOfs);
 
@@ -36,15 +39,47 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_FootstepPla
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", func_002A1960);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetVol);
+int sound_SetVol(int handle, int volume)
+{
+    unsigned int offset = handle * sizeof(SoundVoice);
+    unsigned char *voice = (unsigned char *)(offset + (unsigned int)&audioState);
+    *(int *)(voice + offsetof(SoundAudioState, voices[0].volume)) = volume;
+    return 1;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetPitch);
+int sound_SetPitch(int handle, int pitch)
+{
+    unsigned int offset = handle * sizeof(SoundVoice);
+    unsigned char *voice = (unsigned char *)(offset + (unsigned int)&audioState);
+    *(int *)(voice + offsetof(SoundAudioState, voices[0].pitch_bend)) = pitch;
+    return 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetupAmbientFunctions);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_UpdateAmbient);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetReverb);
+enum { REVERB_TYPE = 1, REVERB_DELAY_FEEDBACK = 2, REVERB_DEPTH = 4 };
+
+void sound_SetReverb(int owner, int type, int depth, int delay, int feedback)
+{
+    audioState.reverb_owner = owner;
+    if (audioState.reverb_type != type) {
+        audioState.reverb_type = type;
+        audioState.reverb_commands |= REVERB_TYPE;
+    }
+
+    if (audioState.reverb_depth != depth) {
+        audioState.reverb_depth = depth;
+        audioState.reverb_commands |= REVERB_DEPTH;
+    }
+
+    if (audioState.reverb_delay != delay || audioState.reverb_feedback != feedback) {
+        audioState.reverb_feedback = feedback;
+        audioState.reverb_delay = delay;
+        audioState.reverb_commands |= REVERB_DELAY_FEEDBACK;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_StopAllSounds);
 

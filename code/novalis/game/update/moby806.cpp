@@ -1,6 +1,11 @@
 #include "common.h"
+#include "vtbl.h"
+#include "moby.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby806", FUN_00300518);
+int M806_IsActive(MobyInstance *moby)
+{
+    return moby->state == 1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby806", FUN_00300528);
 

@@ -1,4 +1,7 @@
 #include "common.h"
+#include "vuchain.h"
+#include "pause.h"
+#include "map.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_LoadPlanetMap);
 
@@ -8,9 +11,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_FindFreeCacheSl
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetFreeCacheSlotCompact);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_MoveCacheSlot);
+void Map_MoveCacheSlot(int destination, int source)
+{
+    FastMemCopy16(MapPage.cacheBuffers[destination], MapPage.cacheBuffers[source], MapPage.cacheSizes[source] * 16);
+    MapPage.cacheIds[destination] = MapPage.cacheIds[source];
+    MapPage.cacheSizes[destination] = MapPage.cacheSizes[source];
+    MapPage.cacheIds[source] = -1;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_FindCacheSlotById);
+int Map_FindCacheSlotById(int id)
+{
+    for (int slot = 0; slot < MAP_CACHE_SLOT_COUNT; ++slot) {
+        if (MapPage.cacheBuffers[slot] && MapPage.cacheIds[slot] == id)
+            return slot;
+    }
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetNextMapToPrefetch);
 
@@ -30,7 +46,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DecodeLayerRow)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", DrawMapFrame_Part2);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_RegionVisible_cc08);
+int Map_RegionVisible_cc08(int endX, int endY)
+{
+    return Map_PointSideOfLine(endX, endY, 211, 219, 297, 249);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", func_0025CC30);
 
@@ -162,6 +181,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DrawIcon);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_SaveLevelObjectState);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_stub);
+void map_stub(void)
+{
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_PointSideOfLine);
+int Map_PointSideOfLine(int endX, int endY, int startX, int startY, int pointX, int pointY)
+{
+    int relativeX = pointX - startX;
+    int lineX = endX - startX;
+    int relativeY = pointY - startY;
+    int lineY = endY - startY;
+    if ((relativeX * lineY - relativeY * lineX) < 0) return 1;
+    return 0;
+}

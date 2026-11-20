@@ -129,4 +129,14 @@ int viBufFlush(ViBuf *buffer);
 int cpy2area(unsigned char *first, int firstSize, unsigned char *second, int secondSize,
              unsigned char *source, int sourceSize, unsigned char *unused, int unusedSize);
 
+unsigned int getFIFOindex(ViBuf *buffer, void *position);
+
+void scTag2(unsigned long *tag, unsigned int address, unsigned int id, unsigned int count);
+
+int viBufModifyPts(ViBuf *buffer, TimeStamp *timestamp);
+
+void setD3_CHCR(unsigned int value);
+
+void setD4_CHCR(unsigned int value);
+
 #endif

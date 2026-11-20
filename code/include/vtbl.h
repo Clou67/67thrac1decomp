@@ -27,7 +27,7 @@ struct MobyUpdateEntry {
 
 struct CameraUpdateEntry {
     int id;
-    void (*init)(UpdateCam *camera);
+    int (*init)(UpdateCam *camera);
     void (*activate)(UpdateCam *camera);
     void (*update)(UpdateCam *camera);
     void (*exit)(UpdateCam *camera);
@@ -175,7 +175,7 @@ void UpdateMoby_1848(MobyInstance *moby);
 
 int FUN_003040b8(MobyInstance *moby);
 int FUN_003040c0(MobyInstance *moby);
-int FUN_003040c8(MobyInstance *moby, int arg1, int arg2, float amount);
+int FUN_003040c8(MobyInstance *moby, int damageKind, int flags, float amount);
 int FUN_003040d0(MobyInstance *moby);
 int FUN_003040f8(MobyInstance *moby);
 void DeleteMoby_Thunk(MobyInstance *moby);
@@ -195,31 +195,31 @@ int FUN_002f1d18(MobyInstance *moby, int arg1, int arg2, float amount);
 int FUN_002f1dc8(MobyInstance *moby);
 int func_002F1DF8(MobyInstance *moby);
 
-void InitCamera_0(UpdateCam *camera);
+int InitCamera_0(UpdateCam *camera);
 void ActivateCamera_0(UpdateCam *camera);
 void UpdateCamera_0(UpdateCam *camera);
 void ExitCamera_0(UpdateCam *camera);
-void InitCamera_3(UpdateCam *camera);
+int InitCamera_3(UpdateCam *camera);
 void ActivateCamera_3(UpdateCam *camera);
 void UpdateCamera_3(UpdateCam *camera);
 void ExitCamera_3(UpdateCam *camera);
-void InitCamera_4(UpdateCam *camera);
+int InitCamera_4(UpdateCam *camera);
 void ActivateCamera_4(UpdateCam *camera);
 void UpdateCamera_4(UpdateCam *camera);
 void ExitCamera_4(UpdateCam *camera);
-void InitCamera_5(UpdateCam *camera);
+int InitCamera_5(UpdateCam *camera);
 void ActivateCamera_5(UpdateCam *camera);
 void UpdateCamera_5(UpdateCam *camera);
 void ExitCamera_5(UpdateCam *camera);
-void InitCamera_6(UpdateCam *camera);
+int InitCamera_6(UpdateCam *camera);
 void ActivateCamera_6(UpdateCam *camera);
 void UpdateCamera_6(UpdateCam *camera);
 void ExitCamera_6(UpdateCam *camera);
-void InitCamera_7(UpdateCam *camera);
+int InitCamera_7(UpdateCam *camera);
 void ActivateCamera_7(UpdateCam *camera);
 void UpdateCamera_7(UpdateCam *camera);
 void ExitCamera_7(UpdateCam *camera);
-void InitCamera_17(UpdateCam *camera);
+int InitCamera_17(UpdateCam *camera);
 void ActivateCamera_17(UpdateCam *camera);
 void UpdateCamera_17(UpdateCam *camera);
 void ExitCamera_17(UpdateCam *camera);
@@ -230,5 +230,23 @@ void UpdateSound_2(AmbientSound *sound);
 void UpdateSound_3(AmbientSound *sound);
 void UpdateSound_5(AmbientSound *sound);
 void UpdateSound_6(AmbientSound *sound);
+
+void M676_DrawWaterSheets(MobyInstance *moby);
+
+int M806_IsActive(MobyInstance *moby);
+
+void M751_DrawWaterTiles(MobyInstance *moby);
+
+void M678_DrawWaterSheets(MobyInstance *moby);
+
+void M761_DrawWaterSheets(MobyInstance *moby);
+
+void M280_BeginSucking(MobyInstance *moby);
+
+void M577_BeginSucking(MobyInstance *moby);
+
+int FUN_002c72c0(MobyInstance *moby);
+
+void M585_BeginSucking(MobyInstance *moby);
 
 #endif

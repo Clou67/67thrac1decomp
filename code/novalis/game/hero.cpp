@@ -1,4 +1,9 @@
 #include "common.h"
+#include "draw.h"
+#include "npc.h"
+#include "mobyutil.h"
+#include "fastfunc.h"
+#include "hero.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ResetHero);
 
@@ -6,7 +11,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_InitStuff);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetIdleAnim);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", STUB_00226fa0);
+int STUB_00226fa0(int animation)
+{
+    return animation;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", TakeDamage);
 
@@ -56,7 +64,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateScaleEf
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateScreenFadeInOut);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_RegisterGlowDraw);
+void Hero_DrawGlows(MobyInstance *moby);
+
+void Hero_RegisterGlowDraw(void)
+{
+    if (!Hero.glowDrawRegistered) {
+        Hero.glowDrawRegistered = 1;
+        RegisterMobyDraw(Hero_DrawGlows, Hero.moby);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_DrawGlows);
 
@@ -76,7 +92,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetLoopedAnim
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ApplyRootMotionDelta);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ApplyRootMotion);
+void FastVecZero(Vec4 *vector);
+void Hero_ApplyRootMotionDelta(Vec4 *out, float x, float y, float z);
+
+void Hero_ApplyRootMotion(float x, float y, float z)
+{
+    Vec4 displacement;
+
+    FastVecZero(&displacement);
+    displacement.z = 0.6f;
+    Hero_ApplyRootMotionDelta(&displacement, x, y, z);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetJoint9Mtx);
 
@@ -116,7 +142,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateTiltWob
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateLedge);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ResetIfTypeThree);
+void Hero_ResetIfTypeThree(void)
+{
+    if (Hero.type == HERO_TYPE_HOLOGUISE)
+        Hero_RevertToRatchet();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HandleGroundType);
 
@@ -128,15 +158,50 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HandGadgetID)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetGadgetMoby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsWeaponGroupB);
+int Hero_GetGadgetMoby(int slot);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsWeaponGroupA);
+int Hero_IsWeaponGroupB(int slot)
+{
+    int gadget = Hero_GetGadgetMoby(slot);
+    if (gadget == ITEM_MINE_GLOVE || gadget == ITEM_BOMB_GLOVE || gadget == ITEM_GLOVE_OF_DOOM || gadget == ITEM_DECOY_GLOVE)
+        return 1;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsWearingBoots);
+    return 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsInSpecialMovementState);
+int Hero_GetGadgetMoby(int slot);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_DefaultByteIfFF);
+int Hero_IsWeaponGroupA(int slot)
+{
+    return (unsigned int)(Hero_GetGadgetMoby(slot) - ITEM_SONIC_SUMMONER) < 3;
+}
+
+int Hero_IsWearingBoots(int slot)
+{
+    return (unsigned int)(Hero_GetGadgetMoby(slot) - ITEM_MAGNEBOOTS) < 2;
+}
+
+enum { HERO_STATE_TYPE_SPECIAL = 17 };
+
+int Hero_IsInSpecialMovementState(void)
+{
+    if ((unsigned int)(Hero.stateType - HERO_STATE_TYPE_SPECIAL) < 2 ||
+        Hero.state == PLAYER_STATE_DEATH_DROWNING ||
+        Hero.state == PLAYER_STATE_DEATH_WATER_LASER ||
+        Hero.state == PLAYER_STATE_UNDERWATER_DAMAGE ||
+        Hero.state == PLAYER_STATE_UNK_75)
+        return 1;
+
+    return 0;
+}
+
+int Hero_DefaultByteIfFF(MobyInstance *moby, int animation)
+{
+    if (animation == 0xFF)
+        animation = moby->previousAnimationId;
+
+    return animation;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetGadgetAnimBlend);
 
@@ -146,7 +211,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ComputeTarget
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetAutoTargetMoby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetOverlayAnimId);
+int Hero_GetOverlayAnimId(int overlay)
+{
+    switch (overlay) {
+    case 1:
+        return 121;
+    case 2:
+        return 119;
+    case 3:
+        return 117;
+    default:
+        return 0;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateOverlayAnimLayer);
 
@@ -160,7 +237,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_PlayBackpackI
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateFiringAnimLayer);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateAnimLayers);
+void Hero_UpdateGadgetAnimLayers(void);
+void Hero_UpdateFiringAnimLayer(void);
+void Hero_UpdateOverlayAnimLayer(void);
+
+void Hero_UpdateAnimLayers(void)
+{
+    Hero_UpdateGadgetAnimLayers();
+    Hero_UpdateFiringAnimLayer();
+    Hero_UpdateOverlayAnimLayer();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", EquipItem);
 
@@ -188,29 +274,85 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", SetHeroType);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_RevertToRatchet);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_NormalizeThrust);
+void FastVec3RSqrtScale(Vec4 *out, Vec4 *direction, float scale);
+
+void Hero_NormalizeThrust(Vec4 *direction, float horizontal, float vertical, int scaleComponents)
+{
+    if (scaleComponents) {
+        direction->x *= horizontal;
+        direction->y *= horizontal;
+        direction->z *= vertical;
+    }
+
+    else {
+        FastVec3RSqrtScale(direction, direction, horizontal);
+        direction->z = vertical;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HandleDamage);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", HandleHeroDeath);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_isMobyWrench);
+enum { WRENCH_CLASS = 0x47 };
+
+int Hero_isMobyWrench(MobyInstance *moby)
+{
+    if (!moby)
+        return 0;
+
+    return (short)moby->oClass == WRENCH_CLASS;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateCollisionSize);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateMovement);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetPadMagnitude);
+float Hero_GetPadMagnitude(void)
+{
+    float magnitude = FastVec3Length(Hero.padStick);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_AnimFrameInWindow);
+    if (magnitude > 1.0f)
+        magnitude = 1.0f;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ZeroThrustVars);
+    return magnitude;
+}
+
+int Hero_AnimFrameInWindow(float frame)
+{
+    if (frame < Hero.animFrame)
+        return Hero.animFrame - frame <= Hero.animFrameWindow;
+
+    return 0;
+}
+
+void Hero_ZeroThrustVars(void)
+{
+    Hero.idealSpeed = 0.0f;
+    Hero.storedNeutralSpeed = 0.0f;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetIdealThrustFromPad);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetIdealThrustForWalk);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_RotateByEuler);
+void FastEulerToMtx1(Mtx4 *out, Vec4 *angles);
+void MB_GetOrientationMtx(Mtx4 *matrix, Vec4 *out);
+
+void Hero_RotateByEuler(float xAngle, float yAngle, float zAngle)
+{
+    Vec4 angles;
+    Mtx4 rotationDelta;
+    Mtx4 orientation;
+
+    angles.x = xAngle;
+    angles.y = yAngle;
+    angles.z = zAngle;
+    FastEulerToMtx1(&rotationDelta, &angles);
+    FastEulerToMtx1(&orientation, &Hero.rotation);
+    FastMtxTransform(&orientation, &orientation, &rotationDelta);
+    MB_GetOrientationMtx(&orientation, &Hero.rotation);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_Turn3D);
 
@@ -220,7 +362,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GunTurnWalk);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_TurnWalk);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ThrustModeAccel);
+void Hero_ThrustModeAccel(float acceleration, float deceleration)
+{
+    if (Hero.storedNeutralSpeed < Hero.idealSpeed)
+        Delt(Hero.storedNeutralSpeed, Hero.idealSpeed, acceleration);
+
+    else
+        Delt(Hero.storedNeutralSpeed, Hero.idealSpeed, deceleration);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ThrustToMotionFwd);
 
@@ -298,13 +447,38 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateMovemen
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateIdleDetect);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetJumpHoldTime);
+int Hero_GetSnapJumpDir(void);
+enum { SNAP_JUMP_NO_HOLD = 2, SNAP_JUMP_STANDARD_HOLD = 3 };
+
+int Hero_GetJumpHoldTime(void)
+{
+    int frames = FastScaleRoundInt(12);
+    int direction = Hero_GetSnapJumpDir();
+
+    if (direction == SNAP_JUMP_NO_HOLD)
+        frames = 0;
+    else if (direction == SNAP_JUMP_STANDARD_HOLD)
+        frames = FastScaleRoundInt(12);
+
+    return frames;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetSnapJumpDir);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", TransitionMovement);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_TransitionToDefault);
+void TransitionMovement(int state, int force);
+void Hero_TransitionToDefault(void)
+{
+    switch (Hero.type) {
+    case HERO_TYPE_RATCHET:
+        TransitionMovement(PLAYER_STATE_STANDING, 1);
+        break;
+    case HERO_TYPE_HOLOGUISE:
+        TransitionMovement(PLAYER_STATE_HOLOGUISE_STANDING, 1);
+        break;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IdleCycleFiringTransition);
 
@@ -346,25 +520,60 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetBackpackAn
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SyncBackpackAnimSpeed);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ClearBoardMoby);
+void Hero_ClearBoardMoby(void)
+{
+    Hero.animLinkMoby = 0;
+    Hero.animLinkTable = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetBoardAnim);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_TransBoardAnim);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SyncBoardAnimSpeed);
+int Hero_GetBoardAnim(int animation, int *boardAnimation);
+
+void Hero_SyncBoardAnimSpeed(void)
+{
+    int boardAnimation;
+
+    if (Hero.animLinkMoby && Hero.animLinkTable && Hero_GetBoardAnim(Hero.moby->animationId, &boardAnimation))
+        Hero.animLinkMoby->unk58 = Hero.animSpeed;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SyncBoardAnimFrame);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_TransAnim);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SnapAnim);
+void UpdateMobyFrameData(MobyInstance *moby);
+
+void Hero_SnapAnim(int animation, int frame)
+{
+    MobyInstance *moby = Hero.moby;
+
+    moby->animationFrame = frame + 1;
+    moby->updateId = animation;
+    moby->animationId = animation;
+    moby->previousAnimationFrame = frame;
+    moby->animationBlend = 0.0f;
+
+    UpdateMobyFrameData(moby);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetNextAnimFrame);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ClearNextAnim);
+void Hero_ClearNextAnim(void)
+{
+    Hero.animLoopFrame = -1;
+    Hero.queuedFrameRequest = 0;
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetNextAnimBlend);
+void Hero_SetNextAnimBlend(int frames)
+{
+    if (frames == -1)
+        frames = FastScaleRoundInt(5);
+
+    Hero.queuedFrameRequest = frames;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateAnim);
 
@@ -376,9 +585,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_MakeInvisible
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_MakeVisible);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HideHeroMoby);
+enum { HERO_MOBY_HIDDEN = 1 };
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ShowHeroMoby);
+void Hero_HideHeroMoby(void)
+{
+    Hero.moby->modeBits |= HERO_MOBY_HIDDEN;
+}
+
+void Hero_ShowHeroMoby(void)
+{
+    Hero.moby->modeBits &= ~HERO_MOBY_HIDDEN;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", func_00248918);
 
@@ -390,11 +607,41 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetSpecialPad
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_AddGravity);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetPolarOffset);
+void FastVecZero(Vec4 *vector);
+void FastTransformVec4(Vec4 *out, Vec4 *in, Mtx4 *matrix);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetHeroRelativePos);
+void Hero_GetPolarOffset(Vec4 *out, float x, float y, float z)
+{
+    out->x = FastAngleSinF(y) * x;
+    out->y = FastAngleCosF(y) * x;
+    out->z = z;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SubGravity);
+    FastTransformVec4(out, out, &Hero.mtx);
+    FastVec3Add(out, out, &Hero.position);
+}
+
+void FastVecZero(Vec4 *vector);
+void FastTransformVec4(Vec4 *out, Vec4 *in, Mtx4 *matrix);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void Hero_GetHeroRelativePos(Vec4 *out, float x, float y, float z)
+{
+    FastVecZero(out);
+    out->x = x;
+    out->y = y;
+    out->z = z;
+
+    FastTransformVec4(out, out, &Hero.mtx);
+    FastVec3Add(out, out, &Hero.position);
+}
+
+void Hero_AddGravity(float amount, float *out, float *in);
+
+void Hero_SubGravity(float amount, float *out, float *in)
+{
+    Hero_AddGravity(-amount, out, in);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ToWorldVector);
 
@@ -418,11 +665,31 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", hero_ConsumeAmmo);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", hero_GiveAmmo);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetWeaponAmmo);
+int Hero_GetWeaponAmmo(int item)
+{
+    if (item == -1)
+        item = Hero.currentWeapon;
+
+    if (!VendorPrices[item].maxAmmo)
+        return 1;
+
+    return WeaponAmmo[item];
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_StartHit);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetSpecialStateKind);
+int Hero_GetSpecialStateKind(void)
+{
+    switch (Hero.state) {
+    case PLAYER_STATE_ANIM_TARGET_WALK:
+    case PLAYER_STATE_UNK_66:
+        return 1;
+    case PLAYER_STATE_TELEPORTER_USE:
+        return 2;
+    default:
+        return 0;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_MoveWithPlatform);
 

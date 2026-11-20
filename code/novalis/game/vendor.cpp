@@ -1,4 +1,7 @@
 #include "common.h"
+#include "framebuf.h"
+#include "draw.h"
+#include "vendor.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", ProjectBoxToScreen);
 
@@ -52,7 +55,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_DrawFlick
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_SetupScreenRender);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_ResetHUDPass);
+void Vendor_ResetHUDPass(void)
+{
+    PutDrawBufferLarge();
+    InitViewContext();
+    UpdateViewContext();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_HudUpdate);
 

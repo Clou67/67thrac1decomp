@@ -1,4 +1,9 @@
 #include "common.h"
+#include "gsregs.h"
+#include "vuchain.h"
+#include "fastfunc.h"
+#include "moby.h"
+#include "pause.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", LoadHudSeqs);
 
@@ -64,7 +69,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002904A0);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002904D0);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MenuText_OnEnterResetBuffers);
+void Menu_InitStreamBuffers(int reset);
+
+int MenuText_OnEnterResetBuffers(void)
+{
+    Menu_InitStreamBuffers(1);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00290508);
 
@@ -94,13 +105,23 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00291930);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00291938);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_OnExit);
+MobyInstance *Menu_DeleteMoby(MobyInstance *moby);
+
+int ItemView_OnExit(ItemViewWidget *widget)
+{
+    widget->moby = Menu_DeleteMoby(widget->moby);
+    widget->otherMoby = Menu_DeleteMoby(widget->moby);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_Update);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_Draw);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_SpinMobyUpdate);
+void ItemView_SpinMobyUpdate(MobyInstance *moby)
+{
+    moby->rotation.z = FastAddRots(moby->rotation.z, 0.01f);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", WeaponView_Update);
 
@@ -114,17 +135,36 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", PlanetInfo_Draw);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBoltWidget_SpawnMoby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBoltWidget_DeleteMoby);
+MobyInstance *Menu_DeleteMoby(MobyInstance *moby);
+
+int GoldBoltWidget_DeleteMoby(GoldBoltWidget *widget)
+{
+    widget->moby = Menu_DeleteMoby(widget->moby);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBoltWidget_Update);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Update_FoundGBsShipMenu);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBolt_SpinMobyUpdate);
+void GoldBolt_SpinMobyUpdate(MobyInstance *moby)
+{
+    moby->rotation.x = FastAddRots(moby->rotation.x, 0.02f);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemInfo_DrawCost);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MapPage_Draw);
+void DrawMapFrame(void);
+enum { MAP_ALPHA_BLEND = 0x44, MAP_DRAW_RESULT = 8 };
+
+int MapPage_Draw(void)
+{
+    VU1_addGSregister(GS_REG_ALPHA_1, MAP_ALPHA_BLEND);
+    VU1_addGSregister(GS_REG_TEST_1, GS_TEST_ATE | GS_TEST_ATST_GEQUAL);
+
+    DrawMapFrame();
+    return MAP_DRAW_RESULT;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MapMenu_DrawOptions);
 
@@ -140,7 +180,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ImageWidget_Draw)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ImageWidget_OnEnter);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ImageWidget_OnExit);
+void *Menu_FreeStreamBuffer(void *buffer);
+
+int ImageWidget_OnExit(ImageWidget *widget)
+{
+    widget->streamBuffers[0] = Menu_FreeStreamBuffer(widget->streamBuffers[0]);
+    widget->streamBuffers[1] = Menu_FreeStreamBuffer(widget->streamBuffers[1]);
+
+    widget->unk_50 = -1;
+    widget->unk_54 = -1;
+    widget->image = -1;
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", UpdateOptionsMenus);
 
@@ -172,13 +223,24 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00295208);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00295310);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_SetClipRect);
+void DrawGalaxyMap(int left, int right, int top, int bottom);
+enum { MENU_WIDGET_DRAW_CLIPPED = 2 };
+
+int Menu_SetClipRect(MenuClipWidget *widget)
+{
+    DrawGalaxyMap(widget->x, widget->x + widget->width, widget->y, widget->y + widget->height);
+    return MENU_WIDGET_DRAW_CLIPPED;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", PlanetSelect_Update);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MessageBox_OnEnter);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MessageBox_OnExit);
+int MessageBox_OnExit(MessageBoxWidget *widget)
+{
+    widget->streamBuffer = Menu_FreeStreamBuffer(widget->streamBuffer);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002954C0);
 
@@ -208,9 +270,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Draw_GameComplete
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveSlotInfo_Draw);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveLoad_OnEnter);
+void *Menu_AllocStreamBuffer(int flags);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveLoad_OnExit);
+int SaveLoad_OnEnter(SaveLoadWidget *widget)
+{
+    Menu_InitStreamBuffers(1);
+    widget->streamBuffer = Menu_AllocStreamBuffer(0);
+    widget->unk_4C = 0;
+
+    return 0;
+}
+
+int SaveLoad_OnExit(SaveLoadWidget *widget)
+{
+    widget->streamBuffer = Menu_FreeStreamBuffer(widget->streamBuffer);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveGame_Update);
 
@@ -258,7 +333,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GameComplete_OnEx
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", M1957_Update_GirlwadOnGameComplete);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GameComplete_Draw);
+void DrawMobyListProc(MobyInstance *moby, int count);
+enum { MENU_WIDGET_DRAW_COMPLETE = 4 };
+
+int GameComplete_Draw(GameCompleteWidget *widget)
+{
+    MobyInstance **moby = widget->mobys;
+
+    for (int remaining = GAME_COMPLETE_MOBY_COUNT - 1; remaining >= 0; --remaining, ++moby) {
+        if (*moby)
+            DrawMobyListProc(*moby, 1);
+    }
+
+    return MENU_WIDGET_DRAW_COMPLETE;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002996C0);
 
@@ -268,7 +356,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_AllocStreamB
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_FreeStreamBuffer);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_GetStreamBufferSize);
+int Menu_GetStreamBufferSize(void *data)
+{
+    MenuStreamBuffer *buffer = MenuStreamBuffers;
+
+    for (int slot = 0; slot < MENU_STREAM_BUFFER_COUNT; ++slot, ++buffer) {
+        if (buffer->data == data) {
+            return buffer->flags & MENU_STREAM_LARGE ? 0x4F000 : 0x11800;
+        }
+    }
+
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_LockStreamBuffer);
 

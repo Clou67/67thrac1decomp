@@ -5,7 +5,28 @@
 
 // Camera types from the PS3 project (game/camera.h); RC1 PS2 uses the same layout.
 
-struct UpdateCam;
+struct CameraControlActivation {
+    int activationType;
+    float blendSpeed;
+    char priority;
+    char activate;
+    short deactivate;
+    short repCam;
+    short orgCam;
+};
+
+struct UpdateCam {
+    char unk_00[0x74];
+    CameraControlActivation activation;
+    short importCameraIdx;
+    short type;
+    char subType;
+    char bumped;
+    short bumpOff;
+    short funcIdx;
+    short active;
+    char unk_90[0x10];
+};
 
 struct Vec3 {
     float x;
@@ -134,10 +155,15 @@ struct GAMECAMERA {
     Mtx4 mtx2;
     Mtx4 mtx3;
     Mtx4 mtx4;
-    float posX;
-    float posY;
-    float posZ;
-    float posW;
+    union {
+        Vec4 position;
+        struct {
+            float posX;
+            float posY;
+            float posZ;
+            float posW;
+        };
+    };
     // radius holds the yaw.
     PolarSm rot;
     float rotW;
@@ -157,5 +183,31 @@ struct GAMECAMERA {
 };
 
 extern GAMECAMERA GameCamera;
+
+void Camera_ClearPolar(float *polar);
+
+void Camera_DeactivateCurrent(void);
+
+void Camera_runSetupToNewCam(UpdateCam *camera);
+
+void Camera_Exit(UpdateCam *camera);
+
+void Camera_CopyLastPolarToQuat(void);
+
+void Cam_CopyRotWrapped(float *out, float *polar, float yawOffset);
+
+void Camera_CopyLastQuatToPolar(void);
+
+void Camera_Polar2Pos(Vec4 *out, PolarSm *polar, Vec4 *origin);
+
+int Camera_Pos2Polar(PolarSm *out, Vec4 *position, Vec4 *origin);
+
+void Camera_CopyHeroPosition(MobyInstance *target, Vec4 *position);
+
+void FUN_00318ad0(UpdateCam *camera);
+
+void camera_HandleCollWithHero(UpdateCam *camera);
+
+void Camera_HandleScreenFade(void);
 
 #endif

@@ -2,18 +2,32 @@
 #define MUSIC_H
 
 struct MusicTransition {
-    char unk0[0x1C];
+    char unk0[8];
+    short read_state;
+    unsigned char cancel_read;
+    char unk0B[0x11];
     int unk1C;
     char unk20[2];
     signed char requested_track;
-    char unk23[0x15];
+    signed char requested_transition;
+    char unk24[0x14];
     short primary_track;
-    char unk3A[0x16];
+    char unk3A[4];
+    short primary_bank;
+    short primary_command;
+    short primary_unpause;
+    char unk44[0xC];
     int unk50;
     short speechId;
     short unk56;
     short unk58;
     short state;
+    short secondary_command;
+    short secondary_unpause;
+    char unk60[0x16];
+    short transition_bank;
+    short transition_command;
+    short transition_unpause;
 };
 
 // Speech ids are offset by this much from the ids stored in the help messages.
@@ -27,7 +41,7 @@ struct MusicTransition {
 extern MusicTransition musicTransition;
 
 void music_Sync(int wait);
-void music_Pause(int fade);
+void music_Pause(int includeSpeech);
 void music_Unpause(void);
 void music_RegisterBankCB(void);
 void music_PlayPreseekedSpeech(void);
@@ -36,5 +50,13 @@ extern short CdReadActive[];
 
 void music_LoadFile(void *destination, int sector, int length);
 int music_LoadFileSync(void *destination, int sector, int length);
+
+void music_UnpauseDelay(int frames);
+
+void music_LoadBankCB(int reason);
+
+void music_StopLoad(void);
+
+void music_SetTransition(int track, int transition);
 
 #endif

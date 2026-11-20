@@ -66,7 +66,9 @@ struct ActiveInfobotHint {
 // Price table entry.
 struct VendorPrice {
     int bolts;
-    char unk4[0x10];
+    char unk4[0xA];
+    unsigned short maxAmmo;
+    char unk10[4];
     unsigned short goldBoltPrice;
     char unk16[2];
 };

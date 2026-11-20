@@ -1,4 +1,6 @@
 #include "common.h"
+#include "fastfunc.h"
+#include "hud.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", hud_InitBanks);
 
@@ -36,9 +38,29 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_GetSlideOf
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_CalcNumberSize);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_InitCounter);
+void HudEntry_CalcNumberSize(HudEntry *entry);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_InitCounter32);
+void HudEntry_InitCounter(HudEntry *entry)
+{
+    int timer = FastScaleRoundInt(180) + 30;
+    entry->offsetX = 0;
+    entry->offsetY = 0;
+    entry->timer = timer;
+    HudEntry_CalcNumberSize(entry);
+}
+
+void HudEntry_InitCounter32(HudEntry *entry)
+{
+    int timer = FastScaleRoundInt(180) + 30;
+    entry->offsetX = 0;
+    entry->offsetY = 0;
+    entry->timer = timer;
+    entry->width = 32;
+    entry->height = 32;
+    HudEntry_CalcNumberSize(entry);
+}
+
+TEXT_PADDING(0, 0);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_SetEntryMinValueById);
 
@@ -58,15 +80,34 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Moby185Hud_Update);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_Moby185Meter);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_InitCounterSlide);
+void HudEntry_InitCounterSlide(HudEntry *entry)
+{
+    int timer = FastScaleRoundInt(10) + 30;
+    entry->offsetX = 0;
+    entry->offsetY = 0;
+    entry->timer = timer;
+    entry->width = 32;
+    entry->height = 32;
+    HudEntry_CalcNumberSize(entry);
+}
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_UpdateCounterWrap);
+void HudEntry_UpdateCounter(HudEntry *entry);
+
+void HudEntry_UpdateCounterWrap(HudEntry *entry)
+{
+    HudEntry_UpdateCounter(entry);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_PromptMsg);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", GetHelpLen);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_GetTexIndex);
+void HudEntry_InitCounter(HudEntry *entry);
+
+void Hud_GetTexIndex(HudEntry *entry)
+{
+    HudEntry_InitCounter(entry);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Moby849Hud_Update);
 
@@ -84,7 +125,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_DrawIcon);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_NanotechUI);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawTexQuadUV_Fixed);
+extern short BoltHudCounter;
+
+void Hud_DrawTexQuadUV_Fixed(HudEntry *entry)
+{
+    HudEntry_RoundFixed(entry);
+    entry->counter = &BoltHudCounter;
+    BoltHudCounter = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", BoltHud_Update);
 
@@ -96,7 +144,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_MetalDetectorH
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawTextBox);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_RoundFixed);
+void HudEntry_RoundFixed(HudEntry *entry)
+{
+    entry->timer = FastScaleRoundInt(120) + 30;
+    entry->width = 32;
+    entry->height = 32;
+    HudEntry_CalcNumberSize(entry);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_AmmoCounter);
 

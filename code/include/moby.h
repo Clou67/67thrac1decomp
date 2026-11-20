@@ -23,6 +23,11 @@ struct BSphere {
     float rad;
 };
 
+struct MobyCollPrims {
+    char unk00[8];
+    int count;
+};
+
 struct MobyClass;
 struct Manipulator;
 
@@ -63,8 +68,13 @@ struct MobyInstance {
     short drawDistance;
     unsigned short modeBits;
     unsigned short occlIndex;
-    unsigned int color;
-    unsigned int light;
+    union {
+        unsigned long long lights;
+        struct {
+            unsigned int color;
+            unsigned int light;
+        };
+    };
     Vec4 rotation;
     char previousAnimationFrame;
     char animationFrame;
@@ -85,16 +95,19 @@ struct MobyInstance {
     char trigsCnt;
     char shadow;
     int colorManipulator;
-    int unk84;
-    int unk88;
+    float zMin;
+    float zMax;
     char unk8C[4];
     unsigned int glowRgba;
-    unsigned short *collision;
+    union {
+        unsigned short *collision;
+        MobyCollPrims *pCollPrims;
+    };
     float *collisionMesh;
     int collQueryStamp;
     unsigned int collCount;
     signed char damage;
-    char previousAnimationId;
+    unsigned char previousAnimationId;
     unsigned short oClass;
     int handle;
     unsigned int index;
@@ -108,5 +121,19 @@ struct MobyInstance {
     char unkBE[2];
     Mtx4 transform;
 };
+
+void SetLevelFlag(int flag);
+
+extern int StashedMobyClassDists[];
+
+void InitMobyClassDists(void);
+
+void StashMobyClassDists(void);
+
+void RestoreMobyClassDists(void);
+
+void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out);
+
+void MB_GetBoneTransformation(MobyInstance *moby, int index, Mtx4 *out);
 
 #endif

@@ -11,6 +11,7 @@ enum gameMode_t {
 };
 
 extern int gameMode;
+extern int CutscenePlaying;
 // Game time in frames.
 extern int worldUpdateTime;
 extern int gameLanguage;

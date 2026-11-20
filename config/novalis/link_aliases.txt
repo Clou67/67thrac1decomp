@@ -44,7 +44,6 @@ UpdateMoby_280__FP12MobyInstance = 0x002E0C68;
 UpdateMoby_304__FP12MobyInstance = 0x002E1AC0;
 UpdateMoby_305__FP12MobyInstance = 0x002E2170;
 UpdateMoby_428__FP12MobyInstance = 0x002E2F68;
-UpdateMoby_433__FP12MobyInstance = 0x002E30B0;
 UpdateMoby_437__FP12MobyInstance = 0x002E3F20;
 UpdateMoby_454__FP12MobyInstance = 0x002E4E60;
 UpdateMoby_457__FP12MobyInstance = 0x002E5A48;
@@ -52,7 +51,6 @@ UpdateMoby_459__FP12MobyInstance = 0x002E6BF0;
 UpdateMoby_479__FP12MobyInstance = 0x002E92B8;
 UpdateMoby_500__FP12MobyInstance = 0x002EA178;
 UpdateMoby_530__FP12MobyInstance = 0x002ECDE0;
-UpdateMoby_531__FP12MobyInstance = 0x002ECE90;
 UpdateMoby_562__FP12MobyInstance = 0x002ED5D8;
 UpdateMoby_567__FP12MobyInstance = 0x002EDA00;
 UpdateMoby_572__FP12MobyInstance = 0x002EDCA0;
@@ -62,13 +60,11 @@ UpdateMoby_604__FP12MobyInstance = 0x002F2B68;
 UpdateMoby_605__FP12MobyInstance = 0x002F2EB8;
 UpdateMoby_607__FP12MobyInstance = 0x002F30C0;
 UpdateMoby_613__FP12MobyInstance = 0x002F3120;
-UpdateMoby_618__FP12MobyInstance = 0x002F3568;
 UpdateMoby_639__FP12MobyInstance = 0x002F3748;
 UpdateMoby_641__FP12MobyInstance = 0x002F4348;
 UpdateMoby_660__FP12MobyInstance = 0x002F4428;
 UpdateMoby_665__FP12MobyInstance = 0x002F4710;
 UpdateMoby_666__FP12MobyInstance = 0x002F4960;
-UpdateMoby_676__FP12MobyInstance = 0x002F6128;
 UpdateMoby_678__FP12MobyInstance = 0x002F6180;
 UpdateMoby_679__FP12MobyInstance = 0x002F6328;
 UpdateMoby_686__FP12MobyInstance = 0x002F6A30;
@@ -95,7 +91,6 @@ UpdateMoby_760__FP12MobyInstance = 0x002FDBC0;
 UpdateMoby_761__FP12MobyInstance = 0x002FEB58;
 UpdateMoby_768__FP12MobyInstance = 0x002FED68;
 UpdateMoby_774__FP12MobyInstance = 0x002FF118;
-UpdateMoby_775__FP12MobyInstance = 0x002FF810;
 UpdateMoby_778__FP12MobyInstance = 0x002FF860;
 UpdateMoby_779__FP12MobyInstance = 0x002FFB28;
 UpdateMoby_787__FP12MobyInstance = 0x002FFDC0;
@@ -114,7 +109,6 @@ UpdateMoby_1138__FP12MobyInstance = 0x00309898;
 UpdateMoby_1143__FP12MobyInstance = 0x00309990;
 UpdateMoby_1225__FP12MobyInstance = 0x00309C98;
 UpdateMoby_1251__FP12MobyInstance = 0x00309CD0;
-UpdateMoby_1289__FP12MobyInstance = 0x0030A6C8;
 UpdateMoby_1290__FP12MobyInstance = 0x0030A6D0;
 UpdateMoby_1341__FP12MobyInstance = 0x0030ACB8;
 UpdateMoby_1504__FP12MobyInstance = 0x0030B618;
@@ -123,15 +117,8 @@ UpdateMoby_1546__FP12MobyInstance = 0x0030C190;
 UpdateMoby_1633__FP12MobyInstance = 0x0030C9A8;
 UpdateMoby_1736__FP12MobyInstance = 0x0030CD18;
 UpdateMoby_1813__FP12MobyInstance = 0x0030D0F0;
-UpdateMoby_1816__FP12MobyInstance = 0x0030D200;
 UpdateMoby_1818__FP12MobyInstance = 0x0030DF40;
 UpdateMoby_1848__FP12MobyInstance = 0x0030F208;
-FUN_003040b8__FP12MobyInstance = 0x003040B8;
-FUN_003040c0__FP12MobyInstance = 0x003040C0;
-FUN_003040c8__FP12MobyInstanceiif = 0x003040C8;
-FUN_003040d0__FP12MobyInstance = 0x003040D0;
-FUN_003040f8__FP12MobyInstance = 0x003040F8;
-DeleteMoby_Thunk__FP12MobyInstance = 0x003040D8;
 FUN_002e0a28__FP12MobyInstance = 0x002E0A28;
 FUN_002e0a78__FP12MobyInstance = 0x002E0A78;
 FUN_002e0ac8__FP12MobyInstanceiif = 0x002E0AC8;
@@ -145,11 +132,8 @@ FUN_002f1c78__FP12MobyInstance = 0x002F1C78;
 FUN_002f1cc8__FP12MobyInstance = 0x002F1CC8;
 FUN_002f1d18__FP12MobyInstanceiif = 0x002F1D18;
 FUN_002f1dc8__FP12MobyInstance = 0x002F1DC8;
-InitCamera_0__FP9UpdateCam = 0x00314DF8;
 ActivateCamera_0__FP9UpdateCam = 0x00311F38;
 UpdateCamera_0__FP9UpdateCam = 0x00314E00;
-ExitCamera_0__FP9UpdateCam = 0x00314E90;
-InitCamera_3__FP9UpdateCam = 0x00315DD8;
 ActivateCamera_3__FP9UpdateCam = 0x00315DE0;
 UpdateCamera_3__FP9UpdateCam = 0x00315358;
 ExitCamera_3__FP9UpdateCam = 0x00316030;
@@ -157,22 +141,12 @@ InitCamera_4__FP9UpdateCam = 0x00316880;
 ActivateCamera_4__FP9UpdateCam = 0x00316B98;
 UpdateCamera_4__FP9UpdateCam = 0x00316330;
 ExitCamera_4__FP9UpdateCam = 0x00316C08;
-InitCamera_5__FP9UpdateCam = 0x00317668;
 ActivateCamera_5__FP9UpdateCam = 0x003171B8;
 UpdateCamera_5__FP9UpdateCam = 0x00317670;
-ExitCamera_5__FP9UpdateCam = 0x003176C8;
-InitCamera_6__FP9UpdateCam = 0x00317F50;
 ActivateCamera_6__FP9UpdateCam = 0x00317F58;
-UpdateCamera_6__FP9UpdateCam = 0x00318008;
-ExitCamera_6__FP9UpdateCam = 0x00318028;
-InitCamera_7__FP9UpdateCam = 0x00318B10;
 ActivateCamera_7__FP9UpdateCam = 0x00318030;
 UpdateCamera_7__FP9UpdateCam = 0x00318B18;
-ExitCamera_7__FP9UpdateCam = 0x00318C08;
 InitCamera_17__FP9UpdateCam = 0x00319688;
-ActivateCamera_17__FP9UpdateCam = 0x00319788;
-UpdateCamera_17__FP9UpdateCam = 0x00319790;
-ExitCamera_17__FP9UpdateCam = 0x00319798;
 UpdateSound_0__FP12AmbientSound = 0x003197A0;
 UpdateSound_1__FP12AmbientSound = 0x00319928;
 UpdateSound_2__FP12AmbientSound = 0x00319CC8;
@@ -186,8 +160,6 @@ FastScaleRoundInt__Fi = 0x00220E30;
 FastVec3Length__FPf = 0x00221318;
 FlipAndExploreTimersVU1__Fi = 0x0021AC60;
 FinalizeVU1FramePacketChain__Fv = 0x0021AD78;
-FontLen__FPci = 0x0021CC90;
-FontPrintMediumLeft__FiiUlPci = 0x0021CF70;
 HudTex_GetFrame__Fii = 0x0024FE10;
 Hud_DrawTexQuad__Fiiiiii = 0x002500E0;
 Hud_DrawTexQuadF__Fiiiiiiii = 0x00250B00;
@@ -197,21 +169,16 @@ FastDecTimer__FRi = 0x00220E78;
 DrawTextShadow__Fiiiii = 0x0021C958;
 DrawSprite__FiiiiiiiiUlUl = 0x0021BE90;
 FontSet__Fi = 0x0021AE98;
-SetFontWindow__FP10FontWindowiiiiiiii = 0x0021E120;
-FontPrintWindowSmall__FP10FontWindowUlPci = 0x0021E0A8;
 MB_RequestHelpMessage__Fii = 0x00279000;
 music_PlayPreseekedSpeech__Fv = 0x00279E78;
 sound_LevelPlay__Fiii = 0x002A1770;
 
 snd_PauseAllSoundsInGroup__Fi = 0x0012E3E8;
-music_Pause__Fi = 0x0027A408;
 FadeToBlack__Fi = 0x0021B438;
 Hud_SetEntryValueById__Fii = 0x0024B090;
 HudStub__Fv = 0x0024FB38;
-ChangeLevel__Fi = 0x002A29A0;
 Hero_RevertToRatchet__Fv = 0x00231450;
 Hero_Warp__FPfT0ii = 0x002368E0;
-music_Unpause__Fv = 0x0027A440;
 sound_Update__Fv = 0x002A0638;
 snd_ContinueAllSoundsInGroup__Fi = 0x0012E418;
 snd_FlushSoundCommands__Fv = 0x0012DC80;
@@ -219,8 +186,6 @@ FastAngleCosF__Ff = 0x00221710;
 FastFloatToInt__Ff = 0x00222160;
 FastIntToFloat__Fi = 0x00222150;
 FastTweenColor__Fiif = 0x002221A8;
-FontPrintCenter__FiiUlPci = 0x0021D5A8;
-FontPrintWindowMedium__FP10FontWindowUlPci = 0x0021E038;
 FontPrintWindow__FP10FontWindowUlPciUlPv = 0x0021DB48;
 HudTex_Bind__Fi = 0x0024FEC0;
 Hud_DrawRotatedSprite16__FfffffiiUl = 0x00250EA8;
@@ -228,7 +193,6 @@ DrawRoundedRect__Fiiiii = 0x0021CAA0;
 memset = 0x001153FC;
 MB_UnlockItem__Fic = 0x00275760;
 MB_UnlockLevel__Fi = 0x002756D0;
-music_RegisterBankCB__Fv = 0x00279788;
 InitMemSlots__Fv = 0x00252128;
 FastMemSet__FPvii = 0x00220F50;
 InitViewContext__Fv = 0x00219448;
@@ -250,20 +214,18 @@ FastAddRots__Fff = 0x00221FF8;
 FastVec3Dist__FP4Vec4T0 = 0x00221360;
 FastVec3AddSubLen__FP4Vec4P7BSphere = 0x002213C8;
 FastScaleVec4__FP4Vec4T0f = 0x00221240;
-BoltHud_Update__Fv = 0x0024E908;
-Draw_BoltCountUI__Fv = 0x0024EA00;
-Draw_PromptMsg__Fv = 0x0024C898;
+BoltHud_Update__FP8HudEntry = 0x0024E908;
+Draw_BoltCountUI__FP8HudEntry = 0x0024EA00;
+Draw_PromptMsg__FP8HudEntry = 0x0024C898;
 FastArcTan__Fff = 0x002217C0;
 FastDiffRots__Fff = 0x00222100;
 GetHelpLen__FPc = 0x0024CDB0;
-HudEntry_InitCounterSlide__Fv = 0x0024C828;
 HudEntry_UpdateCounterWrap__Fv = 0x0024C878;
 Hud_DrawTexQuadUV_Fixed__Fv = 0x0024E8D0;
 Hud_SetEntryIconById__Fi = 0x0024AFA0;
 Hud_SetEntryMinValueById__Fii = 0x0024B4B0;
-MB_GetUnspentGoldBolts__Fv = 0x002790D0;
 PlayInfobotMovie__Fi = 0x002ACF50;
-RegisterHUDCallback__FiiPFv_vN22Pvi = 0x0024AD98;
+RegisterHUDCallback__FiiPFP8HudEntry_vN22Pvi = 0x0024AD98;
 mode_movieUnInit__Fi = 0x002AC330;
 snd_InitMovieSound__Fiiiiii = 0x0012F068;
 snd_CloseMovieSound__Fv = 0x0012F0E0;
@@ -279,7 +241,6 @@ EnableIntc = 0x00119090;
 movieOpenError = 0x0020A760;
 vblankHandler__Fi = 0x0031B280;
 handler_endimage__Fi = 0x0031B3E8;
-videoCallback__FP7sceMpegP13sceMpegCbDataPv = 0x0031B498;
 ShrubProc__Fv = 0x0029CDF0;
 BuildShrubTextureDma__Fi = 0x0029E538;
 FastFromSpr__FPvii = 0x00221090;
@@ -298,6 +259,135 @@ SetHeroType__FiiP12MobyInstance = 0x00231348;
 FastEulerToMtx__FP4Mtx4P4Vec4 = 0x00221960;
 Camera_resetToFollow__Fv = 0x0020EE80;
 
-viBufCreate__FP5ViBufPUxT1iP9TimeStampi = 0x0031BAF0;
 
 setImageTag__FPA1_UiP6VoDataii = 0x0031B0B8;
+
+
+SetupVU1WorldDraw__Fv = 0x0021E340;
+
+Hero_AddGravity__FfPfT1 = 0x00248B68;
+
+FrontEnd_DrawMenu__Fi = 0x0028D080;
+
+LibcMemcpy__FPvPCvUi = 0x00115248;
+
+Hero_GetGadgetMoby__Fi = 0x0022DDD8;
+
+snd_StreamSafeCdCallback__FPFi_v = 0x0012EF28;
+
+snd_StreamSafeCdGetError__Fv = 0x0012EEF0;
+
+WaterTile_PutDrop__FP9WaterTileiffffi = 0x002B82A8;
+
+Menu_InitStreamBuffers__Fi = 0x002996C8;
+
+Hero_UpdateGadgetAnimLayers__Fv = 0x0022E660;
+Hero_UpdateFiringAnimLayer__Fv = 0x0022F068;
+Hero_UpdateOverlayAnimLayer__Fv = 0x0022E3A8;
+
+
+DeleteMoby__FP12MobyInstance = 0x002636C0;
+
+DrawMapFrame__Fv = 0x0025B1C0;
+
+UpdateMobyFrameData__FP12MobyInstance = 0x00263718;
+
+snd_StreamSafeCdBreak__Fv = 0x0012EEA8;
+
+RandomNext__Fv = 0x001160D8;
+
+
+FastVecZero__FP4Vec4 = 0x00221170;
+
+TransitionMovement__Fii = 0x0023CF98;
+
+FastMtx3x4Copy__FP4Mtx4T0 = 0x00221BC8;
+
+FastMtx4Copy__FP4Mtx4T0 = 0x00221BE8;
+
+MB_MtxToQuat__FP4Vec4P4Mtx4 = 0x00271DB0;
+
+WaterSheet_DrawAll__FiP10WaterSheet = 0x002B96E0;
+
+
+FastAbsF__Ff = 0x00221128;
+
+FastDecTimer__FRs = 0x00220EA8;
+
+DeletePart__FP12PartInstance = 0x0027C5E8;
+
+FastVec3Add__FP4Vec4N20 = 0x00221188;
+
+FastVec3RSqrtScale__FP4Vec4T0f = 0x00221460;
+
+FastVec3Length2__FP4Vec4 = 0x002212E8;
+
+FastVec3Normalize__FP4Vec4T0f = 0x00221410;
+
+FastBsphereCheck__FP4Vec4f = 0x002221F0;
+
+DrawMobyListProc__FP12MobyInstancei = 0x00264CE8;
+
+Menu_DeleteMoby__FP12MobyInstance = 0x00298F38;
+
+Menu_FreeStreamBuffer__FPv = 0x002998E0;
+
+Menu_AllocStreamBuffer__Fi = 0x00299820;
+
+FontPrint__FiiUlPciUlPUc = 0x0021CCF0;
+
+Hero_GetBoardAnim__FiPi = 0x00247898;
+
+FastSubRots__Fff = 0x00222040;
+
+FastVec3Dot__FP4Vec4T0 = 0x002212A8;
+
+FastSubVec3__FP4Vec4N20 = 0x002211B8;
+
+FastQuaternionMult__FP4Vec4N20 = 0x00221D78;
+
+FastQuatToEuler__FP4Vec4fi = 0x00221E38;
+
+FastTransformVec4__FP4Vec4T0P4Mtx4 = 0x00221608;
+
+FontPrintWrapped__FiiUlPciiiUlPUc = 0x0021D770;
+
+Hero_ApplyRootMotionDelta__FP4Vec4fff = 0x0022A7D0;
+
+Hero_GetSnapJumpDir__Fv = 0x0023CEB0;
+
+Camera6_UpdateOrbit__FP9UpdateCam = 0x003178D8;
+
+WaterTile_DrawAll__FP9WaterTilei = 0x002B91C8;
+
+MB_BeginSucking__FP12MobyInstance = 0x00304690;
+
+MobyComputeSelectedJoints__FP12MobyInstanceiPiP4Mtx4 = 0x00268D80;
+
+FastVecMtx3Mult__FP4Vec4T0P4Mtx4 = 0x002215E0;
+
+Hero_DrawGlows__FP12MobyInstance = 0x00229440;
+
+FastEulerToMtx1__FP4Mtx4P4Vec4 = 0x00221980;
+
+MB_GetOrientationMtx__FP4Mtx4P4Vec4 = 0x002721F0;
+
+MB_PushOutOfWalls__FP12MobyInstanceP4Vec4fffi = 0x0026D610;
+
+
+HudEntry_UpdateCounter__FP8HudEntry = 0x0024B538;
+
+HudEntry_CalcNumberSize__FP8HudEntry = 0x0024B318;
+
+FUN_003182c8__FP9UpdateCam = 0x003182C8;
+
+FUN_00318900__FP9UpdateCam = 0x00318900;
+
+BoltHudCounter = 0x0015FAB8;
+
+MB_isCrate__FP12MobyInstance = 0x00273278;
+
+
+SpawnMoby_1007__FP4Vec4 = 0x002BA760;
+
+CollLine__FP4Vec4T0iP12MobyInstanceT3 = 0x00211870;

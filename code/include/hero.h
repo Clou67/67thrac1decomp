@@ -3,12 +3,16 @@
 
 #include "moby.h"
 
+enum { HERO_TYPE_RATCHET = 0, HERO_TYPE_HOLOGUISE = 3 };
+
 #define HERO_NO_HUD_HANDLE -1
 #define HERO_SHIP_FLAG_RESET 0x1
 #define HERO_RACE_LAP_COUNT 3
 #define HERO_RACE_MOBY_LAP_OFFSET 0xBC
 
 // The hero. Field names from the PS3 project's hero globals (same layout), plus RC1-only fields.
+extern int WeaponAmmo[];
+
 struct HeroState {
     Mtx4 mtx;
     Mtx4 gravityMtx;
@@ -88,7 +92,11 @@ struct HeroState {
     float animSpeed;
     char unkA94[0x14];
     float animFrame;
-    char unkAAC[0x5E4];
+    float animFrameWindow;
+    int animLoopFrame;
+    char unkAB4[4];
+    int queuedFrameRequest;
+    char unkABC[0x5D4];
     MobyInstance *currentWeaponMoby;
     char unk1094[0x24];
     int currentWeapon;
@@ -109,11 +117,12 @@ struct HeroState {
     char unk1634[0x4CC];
     Vec4 posHistory[32];
     float savedPosRot[8];
-    int padStick;
-    char unk1D24[0xAC];
+    float padStick[3];
+    char unk1D2C[0xA4];
     Vec4 glowPos[14];
     short glowCount;
-    char unk1EB2[0x196];
+    short glowDrawRegistered;
+    char unk1EB4[0x194];
     unsigned char metalDetectorSpotIsClose;
     char unk2049[0x37];
     MobyInstance *moby;
@@ -142,7 +151,10 @@ struct HeroState {
     int loopSounds;
     char unk221C[0x1C];
     MobyInstance *loopSoundMobys;
-    char unk223C[0x48];
+    char unk223C[0x3C];
+    MobyInstance *animLinkMoby;
+    int animLinkTable;
+    char unk2280[4];
     int requestedCamType;
     char unk2288[0x14];
     float padMagnitude;
@@ -349,5 +361,69 @@ extern int QuickSelectItems[QUICK_SELECT_SLOT_COUNT];
 
 void Hero_RevertToRatchet(void);
 void Hero_Warp(float *position, float *rotation, int flags, int snap);
+
+void Hero_SubGravity(float amount, float *out, float *in);
+
+void Hero_ClearNextAnim(void);
+
+void Hero_HideHeroMoby(void);
+
+void Hero_ShowHeroMoby(void);
+
+void Hero_ZeroThrustVars(void);
+
+void Hero_ClearBoardMoby(void);
+
+int Hero_IsWeaponGroupA(int slot);
+
+int Hero_IsWearingBoots(int slot);
+
+void Hero_UpdateAnimLayers(void);
+
+int Hero_isMobyWrench(MobyInstance *moby);
+
+void Hero_SnapAnim(int animation, int frame);
+
+int Hero_GetSpecialStateKind(void);
+
+void Hero_SetNextAnimBlend(int frames);
+
+int Hero_IsInSpecialMovementState(void);
+
+void Hero_TransitionToDefault(void);
+
+void Hero_NormalizeThrust(Vec4 *direction, float horizontal, float vertical, int scaleComponents);
+
+void Hero_ResetIfTypeThree(void);
+
+float Hero_GetPadMagnitude(void);
+
+void Hero_ThrustModeAccel(float acceleration, float deceleration);
+
+void Hero_SyncBoardAnimSpeed(void);
+
+void Hero_GetHeroRelativePos(Vec4 *out, float x, float y, float z);
+
+void Hero_GetPolarOffset(Vec4 *out, float x, float y, float z);
+
+int Hero_AnimFrameInWindow(float frame);
+
+void Hero_ApplyRootMotion(float x, float y, float z);
+
+int Hero_GetJumpHoldTime(void);
+
+int STUB_00226fa0(int animation);
+
+int Hero_GetWeaponAmmo(int item);
+
+int Hero_GetOverlayAnimId(int overlay);
+
+int Hero_IsWeaponGroupB(int slot);
+
+void Hero_RegisterGlowDraw(void);
+
+void Hero_RotateByEuler(float xAngle, float yAngle, float zAngle);
+
+int Hero_DefaultByteIfFF(MobyInstance *moby, int animation);
 
 #endif
