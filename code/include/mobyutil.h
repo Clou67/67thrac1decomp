@@ -179,4 +179,6 @@ void MB_SetZBoundsFromGround(MobyInstance *moby);
 
 int MB_IsPntInSphere(Vec4 *point, int index);
 
+int MB_IsPntInCuboid(Vec4 *point, int index);
+
 #endif

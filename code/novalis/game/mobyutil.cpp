@@ -796,7 +796,27 @@ void MB_randOffset(Vec4 *vector, float range)
     vector->z += MB_randRangeFloat(-range, range);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsPntInCuboid);
+extern MobyVolume *CuboidVolumes;
+void FastVecMtx3Mult(Vec4 *out, Vec4 *vector, Mtx4 *matrix);
+
+int MB_IsPntInCuboid(Vec4 *point, int index)
+{
+    if (index == -1)
+        return 0;
+
+    MobyVolume *volume = &CuboidVolumes[index];
+    Vec4 offset;
+    Vec4 local;
+
+    FastSubVec3(&offset, point, &volume->origin);
+    offset.w = 0.0f;
+    FastVecMtx3Mult(&local, &offset, &volume->inverseTransform);
+
+    if (local.x >= -1.0f && local.x <= 1.0f && local.y >= -1.0f && local.y <= 1.0f && local.z >= -1.0f && local.z <= 1.0f)
+        return 1;
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsPntInCylinder);
 

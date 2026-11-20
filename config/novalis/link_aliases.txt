@@ -461,3 +461,5 @@ SceneLoad = 0x0016CCE0;
 ParseNpcChunk__Fv = 0x00259288;
 
 SphereVolumes = 0x001600F4;
+
+CuboidVolumes = 0x001600EC;
