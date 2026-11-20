@@ -344,3 +344,5 @@ DrawMobyListProc__FP12MobyInstancei = 0x00264CE8;
 Menu_DeleteMoby__FP12MobyInstance = 0x00298F38;
 
 Menu_FreeStreamBuffer__FPv = 0x002998E0;
+
+Menu_AllocStreamBuffer__Fi = 0x00299820;

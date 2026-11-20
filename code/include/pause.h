@@ -45,6 +45,12 @@ struct MessageBoxWidget {
     void *streamBuffer;
 };
 
+struct SaveLoadWidget {
+    char unk_00[0x48];
+    void *streamBuffer;
+    int unk_4C;
+};
+
 extern int pauseActionListMode;
 
 // State of the pause menu's map page; only the level being shown is known so far.
@@ -75,5 +81,7 @@ int Menu_GetStreamBufferSize(void *data);
 int Menu_SetClipRect(MenuClipWidget *widget);
 
 int MessageBox_OnExit(MessageBoxWidget *widget);
+
+int SaveLoad_OnEnter(SaveLoadWidget *widget);
 
 #endif

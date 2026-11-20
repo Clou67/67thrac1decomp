@@ -263,7 +263,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Draw_GameComplete
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveSlotInfo_Draw);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveLoad_OnEnter);
+void *Menu_AllocStreamBuffer(int flags);
+
+int SaveLoad_OnEnter(SaveLoadWidget *widget)
+{
+    Menu_InitStreamBuffers(1);
+    widget->streamBuffer = Menu_AllocStreamBuffer(0);
+    widget->unk_4C = 0;
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", SaveLoad_OnExit);
 
