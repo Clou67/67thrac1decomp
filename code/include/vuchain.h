@@ -63,7 +63,7 @@ extern int vu1_bufSize;
 struct MEMSLOTS {
     void *base;
     unsigned char *vu1_chain[2];
-    unsigned char *hudScratch;
+    unsigned char *hudHeap;
     unsigned char unk_10[0x50];
     Vec4 collisionPoint;
 };

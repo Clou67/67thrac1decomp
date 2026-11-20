@@ -13,33 +13,33 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_ClearBank);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_UploadBankIcons);
 
-enum { HUD_SCRATCH_SIZE = 0x64000 };
+enum { HUD_HEAP_SIZE = 0x64000 };
 struct HudStateData {
     char unk_00[0x10];
-    unsigned char *scratch;
-    unsigned char *scratchEnd;
+    unsigned char *heapCursor;
+    unsigned char *heapEnd;
 };
 extern HudStateData HudState;
 
-void HudScratch_Reset(void)
+void HudHeap_Reset(void)
 {
-    unsigned char *base = MemSlots.hudScratch;
-    HudState.scratch = base;
-    HudState.scratchEnd = base + HUD_SCRATCH_SIZE;
+    unsigned char *base = MemSlots.hudHeap;
+    HudState.heapCursor = base;
+    HudState.heapEnd = base + HUD_HEAP_SIZE;
 }
 
-void *HudScratch_Alloc(int size)
+void *HudHeap_Alloc(int size)
 {
-    if (!HudState.scratch)
-        HudScratch_Reset();
+    if (!HudState.heapCursor)
+        HudHeap_Reset();
 
-    unsigned char *end = HudState.scratchEnd;
-    unsigned char *allocation = HudState.scratch;
+    unsigned char *end = HudState.heapEnd;
+    unsigned char *allocation = HudState.heapCursor;
     if (end - allocation < size)
         return 0;
 
     size = (size + 15) & ~15u;
-    HudState.scratch = allocation + size;
+    HudState.heapCursor = allocation + size;
     return allocation;
 }
 
