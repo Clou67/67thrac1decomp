@@ -465,3 +465,7 @@ SphereVolumes = 0x001600F4;
 CuboidVolumes = 0x001600EC;
 
 CylinderVolumes = 0x001600FC;
+
+BackupCamera = 0x001693D0;
+
+CameraControls = 0x00169590;
