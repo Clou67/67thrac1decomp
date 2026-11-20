@@ -221,7 +221,30 @@ void MB_BallisticPosAtTicks(Vec4 *out, Vec4 *start, Vec4 *velocity, float gravit
     FastVec3Add(out, start, &displacement);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SolveQuad);
+float FastAbsF(float value);
+float FastFSqrt(float value);
+
+int MB_SolveQuad(float first, float second, float third, float *largerRoot, float *smallerRoot)
+{
+    float discriminant = second * second - first * 4.0f * third;
+    if (discriminant == 0.0f) {
+        *largerRoot = -second / (first + first);
+        return 1;
+    }
+
+    float root = FastFSqrt(FastAbsF(discriminant));
+    float denominator = first + first;
+    *largerRoot = (-second + root) / denominator;
+    *smallerRoot = (-second - root) / denominator;
+
+    if (*largerRoot < *smallerRoot) {
+        float value = *largerRoot;
+        float other = *smallerRoot;
+        *smallerRoot = value;
+        *largerRoot = other;
+    }
+    return discriminant > 0.0f ? 2 : 0;
+}
 
 enum { COLL_LINE_GROUND_QUERY = 2 };
 int CollLine(Vec4 *start, Vec4 *end, int flags, MobyInstance *ignore, MobyInstance *ignoreOther);

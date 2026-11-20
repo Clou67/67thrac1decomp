@@ -402,3 +402,5 @@ HudState = 0x0017E958;
 
 
 GainDampLimit__FfRffff = 0x00270658;
+
+FastFSqrt__Ff = 0x002210F0;

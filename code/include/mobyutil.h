@@ -145,4 +145,6 @@ float MB_RoundToDecimals(float value, int digits);
 
 float SubRots(float target, float angle, int direction);
 
+int MB_SolveQuad(float first, float second, float third, float *largerRoot, float *smallerRoot);
+
 #endif
