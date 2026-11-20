@@ -401,4 +401,6 @@ void Hero_SyncBoardAnimSpeed(void);
 
 void Hero_GetHeroRelativePos(Vec4 *out, float x, float y, float z);
 
+void Hero_GetPolarOffset(Vec4 *out, float x, float y, float z);
+
 #endif
