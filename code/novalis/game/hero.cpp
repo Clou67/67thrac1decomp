@@ -149,7 +149,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HandGadgetID)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetGadgetMoby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsWeaponGroupB);
+int Hero_GetGadgetMoby(int slot);
+
+int Hero_IsWeaponGroupB(int slot)
+{
+    int gadget = Hero_GetGadgetMoby(slot);
+    if (gadget == ITEM_MINE_GLOVE || gadget == ITEM_BOMB_GLOVE || gadget == ITEM_GLOVE_OF_DOOM || gadget == ITEM_DECOY_GLOVE)
+        return 1;
+
+    return 0;
+}
 
 int Hero_GetGadgetMoby(int slot);
 

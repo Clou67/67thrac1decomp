@@ -417,4 +417,6 @@ int Hero_GetWeaponAmmo(int item);
 
 int Hero_GetOverlayAnimId(int overlay);
 
+int Hero_IsWeaponGroupB(int slot);
+
 #endif
