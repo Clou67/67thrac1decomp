@@ -409,4 +409,6 @@ void Hero_ApplyRootMotion(float x, float y, float z);
 
 int Hero_GetJumpHoldTime(void);
 
+int STUB_00226fa0(int animation);
+
 #endif

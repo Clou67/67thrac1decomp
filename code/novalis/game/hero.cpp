@@ -9,7 +9,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_InitStuff);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetIdleAnim);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", STUB_00226fa0);
+int STUB_00226fa0(int animation)
+{
+    return animation;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", TakeDamage);
 
