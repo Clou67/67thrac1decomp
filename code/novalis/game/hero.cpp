@@ -356,7 +356,16 @@ void Hero_RotateByEuler(float xAngle, float yAngle, float zAngle)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_Turn3D);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_Turn);
+void Hero_Turn3D(float gain, float damping, float limit, int direction);
+float AccelDeltAng(float &angle, float target, float &speed, float gain, float damping, float limit, int direction);
+
+void Hero_Turn(float gain, float damping, float limit, int direction)
+{
+    if (Hero.gravityMode)
+        Hero_Turn3D(gain, damping, limit, direction);
+    else
+        Hero.turnDelta = AccelDeltAng(Hero.rotation.z, Hero.idealRotZ, Hero.turnSpeed, gain, damping, limit, direction);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GunTurnWalk);
 

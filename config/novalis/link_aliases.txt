@@ -393,3 +393,7 @@ SpawnMoby_1007__FP4Vec4 = 0x002BA760;
 CollLine__FP4Vec4T0iP12MobyInstanceT3 = 0x00211870;
 
 GalacticMapIds = 0x001602A0;
+
+Hero_Turn3D__Ffffi = 0x002323D8;
+
+AccelDeltAng__FRffT0fffi = 0x00270B58;

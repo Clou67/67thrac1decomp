@@ -30,7 +30,9 @@ struct HeroState {
     Vec4 externalMomentum;
     char unk160[0x20];
     float idealRotZ;
-    char unk184[0xC];
+    float turnSpeed;
+    float turnDelta;
+    char unk18C[4];
     float idealSpeed;
     float storedNeutralSpeed;
     int stateTimer;
@@ -425,5 +427,7 @@ void Hero_RegisterGlowDraw(void);
 void Hero_RotateByEuler(float xAngle, float yAngle, float zAngle);
 
 int Hero_DefaultByteIfFF(MobyInstance *moby, int animation);
+
+void Hero_Turn(float gain, float damping, float limit, int direction);
 
 #endif
