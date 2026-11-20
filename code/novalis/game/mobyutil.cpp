@@ -417,7 +417,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SpawnExplos
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SpawnExplosionSparks2);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", ClampVec3Magnitude);
+float FastVec3Length2(Vec4 *vector);
+void FastVec3Normalize(Vec4 *out, Vec4 *vector, float magnitude);
+
+void ClampVec3Magnitude(Vec4 *vector, float maximum)
+{
+    if (FastVec3Length2(vector) > maximum)
+        FastVec3Normalize(vector, vector, maximum);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_AddMobyToDynamicGroup);
 

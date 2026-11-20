@@ -70,4 +70,6 @@ void MB_AddVectorSphere(Vec4 *out, Vec4 *origin, float radius, float azimuth, fl
 
 MobyInstance *MB_GetPlatformParent(MobyInstance *moby);
 
+void ClampVec3Magnitude(Vec4 *vector, float maximum);
+
 #endif
