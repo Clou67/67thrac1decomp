@@ -17,7 +17,22 @@ int Map_FindFreeCacheSlot(int fromTop)
     return -1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetFreeCacheSlotCompact);
+enum { MAP_CACHE_KEEP_IN_SLOT = 0x1000 };
+
+int Map_GetFreeCacheSlotCompact(void)
+{
+    int slot = Map_FindFreeCacheSlot(1);
+    if (slot != 0)
+        return slot;
+
+    for (slot = 1; slot < MAP_CACHE_SLOT_COUNT; ++slot) {
+        if (!(MapPage.cacheIds[slot] & MAP_CACHE_KEEP_IN_SLOT) && MapPage.cacheBuffers[slot])
+            break;
+    }
+
+    Map_MoveCacheSlot(0, slot);
+    return slot;
+}
 
 void Map_MoveCacheSlot(int destination, int source)
 {

@@ -23,4 +23,6 @@ int Map_GetGalacticMapIndex(int id);
 
 int Map_FindFreeCacheSlot(int fromTop);
 
+int Map_GetFreeCacheSlotCompact(void);
+
 #endif
