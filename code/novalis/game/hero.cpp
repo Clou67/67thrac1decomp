@@ -347,7 +347,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetSnapJumpDi
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", TransitionMovement);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_TransitionToDefault);
+void TransitionMovement(int state, int force);
+enum { HERO_TYPE_RATCHET = 0, HERO_TYPE_HOLOGUISE = 3 };
+
+void Hero_TransitionToDefault(void)
+{
+    switch (Hero.type) {
+    case HERO_TYPE_RATCHET:
+        TransitionMovement(PLAYER_STATE_STANDING, 1);
+        break;
+    case HERO_TYPE_HOLOGUISE:
+        TransitionMovement(PLAYER_STATE_HOLOGUISE_STANDING, 1);
+        break;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IdleCycleFiringTransition);
 

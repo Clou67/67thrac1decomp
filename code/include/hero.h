@@ -385,4 +385,6 @@ void Hero_SetNextAnimBlend(int frames);
 
 int Hero_IsInSpecialMovementState(void);
 
+void Hero_TransitionToDefault(void);
+
 #endif

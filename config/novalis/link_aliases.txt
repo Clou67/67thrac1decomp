@@ -315,3 +315,5 @@ RandomNext__Fv = 0x001160D8;
 MB_SphericalToVector__FP4Vec4fff = 0x00277B50;
 
 FastVecZero__FP4Vec4 = 0x00221170;
+
+TransitionMovement__Fii = 0x0023CF98;
