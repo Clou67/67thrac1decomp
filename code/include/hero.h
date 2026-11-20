@@ -407,4 +407,6 @@ int Hero_AnimFrameInWindow(float frame);
 
 void Hero_ApplyRootMotion(float x, float y, float z);
 
+int Hero_GetJumpHoldTime(void);
+
 #endif

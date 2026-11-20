@@ -391,7 +391,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateMovemen
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateIdleDetect);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetJumpHoldTime);
+int Hero_GetSnapJumpDir(void);
+enum { SNAP_JUMP_NO_HOLD = 2, SNAP_JUMP_STANDARD_HOLD = 3 };
+
+int Hero_GetJumpHoldTime(void)
+{
+    int frames = FastScaleRoundInt(12);
+    int direction = Hero_GetSnapJumpDir();
+
+    if (direction == SNAP_JUMP_NO_HOLD)
+        frames = 0;
+    else if (direction == SNAP_JUMP_STANDARD_HOLD)
+        frames = FastScaleRoundInt(12);
+
+    return frames;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetSnapJumpDir);
 

@@ -361,3 +361,5 @@ FastTransformVec4__FP4Vec4T0P4Mtx4 = 0x00221608;
 FontPrintWrapped__FiiUlPciiiUlPUc = 0x0021D770;
 
 Hero_ApplyRootMotionDelta__FP4Vec4fff = 0x0022A7D0;
+
+Hero_GetSnapJumpDir__Fv = 0x0023CEB0;
