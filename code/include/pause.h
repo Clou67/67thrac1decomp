@@ -61,7 +61,9 @@ extern int pauseActionListMode;
 
 enum { MAP_CACHE_SLOT_COUNT = 5 };
 struct MapPageState {
-    char unk0[0x224];
+    char unk0[0x28];
+    int available;
+    char unk2C[0x1F8];
     int level;
     char unk228[0x50];
     void *cacheBuffers[MAP_CACHE_SLOT_COUNT];

@@ -193,7 +193,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_FindDecodedLaye
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_SaveRevealMask);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DecompressMapImage);
+enum { MAP_IMAGE_RLE = 1 };
+void Map_DecompressMapImage_Rle(unsigned char *out, unsigned char *data, int layer);
+void Map_DecompressMapImage_Raw(unsigned char *out, unsigned char *data);
+
+void Map_DecompressMapImage(unsigned char *out, unsigned char *data, int layer)
+{
+    map_stub();
+    if (MapPage.available) {
+        if (*data & MAP_IMAGE_RLE)
+            Map_DecompressMapImage_Rle(out, data, layer);
+        else
+            Map_DecompressMapImage_Raw(out, data);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DecompressMapImage_Rle);
 

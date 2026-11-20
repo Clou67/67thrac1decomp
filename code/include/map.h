@@ -27,4 +27,6 @@ int Map_GetFreeCacheSlotCompact(void);
 
 void Map_WorldToMapCoords(float x, float y, float *outU, float *outV, int level);
 
+void Map_DecompressMapImage(unsigned char *out, unsigned char *data, int layer);
+
 #endif
