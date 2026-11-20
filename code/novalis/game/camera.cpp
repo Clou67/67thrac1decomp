@@ -45,7 +45,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_switchtoN
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_ActivationCheckPriority);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Exit);
+void Camera_Exit(UpdateCam *camera)
+{
+    void (*callback)(UpdateCam *) = cameraupdate_vtbl[camera->funcIdx].exit;
+
+    if (callback)
+        callback(camera);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", UpdateAllCameras);
 

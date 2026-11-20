@@ -185,4 +185,6 @@ void Camera_DeactivateCurrent(void);
 
 void Camera_runSetupToNewCam(UpdateCam *camera);
 
+void Camera_Exit(UpdateCam *camera);
+
 #endif
