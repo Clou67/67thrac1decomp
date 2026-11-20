@@ -1,4 +1,5 @@
 #include "common.h"
+#include "path.h"
 #include "vuchain.h"
 #include "mathfunc_inline.h"
 #include "fastfunc.h"
@@ -801,7 +802,26 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineInter
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineCrossCheck);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineSegmentsReachable);
+enum { SPLINE_MASK_BITS = 32 };
+extern MobySpline *Splines[];
+
+unsigned int MB_SplineSegmentsReachable(int spline, unsigned int targets, unsigned int from)
+{
+    MobySpline *path = Splines[spline];
+    int reached = from;
+    for (int step = 0; step < SPLINE_MASK_BITS; ++step) {
+        if (targets & reached)
+            return targets & reached;
+
+        int expanded = reached;
+        for (int node = 0; node < SPLINE_MASK_BITS; ++node) {
+            if ((reached >> node) & 1)
+                expanded |= path->nodes[node].mask;
+        }
+        reached = expanded;
+    }
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00276CB0);
 

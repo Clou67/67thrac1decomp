@@ -3,6 +3,19 @@
 
 #include "moby.h"
 
+struct SplineNode {
+    float x;
+    float y;
+    float z;
+    unsigned int mask;
+};
+
+struct MobySpline {
+    int pointCount;
+    char unk_04[12];
+    SplineNode nodes[1];
+};
+
 struct MobyPath {
     int pointCount;
     char unk_04[0xC];

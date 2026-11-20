@@ -149,4 +149,6 @@ int MB_SolveQuad(float first, float second, float third, float *largerRoot, floa
 
 void MB_CosineInterpolateUnitVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to);
 
+unsigned int MB_SplineSegmentsReachable(int spline, unsigned int targets, unsigned int from);
+
 #endif
