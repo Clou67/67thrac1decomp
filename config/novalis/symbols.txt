@@ -1577,7 +1577,7 @@ walk_UpdateStateMachine = 0x002B53E0; // type:func size:0x2650
 WaterTile_InitAll = 0x002B7A48; // type:func size:0x220
 WaterTile_CalcGridBsphere = 0x002B7C68; // type:func size:0xC0
 WaterTile_LookupTile = 0x002B7D28; // type:func size:0x1C4
-WaterWave_ScaleTable = 0x002B7EF0; // type:func size:0x3C
+WaterWave_ScaleTable__Ff = 0x002B7EF0; // type:func size:0x3C
 WaterTile_StepSim = 0x002B7F30; // type:func size:0xAC
 WaterTile_UpdateWaves = 0x002B7FE0; // type:func size:0xEC
 WaterTile_UpdateUVs = 0x002B80D0; // type:func size:0x1B4
@@ -2222,3 +2222,5 @@ movieVblankCount = 0x00161324; // size:0x4
 inactiveVideoDmaMessage = 0x0020A790;
 
 StashedMobyClassDists = 0x00197400; // size:0x380
+
+WaterWaveTable = 0x001CAE60; // size:0x170

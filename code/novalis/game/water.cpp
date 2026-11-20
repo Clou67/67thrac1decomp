@@ -7,7 +7,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_CalcGri
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_LookupTile);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterWave_ScaleTable);
+enum { WATER_WAVE_REFERENCE_SAMPLE = 16, WATER_WAVE_SAMPLE_COUNT = 92 };
+extern float WaterWaveTable[WATER_WAVE_SAMPLE_COUNT];
+
+void WaterWave_ScaleTable(float height)
+{
+    float scale = height / WaterWaveTable[WATER_WAVE_REFERENCE_SAMPLE];
+    float *sample = WaterWaveTable;
+
+    for (unsigned int index = 0; index < WATER_WAVE_SAMPLE_COUNT; index++)
+        *sample++ *= scale;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/water", WaterTile_StepSim);
 
