@@ -125,7 +125,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AD88);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_SpeechPreseekCB);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_PreseekTrackCB);
+void music_PreseekTrack(int track, int flags, int volume);
+
+void music_PreseekTrackCB(unsigned int result, unsigned long long data)
+{
+    MusicPlaying *playing = (MusicPlaying *)(int)data;
+    if (playing) {
+        playing->handle = result;
+        if (result) {
+            if (playing->status == MUSIC_PRESEEK_PENDING)
+                playing->status = MUSIC_PRESEEK_COMPLETE;
+        }
+
+        else
+            music_PreseekTrack(musicTransition.primary_track, musicTransition.primaryFlags, musicTransition.primaryVolume);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", func_0027AE78);
 

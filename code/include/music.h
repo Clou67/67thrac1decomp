@@ -1,6 +1,14 @@
 #ifndef MUSIC_H
 #define MUSIC_H
 
+enum { MUSIC_PRESEEK_PENDING = 1, MUSIC_PRESEEK_COMPLETE = 2 };
+
+struct MusicPlaying {
+    unsigned int handle;
+    char unk_04[6];
+    short status;
+};
+
 struct MusicTransition {
     char unk0[8];
     short read_state;
@@ -12,15 +20,16 @@ struct MusicTransition {
     signed char requested_transition;
     char unk24[0x14];
     short primary_track;
-    char unk3A[4];
+    short primaryVolume;
+    short primaryFlags;
     short primary_bank;
     short primary_command;
     short primary_unpause;
     char unk44[0xC];
     int unk50;
     short speechId;
-    short unk56;
-    short unk58;
+    short speechVolume;
+    short speechFlags;
     short state;
     short secondary_command;
     short secondary_unpause;
@@ -58,5 +67,7 @@ void music_LoadBankCB(int reason);
 void music_StopLoad(void);
 
 void music_SetTransition(int track, int transition);
+
+void music_PreseekTrackCB(unsigned int result, unsigned long long data);
 
 #endif

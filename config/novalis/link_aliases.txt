@@ -439,3 +439,5 @@ HeroTweaks = 0x0017AB00;
 LevelDrawCounters = 0x0016A100;
 
 sound_FootstepPlay__FiiiiP12MobyInstance = 0x002A1898;
+
+music_PreseekTrack__Fiii = 0x00279ED0;
