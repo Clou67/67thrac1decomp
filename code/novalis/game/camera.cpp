@@ -128,7 +128,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", func_0020EB38);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_SetCollFlags);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_HandleScreenFade);
+extern float screenFade;
+
+void Camera_HandleScreenFade(void)
+{
+    if (GameCamera.camStatics.fadeSpeed != 0.0f) {
+        screenFade -= GameCamera.camStatics.fadeSpeed;
+        if (screenFade <= 0.0f) {
+            GameCamera.camStatics.fadeSpeed = 0.0f;
+            screenFade = 0.0f;
+        }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", UpdateCameras);
 
