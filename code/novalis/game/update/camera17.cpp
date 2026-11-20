@@ -11,6 +11,8 @@ void ActivateCamera_17(UpdateCam *camera)
 {
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera17", UpdateCamera_17);
+void UpdateCamera_17(UpdateCam *camera)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera17", ExitCamera_17);
