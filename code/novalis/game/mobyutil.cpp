@@ -386,7 +386,19 @@ void ReorderRGB_Swap(int *red, int *green, int *blue, int mask)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", ReorderRGB);
+unsigned int ReorderRGB(unsigned int rgba, int mask)
+{
+    if (!mask)
+        return rgba;
+
+    int red = rgba & 0xFF;
+    int green = (int)(rgba & 0xFF00) >> 8;
+    int blue = (rgba >> 16) & 0xFF;
+    unsigned int alpha = rgba >> 24;
+
+    ReorderRGB_Swap(&red, &green, &blue, mask);
+    return (alpha << 24) | (blue << 16) | (green << 8) | red;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_NormalizeMtx3Columns);
 
