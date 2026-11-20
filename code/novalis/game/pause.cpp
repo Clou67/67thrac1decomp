@@ -229,7 +229,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", PlanetSelect_Upda
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MessageBox_OnEnter);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MessageBox_OnExit);
+int MessageBox_OnExit(MessageBoxWidget *widget)
+{
+    widget->streamBuffer = Menu_FreeStreamBuffer(widget->streamBuffer);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_002954C0);
 
