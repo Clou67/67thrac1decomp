@@ -143,4 +143,6 @@ float AccelDelt(float &value, float target, float &speed, float gain, float damp
 
 float MB_RoundToDecimals(float value, int digits);
 
+float SubRots(float target, float angle, int direction);
+
 #endif

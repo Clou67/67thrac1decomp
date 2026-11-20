@@ -408,7 +408,20 @@ float AccelDelt(float &value, float target, float &speed, float gain, float damp
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", OrganicDelt);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", SubRots);
+static const float SAME_ANGLE = 0.001745329238474369f;
+static const float FULL_ROTATION = 6.283185307179586f;
+
+float SubRots(float target, float angle, int direction)
+{
+    float delta = FastSubRots(target, angle);
+    if (!direction || delta * direction > 0.0f)
+        return delta;
+    if (FastAbsF(delta) <= SAME_ANGLE)
+        return 0.0f;
+    if (delta > 0.0f)
+        return delta - FULL_ROTATION;
+    return delta + FULL_ROTATION;
+}
 
 float SubRots(float target, float angle, int direction);
 
