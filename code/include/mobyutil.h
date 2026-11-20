@@ -88,4 +88,6 @@ float MB_CosineInterpolate(float start, float end, float weight);
 
 float MB_lerpRotCosine(float start, float end, float weight);
 
+float MB_BallisticTicksToHeight(Vec4 *start, Vec4 *velocity, float gravity, int *ticksOut);
+
 #endif

@@ -171,7 +171,18 @@ int DecAlpha(int *rgba, int decrement)
     return alpha == 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_BallisticTicksToHeight);
+float MB_BallisticTicksToHeight(Vec4 *start, Vec4 *velocity, float gravity, int *ticksOut)
+{
+    int ticks = FastFloatToInt(velocity->z / gravity);
+    float duration = FastIntToFloat(ticks);
+    float gravityDuration = FastIntToFloat((ticks * ticks + ticks) >> 1);
+    float height = start->z + velocity->z * duration - gravityDuration * gravity;
+
+    if (ticksOut)
+        *ticksOut = ticks;
+
+    return height;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_BallisticPosAtTicks);
 
