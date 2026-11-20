@@ -115,8 +115,8 @@ struct HeroState {
     char unk1634[0x4CC];
     Vec4 posHistory[32];
     float savedPosRot[8];
-    int padStick;
-    char unk1D24[0xAC];
+    float padStick[3];
+    char unk1D2C[0xA4];
     Vec4 glowPos[14];
     short glowCount;
     char unk1EB2[0x196];
@@ -392,5 +392,7 @@ void Hero_TransitionToDefault(void);
 void Hero_NormalizeThrust(Vec4 *direction, float horizontal, float vertical, int scaleComponents);
 
 void Hero_ResetIfTypeThree(void);
+
+float Hero_GetPadMagnitude(void);
 
 #endif

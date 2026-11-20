@@ -257,7 +257,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateCollisi
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateMovement);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetPadMagnitude);
+float Hero_GetPadMagnitude(void)
+{
+    float magnitude = FastVec3Length(Hero.padStick);
+
+    if (magnitude > 1.0f)
+        magnitude = 1.0f;
+
+    return magnitude;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_AnimFrameInWindow);
 
