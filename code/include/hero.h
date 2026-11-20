@@ -461,4 +461,6 @@ extern HeroTweakValues HeroTweaks;
 
 void Hero_SetTweakPair_97b44(float first, float second);
 
+void Hero_SetTweakPair_929e8(float first, float second);
+
 #endif

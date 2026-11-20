@@ -125,7 +125,11 @@ void Hero_SetTweakPair_97b44(float first, float second)
     HeroTweaks.unk_A8 = second;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetTweakPair_929e8);
+void Hero_SetTweakPair_929e8(float first, float second)
+{
+    HeroTweaks.unk_154 = first;
+    HeroTweaks.unk_158 = second;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetTweak_721dd4);
 
