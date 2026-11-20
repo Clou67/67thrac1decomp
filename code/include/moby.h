@@ -150,4 +150,6 @@ void MB_GetBoneTransformation(MobyInstance *moby, int index, Mtx4 *out);
 
 int MB_FindNearestAnimTrigger(MobySeq *sequence, float time);
 
+void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
+
 #endif
