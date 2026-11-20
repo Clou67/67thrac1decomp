@@ -421,7 +421,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026F868)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DamageMobyList);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ReadDamagePush);
+static const float DAMAGE_PUSH_TAG = 5627.9248046875f;
+
+void MB_ReadDamagePush(Vec4 impact, float *angle, float *speed, float *height)
+{
+    if (impact.w != DAMAGE_PUSH_TAG)
+        *angle = FastArcTan(impact.x, impact.y);
+
+    else {
+        *angle = FastArcTan(impact.x, impact.y);
+        float length = FastVec3Length(&impact.x);
+        impact.w = 0.0f;
+        *speed *= length;
+        *height *= impact.z;
+    }
+}
 
 void FastSubVec3(Vec4 *out, Vec4 *first, Vec4 *second);
 
