@@ -870,7 +870,22 @@ float MB_RoundToDecimals(float value, int digits)
     return value / factor;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_MayaFrameTrigger);
+float MB_BlendAnimFrame(MobyInstance *moby);
+float MB_RoundToDecimals(float value, int digits);
+
+int MB_MayaFrameTrigger(MobyInstance *moby, float frame)
+{
+    float current = MB_BlendAnimFrame(moby);
+    float offset = MB_RoundToDecimals(current - frame, 4);
+    float step = MB_RoundToDecimals(moby->unk58 * moby->frameSpeed, 4);
+
+    if (frame <= current) {
+        if (offset < step)
+            return 1;
+    }
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_LineCrossesSpline);
 

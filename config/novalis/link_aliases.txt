@@ -446,3 +446,5 @@ music_StartSpeech__Fiii = 0x00279CD8;
 MusicUnexpectedStopHandle = 0x00160128;
 
 snd_ContinueVAGStream__FUi = 0x0012ECA0;
+
+MB_BlendAnimFrame__FP12MobyInstance = 0x00263920;

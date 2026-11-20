@@ -165,4 +165,6 @@ bool MB_isAmmo(MobyInstance *moby);
 
 int MB_HeroStandingOnMoby(MobyInstance *moby);
 
+int MB_MayaFrameTrigger(MobyInstance *moby, float frame);
+
 #endif
