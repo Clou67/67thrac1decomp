@@ -96,4 +96,6 @@ void MB_RemoveVecComponent(Vec4 *out, Vec4 *vector, Vec4 *axis, float weight);
 
 void MB_BobMotion(MobyInstance *moby, float *phase, float *offset, float height, float phaseStep);
 
+void MB_SphericalToVector(Vec4 *out, float radius, float azimuth, float elevation);
+
 #endif

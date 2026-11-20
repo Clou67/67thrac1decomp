@@ -608,7 +608,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SwingMotion
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00277B48);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SphericalToVector);
+void MB_SphericalToVector(Vec4 *out, float radius, float azimuth, float elevation)
+{
+    out->x = FastAngleSinF(azimuth) * radius * FastAngleSinF(elevation);
+    out->y = FastAngleCosF(azimuth) * radius * FastAngleSinF(elevation);
+    out->z = FastAngleCosF(elevation) * radius;
+}
 
 void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
 
