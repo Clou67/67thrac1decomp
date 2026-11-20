@@ -395,4 +395,6 @@ void Hero_ResetIfTypeThree(void);
 
 float Hero_GetPadMagnitude(void);
 
+void Hero_ThrustModeAccel(float acceleration, float deceleration);
+
 #endif

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "mobyutil.h"
 #include "fastfunc.h"
 #include "hero.h"
 
@@ -289,7 +290,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GunTurnWalk);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_TurnWalk);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ThrustModeAccel);
+void Hero_ThrustModeAccel(float acceleration, float deceleration)
+{
+    if (Hero.storedNeutralSpeed < Hero.idealSpeed)
+        Delt(Hero.storedNeutralSpeed, Hero.idealSpeed, acceleration);
+
+    else
+        Delt(Hero.storedNeutralSpeed, Hero.idealSpeed, deceleration);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ThrustToMotionFwd);
 
