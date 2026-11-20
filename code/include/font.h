@@ -31,4 +31,6 @@ void FontPrintWindowSmall(FontWindow *window, unsigned long rgba, char *text, in
 
 void FontPrintSmallLeft(int x, int y, unsigned long rgba, char *text, int length);
 
+void FontPrintLarge(int x, int y, unsigned long rgba, char *text, int length);
+
 #endif
