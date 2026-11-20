@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vuchain.h"
 #include "pause.h"
 #include "map.h"
 
@@ -10,7 +11,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_FindFreeCacheSl
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetFreeCacheSlotCompact);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_MoveCacheSlot);
+void Map_MoveCacheSlot(int destination, int source)
+{
+    FastMemCopy16(MapPage.cacheBuffers[destination], MapPage.cacheBuffers[source], MapPage.cacheSizes[source] * 16);
+    MapPage.cacheIds[destination] = MapPage.cacheIds[source];
+    MapPage.cacheSizes[destination] = MapPage.cacheSizes[source];
+    MapPage.cacheIds[source] = -1;
+}
 
 int Map_FindCacheSlotById(int id)
 {

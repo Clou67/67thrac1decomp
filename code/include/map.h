@@ -17,4 +17,6 @@ void map_stub(void);
 
 int Map_FindCacheSlotById(int id);
 
+void Map_MoveCacheSlot(int destination, int source);
+
 #endif
