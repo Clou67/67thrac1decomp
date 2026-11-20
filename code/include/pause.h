@@ -2,6 +2,7 @@
 #define PAUSE_H
 
 struct MobyInstance;
+struct FontWindow;
 
 enum { GAME_COMPLETE_MOBY_COUNT = 24 };
 
@@ -100,5 +101,7 @@ int SaveLoad_OnEnter(SaveLoadWidget *widget);
 int SaveLoad_OnExit(SaveLoadWidget *widget);
 
 int ItemView_OnExit(ItemViewWidget *widget);
+
+void Menu_InitSpriteRect(FontWindow *window, MenuClipWidget *widget);
 
 #endif

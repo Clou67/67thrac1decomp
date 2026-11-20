@@ -1,4 +1,5 @@
 #include "common.h"
+#include "font.h"
 #include "gsregs.h"
 #include "vuchain.h"
 #include "fastfunc.h"
@@ -381,7 +382,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MenuHero_LoadAnim
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_StopStreamLoad);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Menu_InitSpriteRect);
+enum { MENU_SPRITE_LINE_SPACING = 16 };
+
+void Menu_InitSpriteRect(FontWindow *window, MenuClipWidget *widget)
+{
+    window->win_top = 0;
+    window->win_bot = widget->height;
+    window->win_left = 0;
+    window->win_right = widget->width;
+    window->text_x = widget->width >> 1;
+    window->text_y = widget->height >> 1;
+    window->line_spacing = MENU_SPRITE_LINE_SPACING;
+    window->flags = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", MenuHero_SetupMobyList);
 
