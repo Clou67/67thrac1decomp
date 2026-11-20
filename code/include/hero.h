@@ -104,7 +104,9 @@ struct HeroState {
     MobyInstance *currentWeaponMoby;
     char unk1094[0x24];
     int currentWeapon;
-    char unk10BC[0x224];
+    char unk10BC[0x24];
+    MobyInstance *bootMoby;
+    char unk10E4[0x1FC];
     short groundType;
     char unk12E2[0x2];
     // The hero is in water.
@@ -466,5 +468,7 @@ void Hero_SetTweakPair_929e8(float first, float second);
 void Hero_SetTweak_721dd4(float first, float second);
 
 void Hero_SetTweak_721e84(float first, float second);
+
+void Hero_PlayFootStep(int groundType, int whichFoot, int playSound);
 
 #endif

@@ -35,7 +35,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateGlowAnd
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", MetalDetectorUpdate_Unused);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_PlayFootStep);
+enum { OCLASS_MAGNEBOOTS = 0xAD };
+
+int sound_FootstepPlay(int groundType, int whichFoot, int magneboots, int flags, MobyInstance *moby);
+
+void Hero_PlayFootStep(int groundType, int whichFoot, int playSound)
+{
+    if (playSound) {
+        int magneboots = 0;
+        if (Hero.bootMoby)
+            magneboots = (short)Hero.bootMoby->oClass == OCLASS_MAGNEBOOTS;
+
+        sound_FootstepPlay(groundType, whichFoot, magneboots, 0, Hero.moby);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_FeetSounds);
 
