@@ -229,7 +229,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021DB28);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindow);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindowMedium);
+void FontPrintWindowMedium(FontWindow *window, unsigned long rgba, char *text, int length)
+{
+    unsigned long tex0 = FontSet(FONT_MEDIUM);
+    FontPrintWindow(window, rgba, text, length, tex0, FontNormalMetrics);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindowSmall);
 

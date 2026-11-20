@@ -1,6 +1,8 @@
 #ifndef FONT_H
 #define FONT_H
 
+enum { FONT_MEDIUM = 1, FONT_SMALL = 2, FONT_LARGE = 3 };
+
 struct FontWindow {
     short win_top;
     short win_bot;
