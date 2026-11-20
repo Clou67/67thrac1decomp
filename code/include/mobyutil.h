@@ -127,4 +127,6 @@ void MB_SetStateByGroup(int group, int value);
 
 int MB_PushMobyOutOfWalls(MobyInstance *moby, Vec4 *move, float height, float stepHeight, int radiusFixed, int flags);
 
+void MB_RotateMoby(MobyInstance *moby, float xAngle, float yAngle, float zAngle);
+
 #endif

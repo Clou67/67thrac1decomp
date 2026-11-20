@@ -671,7 +671,23 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SplineFindR
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_PathPosAtDist);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RotateMoby);
+void FastEulerToMtx1(Mtx4 *out, Vec4 *angles);
+void MB_GetOrientationMtx(Mtx4 *matrix, Vec4 *out);
+
+void MB_RotateMoby(MobyInstance *moby, float xAngle, float yAngle, float zAngle)
+{
+    Vec4 angles;
+    Mtx4 rotationDelta;
+    Mtx4 orientation;
+
+    angles.x = xAngle;
+    angles.y = yAngle;
+    angles.z = zAngle;
+    FastEulerToMtx1(&rotationDelta, &angles);
+    FastEulerToMtx1(&orientation, &moby->rotation);
+    FastMtxTransform(&orientation, &orientation, &rotationDelta);
+    MB_GetOrientationMtx(&orientation, &moby->rotation);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", CreateMotionBlur);
 
