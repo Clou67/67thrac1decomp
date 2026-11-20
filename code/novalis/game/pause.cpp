@@ -128,7 +128,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", PlanetInfo_Draw);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBoltWidget_SpawnMoby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBoltWidget_DeleteMoby);
+MobyInstance *Menu_DeleteMoby(MobyInstance *moby);
+
+int GoldBoltWidget_DeleteMoby(GoldBoltWidget *widget)
+{
+    widget->moby = Menu_DeleteMoby(widget->moby);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBoltWidget_Update);
 

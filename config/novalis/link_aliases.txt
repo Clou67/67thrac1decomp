@@ -342,3 +342,5 @@ FastVec3Normalize__FP4Vec4T0f = 0x00221410;
 FastBsphereCheck__FP4Vec4f = 0x002221F0;
 
 DrawMobyListProc__FP12MobyInstancei = 0x00264CE8;
+
+Menu_DeleteMoby__FP12MobyInstance = 0x00298F38;

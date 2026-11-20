@@ -10,6 +10,11 @@ struct GameCompleteWidget {
     MobyInstance *mobys[GAME_COMPLETE_MOBY_COUNT];
 };
 
+struct GoldBoltWidget {
+    char unk_00[0x44];
+    MobyInstance *moby;
+};
+
 extern int pauseActionListMode;
 
 // State of the pause menu's map page; only the level being shown is known so far.
@@ -30,5 +35,7 @@ void GoldBolt_SpinMobyUpdate(MobyInstance *moby);
 int MapPage_Draw(void);
 
 int GameComplete_Draw(GameCompleteWidget *widget);
+
+int GoldBoltWidget_DeleteMoby(GoldBoltWidget *widget);
 
 #endif
