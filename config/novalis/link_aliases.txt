@@ -152,7 +152,6 @@ ActivateCamera_5__FP9UpdateCam = 0x003171B8;
 UpdateCamera_5__FP9UpdateCam = 0x00317670;
 ActivateCamera_6__FP9UpdateCam = 0x00317F58;
 UpdateCamera_6__FP9UpdateCam = 0x00318008;
-InitCamera_7__FP9UpdateCam = 0x00318B10;
 ActivateCamera_7__FP9UpdateCam = 0x00318030;
 UpdateCamera_7__FP9UpdateCam = 0x00318B18;
 ExitCamera_7__FP9UpdateCam = 0x00318C08;

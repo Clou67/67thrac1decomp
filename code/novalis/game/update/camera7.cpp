@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vtbl.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera7", ActivateCamera_7);
 
@@ -12,7 +13,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera7", FUN_0031
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera7", func_00318B00);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera7", InitCamera_7);
+int InitCamera_7(UpdateCam *camera)
+{
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera7", UpdateCamera_7);
 
