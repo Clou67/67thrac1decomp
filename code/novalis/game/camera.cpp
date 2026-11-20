@@ -133,7 +133,22 @@ void Camera_Polar2Pos(Vec4 *out, PolarSm *polar, Vec4 *origin)
     FastVec3Add(out, out, origin);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Pos2Polar);
+void FastSubVec3(Vec4 *out, Vec4 *first, Vec4 *second);
+float FastSubRots(float first, float second);
+float FastVec3Length2(Vec4 *vector);
+
+int Camera_Pos2Polar(PolarSm *out, Vec4 *position, Vec4 *origin)
+{
+    Vec4 delta;
+    FastSubVec3(&delta, position, origin);
+    out->elevation = FastArcTan(FastVec3Length(&delta.x), delta.z);
+    float azimuth = FastArcTan(delta.x, delta.y);
+    FastSubRots(azimuth, out->azimuth);
+    out->azimuth = azimuth;
+    out->radius = FastVec3Length2(&delta);
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_CollSphereBump);
 
