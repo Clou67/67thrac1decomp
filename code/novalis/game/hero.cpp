@@ -330,7 +330,23 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetIdealThrus
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetIdealThrustForWalk);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_RotateByEuler);
+void FastEulerToMtx1(Mtx4 *out, Vec4 *angles);
+void MB_GetOrientationMtx(Mtx4 *matrix, Vec4 *out);
+
+void Hero_RotateByEuler(float xAngle, float yAngle, float zAngle)
+{
+    Vec4 angles;
+    Mtx4 rotationDelta;
+    Mtx4 orientation;
+
+    angles.x = xAngle;
+    angles.y = yAngle;
+    angles.z = zAngle;
+    FastEulerToMtx1(&rotationDelta, &angles);
+    FastEulerToMtx1(&orientation, &Hero.rotation);
+    FastMtxTransform(&orientation, &orientation, &rotationDelta);
+    MB_GetOrientationMtx(&orientation, &Hero.rotation);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_Turn3D);
 

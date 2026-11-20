@@ -369,3 +369,7 @@ MobyComputeSelectedJoints__FP12MobyInstanceiPiP4Mtx4 = 0x00268D80;
 FastVecMtx3Mult__FP4Vec4T0P4Mtx4 = 0x002215E0;
 
 Hero_DrawGlows__FP12MobyInstance = 0x00229440;
+
+FastEulerToMtx1__FP4Mtx4P4Vec4 = 0x00221980;
+
+MB_GetOrientationMtx__FP4Mtx4P4Vec4 = 0x002721F0;

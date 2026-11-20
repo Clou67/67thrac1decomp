@@ -422,4 +422,6 @@ int Hero_IsWeaponGroupB(int slot);
 
 void Hero_RegisterGlowDraw(void);
 
+void Hero_RotateByEuler(float xAngle, float yAngle, float zAngle);
+
 #endif
