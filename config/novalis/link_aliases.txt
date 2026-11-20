@@ -139,7 +139,6 @@ FUN_002f1c78__FP12MobyInstance = 0x002F1C78;
 FUN_002f1cc8__FP12MobyInstance = 0x002F1CC8;
 FUN_002f1d18__FP12MobyInstanceiif = 0x002F1D18;
 FUN_002f1dc8__FP12MobyInstance = 0x002F1DC8;
-InitCamera_0__FP9UpdateCam = 0x00314DF8;
 ActivateCamera_0__FP9UpdateCam = 0x00311F38;
 UpdateCamera_0__FP9UpdateCam = 0x00314E00;
 InitCamera_3__FP9UpdateCam = 0x00315DD8;

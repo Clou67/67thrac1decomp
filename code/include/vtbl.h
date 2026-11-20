@@ -27,7 +27,7 @@ struct MobyUpdateEntry {
 
 struct CameraUpdateEntry {
     int id;
-    void (*init)(UpdateCam *camera);
+    int (*init)(UpdateCam *camera);
     void (*activate)(UpdateCam *camera);
     void (*update)(UpdateCam *camera);
     void (*exit)(UpdateCam *camera);
@@ -195,31 +195,31 @@ int FUN_002f1d18(MobyInstance *moby, int arg1, int arg2, float amount);
 int FUN_002f1dc8(MobyInstance *moby);
 int func_002F1DF8(MobyInstance *moby);
 
-void InitCamera_0(UpdateCam *camera);
+int InitCamera_0(UpdateCam *camera);
 void ActivateCamera_0(UpdateCam *camera);
 void UpdateCamera_0(UpdateCam *camera);
 void ExitCamera_0(UpdateCam *camera);
-void InitCamera_3(UpdateCam *camera);
+int InitCamera_3(UpdateCam *camera);
 void ActivateCamera_3(UpdateCam *camera);
 void UpdateCamera_3(UpdateCam *camera);
 void ExitCamera_3(UpdateCam *camera);
-void InitCamera_4(UpdateCam *camera);
+int InitCamera_4(UpdateCam *camera);
 void ActivateCamera_4(UpdateCam *camera);
 void UpdateCamera_4(UpdateCam *camera);
 void ExitCamera_4(UpdateCam *camera);
-void InitCamera_5(UpdateCam *camera);
+int InitCamera_5(UpdateCam *camera);
 void ActivateCamera_5(UpdateCam *camera);
 void UpdateCamera_5(UpdateCam *camera);
 void ExitCamera_5(UpdateCam *camera);
-void InitCamera_6(UpdateCam *camera);
+int InitCamera_6(UpdateCam *camera);
 void ActivateCamera_6(UpdateCam *camera);
 void UpdateCamera_6(UpdateCam *camera);
 void ExitCamera_6(UpdateCam *camera);
-void InitCamera_7(UpdateCam *camera);
+int InitCamera_7(UpdateCam *camera);
 void ActivateCamera_7(UpdateCam *camera);
 void UpdateCamera_7(UpdateCam *camera);
 void ExitCamera_7(UpdateCam *camera);
-void InitCamera_17(UpdateCam *camera);
+int InitCamera_17(UpdateCam *camera);
 void ActivateCamera_17(UpdateCam *camera);
 void UpdateCamera_17(UpdateCam *camera);
 void ExitCamera_17(UpdateCam *camera);

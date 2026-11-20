@@ -117,7 +117,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0031
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_00314d88);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", InitCamera_0);
+int InitCamera_0(UpdateCam *camera)
+{
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", UpdateCamera_0);
 
