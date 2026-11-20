@@ -241,7 +241,11 @@ void FontPrintWindowMedium(FontWindow *window, unsigned long rgba, char *text, i
     FontPrintWindow(window, rgba, text, length, tex0, FontNormalMetrics);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintWindowSmall);
+void FontPrintWindowSmall(FontWindow *window, unsigned long rgba, char *text, int length)
+{
+    unsigned long tex0 = FontSet(FONT_SMALL);
+    FontPrintWindow(window, rgba, text, length, tex0, FontSmallMetrics);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", func_0021E118);
 
