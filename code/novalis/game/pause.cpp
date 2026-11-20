@@ -132,7 +132,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBoltWidget_Up
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", Update_FoundGBsShipMenu);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", GoldBolt_SpinMobyUpdate);
+void GoldBolt_SpinMobyUpdate(MobyInstance *moby)
+{
+    moby->rotation.x = FastAddRots(moby->rotation.x, 0.02f);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemInfo_DrawCost);
 
