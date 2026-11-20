@@ -70,4 +70,6 @@ void music_SetTransition(int track, int transition);
 
 void music_PreseekTrackCB(unsigned int result, unsigned long long data);
 
+void music_SpeechPreseekCB(unsigned int result, unsigned long long data);
+
 #endif
