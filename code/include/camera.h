@@ -212,4 +212,6 @@ void Camera_HandleScreenFade(void);
 
 void FUN_0030f338(UpdateCam *camera);
 
+void FUN_00311008(UpdateCam *camera);
+
 #endif
