@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vtbl.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1289", FUN_0030a4e0);
 
@@ -6,4 +7,6 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1289", FUN_003
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1289", FUN_0030a670);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1289", UpdateMoby_1289);
+void UpdateMoby_1289(MobyInstance *moby)
+{
+}
