@@ -41,7 +41,9 @@ struct HeroState {
     int ghostFrames;
     char unk1D0[0x16];
     short swingshotReleasedTimer;
-    char unk1E8[0x38];
+    char unk1E8[0xE];
+    short splineWallHitTimer;
+    char unk1F8[0x28];
     float collTop;
     float collBottom;
     char unk228[0xC];
@@ -171,7 +173,8 @@ struct HeroState {
     short requestedState;
     char unk22CE[0xA];
     short hasClank;
-    char unk22DA[0x36];
+    short splineWall;
+    char unk22DC[0x34];
 };
 
 // Hero states (the PS3 project's PlayerState).
@@ -433,5 +436,7 @@ void Hero_Turn(float gain, float damping, float limit, int direction);
 float Hero_GetRotationHistory(int framesAgo);
 
 void Hero_AlignToVec(Vec4 *direction, Vec4 *out);
+
+void Hero_CollideSplineWall(void);
 
 #endif

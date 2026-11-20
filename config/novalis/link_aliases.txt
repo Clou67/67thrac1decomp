@@ -407,3 +407,5 @@ FastFSqrt__Ff = 0x002210F0;
 Splines = 0x001B0930;
 
 FastMtx3Transpose__FP4Mtx4T0 = 0x00221C08;
+
+MB_CollideSplineWall__FifP4Vec4T2 = 0x00276CB8;

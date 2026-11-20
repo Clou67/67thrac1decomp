@@ -730,7 +730,13 @@ int Hero_GetSpecialStateKind(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_MoveWithPlatform);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_CollideSplineWall);
+int MB_CollideSplineWall(int spline, float radius, Vec4 *position, Vec4 *out);
+
+void Hero_CollideSplineWall(void)
+{
+    if (MB_CollideSplineWall(Hero.splineWall, Hero.collRadius, &Hero.position, &Hero.position))
+        Hero.splineWallHitTimer = 4;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateManipulatorSpin);
 
