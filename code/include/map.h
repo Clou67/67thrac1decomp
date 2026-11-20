@@ -19,4 +19,6 @@ int Map_FindCacheSlotById(int id);
 
 void Map_MoveCacheSlot(int destination, int source);
 
+int Map_GetGalacticMapIndex(int id);
+
 #endif

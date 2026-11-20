@@ -391,3 +391,5 @@ MB_isCrate__FP12MobyInstance = 0x00273278;
 SpawnMoby_1007__FP4Vec4 = 0x002BA760;
 
 CollLine__FP4Vec4T0iP12MobyInstanceT3 = 0x00211870;
+
+GalacticMapIds = 0x001602A0;

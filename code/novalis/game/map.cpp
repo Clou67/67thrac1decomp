@@ -30,7 +30,18 @@ int Map_FindCacheSlotById(int id)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetNextMapToPrefetch);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetGalacticMapIndex);
+enum { GALACTIC_MAP_LEVEL_COUNT = 20 };
+extern int *GalacticMapIds;
+
+int Map_GetGalacticMapIndex(int id)
+{
+    int *entry = GalacticMapIds;
+    for (int index = 0; *entry && index < GALACTIC_MAP_LEVEL_COUNT; ++index, ++entry) {
+        if (GalacticMapIds[index] == id)
+            return index;
+    }
+    return -1;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_ChooseCacheSlotToEvict);
 
