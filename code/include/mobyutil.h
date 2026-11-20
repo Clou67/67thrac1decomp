@@ -108,4 +108,6 @@ void MB_QuatToEuler(Vec4 *out, Vec4 *angles);
 
 void MB_RotateQuatAxisAngle(Vec4 *out, Vec4 *vector, Vec4 *axis, float angle);
 
+unsigned int Float_To_RGBA(float red, float green, float blue, float alpha);
+
 #endif

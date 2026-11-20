@@ -353,7 +353,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", AccelDeltAng);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", OrganicDeltAng);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", Float_To_RGBA);
+unsigned int Float_To_RGBA(float red, float green, float blue, float alpha)
+{
+    int redByte = FastFloatToInt(red * 255.0f) & 0xFF;
+    int greenByte = FastFloatToInt(green * 255.0f) & 0xFF;
+    int blueByte = FastFloatToInt(blue * 255.0f) & 0xFF;
+    unsigned int alphaByte = FastFloatToInt(alpha * 255.0f);
+
+    return redByte | (greenByte << 8) | (blueByte << 16) | (alphaByte << 24);
+}
 
 enum { SWAP_RED_GREEN = 1, SWAP_GREEN_BLUE = 2, SWAP_BLUE_RED = 4 };
 
