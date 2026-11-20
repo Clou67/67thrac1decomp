@@ -1,4 +1,5 @@
 #include "common.h"
+#include "vtbl.h"
 #include "camera.h"
 
 void Camera_ClearPolar(float *polar)
@@ -32,7 +33,13 @@ void Camera_DeactivateCurrent(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", camera_HandleCollWithHero);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_runSetupToNewCam);
+void Camera_runSetupToNewCam(UpdateCam *camera)
+{
+    void (*callback)(UpdateCam *) = cameraupdate_vtbl[camera->funcIdx].activate;
+
+    if (callback)
+        callback(camera);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_switchtoNewCam);
 

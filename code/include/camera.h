@@ -183,4 +183,6 @@ void Camera_ClearPolar(float *polar);
 
 void Camera_DeactivateCurrent(void);
 
+void Camera_runSetupToNewCam(UpdateCam *camera);
+
 #endif
