@@ -519,7 +519,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsPntInCyli
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsPntInSphere);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_QuatMultiply);
+void FastQuaternionMult(Vec4 *out, Vec4 *left, Vec4 *right);
+
+void MB_QuatMultiply(Vec4 *out, Vec4 *vector, Vec4 *rotation)
+{
+    Vec4 inverse, point, rotated;
+
+    FastVec3Scale(&inverse, rotation, -1.0f);
+    inverse.w = rotation->w;
+    CopyVec4Inline(&point, vector);
+    point.w = 0.0f;
+
+    FastQuaternionMult(&rotated, rotation, &point);
+    FastQuaternionMult(out, &rotated, &inverse);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RotateQuatAxisAngle);
 

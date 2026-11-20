@@ -102,4 +102,6 @@ void MB_randSphere(Vec4 *out, float minimum, float maximum);
 
 void MB_randOffset(Vec4 *vector, float range);
 
+void MB_QuatMultiply(Vec4 *out, Vec4 *vector, Vec4 *rotation);
+
 #endif
