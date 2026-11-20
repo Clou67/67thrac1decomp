@@ -33,4 +33,6 @@ int PathFollower_Advance(PathFollower *follower);
 
 int PathFollower_WrapIdx(PathFollower *follower, int index);
 
+int PathFindClosestPnt(float distance, Vec4 *position, MobyPath *path);
+
 #endif

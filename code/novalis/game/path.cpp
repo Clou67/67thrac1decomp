@@ -1,11 +1,26 @@
 #include "common.h"
+#include "fastfunc.h"
 #include "path.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", InitFollower);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", func_0028B508);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", PathFindClosestPnt);
+float FastAbsF(float value);
+
+int PathFindClosestPnt(float distance, Vec4 *position, MobyPath *path)
+{
+    int closest = 0;
+    float bestDistance = 100000000000.0f;
+    for (int index = 0; index < path->pointCount; ++index) {
+        float pointDistance = FastVec3Dist(&path->points[index], position);
+        if (FastAbsF(pointDistance - distance) < bestDistance) {
+            bestDistance = pointDistance;
+            closest = index;
+        }
+    }
+    return closest;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/path", func_0028B5D8);
 
