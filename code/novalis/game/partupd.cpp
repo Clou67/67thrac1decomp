@@ -158,7 +158,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_041)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_041);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_042);
+void UpdatePart_042(PartInstance *part)
+{
+    if (part->timer != -1 && FastDecTimer(part->timer))
+        DeletePart(part);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_042);
 
