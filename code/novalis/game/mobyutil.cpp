@@ -545,8 +545,10 @@ int MB_IsInvalidOrClass502(MobyInstance *moby)
 {
     if (!moby)
         return 0;
-    if (MB_isCrate(moby))
-        return static_cast<short>(moby->oClass) == MOBY_CLASS_502;
+    if (MB_isCrate(moby)) {
+        short oClass = moby->oClass;
+        return oClass == MOBY_CLASS_502;
+    }
 
     return 1;
 }

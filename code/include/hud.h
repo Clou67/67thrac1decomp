@@ -23,19 +23,19 @@ void Hud_DrawRotatedSprite16(float cx, float cy, float width, float height, floa
 void Hud_SetEntryValueById(int id, int value);
 void HudStub(void);
 
-typedef void (*HudFunction)(void);
+typedef void (*HudFunction)(HudEntry *entry);
 
 // Adds a HUD entry with its init, update and draw functions; returns its handle.
 int RegisterHUDCallback(int type, int texture, HudFunction init, HudFunction update, HudFunction draw, void *value, int maximum);
 // Keeps the entry on screen for the given frames; nonzero when it is no longer registered.
 int Hud_SetEntryMinValueById(int handle, int frames);
 int Hud_SetEntryIconById(int handle);
-void HudEntry_InitCounterSlide(void);
+void HudEntry_InitCounterSlide(HudEntry *entry);
 
-void Draw_PromptMsg(void);
+void Draw_PromptMsg(HudEntry *entry);
 
-void BoltHud_Update(void);
-void Draw_BoltCountUI(void);
+void BoltHud_Update(HudEntry *entry);
+void Draw_BoltCountUI(HudEntry *entry);
 // Shows a help prompt with the given text.
 void GetHelpLen(char *text);
 

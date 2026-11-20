@@ -99,7 +99,7 @@ struct MobyInstance {
     int collQueryStamp;
     unsigned int collCount;
     signed char damage;
-    char previousAnimationId;
+    unsigned char previousAnimationId;
     unsigned short oClass;
     int handle;
     unsigned int index;

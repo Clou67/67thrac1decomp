@@ -198,7 +198,7 @@ int Hero_IsInSpecialMovementState(void)
 int Hero_DefaultByteIfFF(MobyInstance *moby, int animation)
 {
     if (animation == 0xFF)
-        animation = static_cast<unsigned char>(moby->previousAnimationId);
+        animation = moby->previousAnimationId;
 
     return animation;
 }
