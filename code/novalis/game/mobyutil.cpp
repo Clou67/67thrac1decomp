@@ -16,7 +16,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetAnimatio
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026C900);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randInt);
+int RandomNext(void);
+
+int MB_randInt(int limit)
+{
+    return ((RandomNext() >> 16) & 0x7FFF) % limit;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randRange);
 

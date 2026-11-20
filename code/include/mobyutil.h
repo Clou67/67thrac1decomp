@@ -25,4 +25,6 @@ void *MB_GetPvarsIfMobyHasThem(MobyInstance *moby);
 
 void MB_CopyHeroLights(MobyInstance *moby);
 
+int MB_randInt(int limit);
+
 #endif
