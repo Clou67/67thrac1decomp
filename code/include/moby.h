@@ -66,7 +66,7 @@ struct MobyClass {
     unsigned char packetCount1;        // 0x05
     unsigned char metalCount;          // 0x06
     unsigned char unk_07;
-    unsigned char unk_08;
+    unsigned char jointCount;          // 0x08
     unsigned char unk_09;
     unsigned char unk_0A;
     unsigned char unk_0B;
@@ -81,6 +81,7 @@ struct MobyClass {
     MobyGifUsage *gifUsage;              // 0x20
     float scale;                        // 0x24
     SoundDef *soundDefs;                // 0x28
+    // The loader saves mipDistance before the runtime slot can hold callbacks.
     union {                             // 0x2C
         unsigned int mipDistance;
         MobyClassCallbacks *callbacks;
