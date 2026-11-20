@@ -235,7 +235,6 @@ HudEntry_UpdateCounterWrap__Fv = 0x0024C878;
 Hud_DrawTexQuadUV_Fixed__Fv = 0x0024E8D0;
 Hud_SetEntryIconById__Fi = 0x0024AFA0;
 Hud_SetEntryMinValueById__Fii = 0x0024B4B0;
-MB_GetUnspentGoldBolts__Fv = 0x002790D0;
 PlayInfobotMovie__Fi = 0x002ACF50;
 RegisterHUDCallback__FiiPFv_vN22Pvi = 0x0024AD98;
 mode_movieUnInit__Fi = 0x002AC330;

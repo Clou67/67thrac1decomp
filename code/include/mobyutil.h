@@ -80,4 +80,6 @@ int MB_CountGoldWeapons(void);
 
 int MB_CountSkillPoints(void);
 
+int MB_GetUnspentGoldBolts(void);
+
 #endif
