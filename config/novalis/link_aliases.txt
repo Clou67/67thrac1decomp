@@ -65,7 +65,6 @@ UpdateMoby_641__FP12MobyInstance = 0x002F4348;
 UpdateMoby_660__FP12MobyInstance = 0x002F4428;
 UpdateMoby_665__FP12MobyInstance = 0x002F4710;
 UpdateMoby_666__FP12MobyInstance = 0x002F4960;
-UpdateMoby_676__FP12MobyInstance = 0x002F6128;
 UpdateMoby_678__FP12MobyInstance = 0x002F6180;
 UpdateMoby_679__FP12MobyInstance = 0x002F6328;
 UpdateMoby_686__FP12MobyInstance = 0x002F6A30;
@@ -325,3 +324,5 @@ FastMtx4Copy__FP4Mtx4T0 = 0x00221BE8;
 MB_MtxToQuat__FP4Vec4P4Mtx4 = 0x00271DB0;
 
 WaterSheet_DrawAll__FiP10WaterSheet = 0x002B96E0;
+
+RegisterMobyDraw__FPFP12MobyInstance_vP12MobyInstance = 0x0021AFE0;

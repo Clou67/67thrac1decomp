@@ -19,4 +19,10 @@ void M676_DrawWaterSheets(MobyInstance *moby)
     WaterSheet_DrawAll(WATER_SHEET_COUNT, WaterSheets);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby676", UpdateMoby_676);
+void RegisterMobyDraw(void (*draw)(MobyInstance *), MobyInstance *moby);
+void M676_DrawWaterSheets(MobyInstance *moby);
+
+void UpdateMoby_676(MobyInstance *moby)
+{
+    RegisterMobyDraw(M676_DrawWaterSheets, moby);
+}
