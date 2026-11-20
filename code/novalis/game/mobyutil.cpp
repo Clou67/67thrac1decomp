@@ -271,7 +271,28 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", OrganicDeltAng
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", Float_To_RGBA);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", ReorderRGB_Swap);
+enum { SWAP_RED_GREEN = 1, SWAP_GREEN_BLUE = 2, SWAP_BLUE_RED = 4 };
+
+void ReorderRGB_Swap(int *red, int *green, int *blue, int mask)
+{
+    if (mask & SWAP_RED_GREEN) {
+        int saved = *red;
+        *red = *green;
+        *green = saved;
+    }
+
+    if (mask & SWAP_GREEN_BLUE) {
+        int saved = *green;
+        *green = *blue;
+        *blue = saved;
+    }
+
+    if (mask & SWAP_BLUE_RED) {
+        int saved = *blue;
+        *blue = *red;
+        *red = saved;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", ReorderRGB);
 

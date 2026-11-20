@@ -55,4 +55,6 @@ void SetCollDamIn(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags, f
 
 void SetCollDamIn_2(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags, float damageHp, Vec4 *momentum);
 
+void ReorderRGB_Swap(int *red, int *green, int *blue, int mask);
+
 #endif
