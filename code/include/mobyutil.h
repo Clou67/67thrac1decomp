@@ -27,4 +27,6 @@ void MB_CopyHeroLights(MobyInstance *moby);
 
 int MB_randInt(int limit);
 
+int MB_randRange(int low, int high);
+
 #endif

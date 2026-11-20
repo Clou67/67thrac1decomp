@@ -23,7 +23,10 @@ int MB_randInt(int limit)
     return ((RandomNext() >> 16) & 0x7FFF) % limit;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randRange);
+int MB_randRange(int low, int high)
+{
+    return ((RandomNext() >> 16) & 0x7FFF) % (high - low + 1) + low;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randRangeFloat);
 
