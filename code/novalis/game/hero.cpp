@@ -79,7 +79,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetLoopedAnim
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ApplyRootMotionDelta);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ApplyRootMotion);
+void FastVecZero(Vec4 *vector);
+void Hero_ApplyRootMotionDelta(Vec4 *out, float x, float y, float z);
+
+void Hero_ApplyRootMotion(float x, float y, float z)
+{
+    Vec4 displacement;
+
+    FastVecZero(&displacement);
+    displacement.z = 0.6f;
+    Hero_ApplyRootMotionDelta(&displacement, x, y, z);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetJoint9Mtx);
 
