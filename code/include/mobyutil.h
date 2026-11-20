@@ -86,4 +86,6 @@ void MB_SetGroupField(int group, int value);
 
 float MB_CosineInterpolate(float start, float end, float weight);
 
+float MB_lerpRotCosine(float start, float end, float weight);
+
 #endif

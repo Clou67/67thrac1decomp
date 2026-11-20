@@ -94,7 +94,15 @@ float MB_CosineInterpolate(float start, float end, float weight)
     return start + (end - start) * blend;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_lerpRotCosine);
+float FastSubRots(float first, float second);
+
+float MB_lerpRotCosine(float start, float end, float weight)
+{
+    float delta = FastSubRots(end, start);
+    float blend = (1.0f - FastAngleSinF(weight * 3.14159265358979323846f)) * 0.5f;
+
+    return FastAddRots(start, delta * blend);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CosineInterpolateUnitVec);
 
