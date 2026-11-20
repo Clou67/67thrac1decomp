@@ -432,4 +432,6 @@ void Hero_Turn(float gain, float damping, float limit, int direction);
 
 float Hero_GetRotationHistory(int framesAgo);
 
+void Hero_AlignToVec(Vec4 *direction, Vec4 *out);
+
 #endif

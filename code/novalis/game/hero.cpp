@@ -1,4 +1,5 @@
 #include "common.h"
+#include "mathfunc_inline.h"
 #include "draw.h"
 #include "npc.h"
 #include "mobyutil.h"
@@ -430,7 +431,24 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetBankTwistS
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetBackpackSway);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_AlignToVec);
+void FastMtx3Transpose(Mtx4 *out, Mtx4 *matrix);
+void FastTransformVec4(Vec4 *out, Vec4 *vector, Mtx4 *matrix);
+float FastFSqrt(float value);
+
+void Hero_AlignToVec(Vec4 *direction, Vec4 *out)
+{
+    Mtx4 orientation;
+    Mtx4 inverse;
+    Vec4 local;
+
+    CopyVec4Inline(&local, direction);
+    FastEulerToMtx1(&orientation, &Hero.moby->rotation);
+    FastMtx3Transpose(&inverse, &orientation);
+    FastTransformVec4(&local, &local, &inverse);
+
+    out->x = FastArcTan(FastFSqrt(local.x * local.x + local.z * local.z), local.y);
+    out->y = -FastArcTan(local.z, local.x);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", func_00236090);
 
