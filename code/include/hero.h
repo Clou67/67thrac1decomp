@@ -465,4 +465,6 @@ void Hero_SetTweakPair_929e8(float first, float second);
 
 void Hero_SetTweak_721dd4(float first, float second);
 
+void Hero_SetTweak_721e84(float first, float second);
+
 #endif
