@@ -1,4 +1,6 @@
 #include "common.h"
+#include "vtbl.h"
+#include "moby.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby577", FUN_002eec68);
 
@@ -20,7 +22,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby577", FUN_002e
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby577", FUN_002efb48);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby577", FUN_002efb98);
+int MB_BeginSucking(MobyInstance *moby);
+enum { M577_SUCKING = 14 };
+
+void M577_BeginSucking(MobyInstance *moby)
+{
+    MB_BeginSucking(moby);
+    moby->state = M577_SUCKING;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby577", FUN_002efbc8);
 
