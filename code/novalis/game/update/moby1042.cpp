@@ -28,7 +28,10 @@ void DeleteMoby_Thunk(MobyInstance *moby)
     DeleteMoby(moby);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040f8);
+int FUN_003040f8(MobyInstance *moby)
+{
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_00304100);
 
