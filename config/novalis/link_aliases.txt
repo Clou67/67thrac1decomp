@@ -380,3 +380,7 @@ MB_PushOutOfWalls__FP12MobyInstanceP4Vec4fffi = 0x0026D610;
 HudEntry_UpdateCounter__FP8HudEntry = 0x0024B538;
 
 HudEntry_CalcNumberSize__FP8HudEntry = 0x0024B318;
+
+FUN_003182c8__FP9UpdateCam = 0x003182C8;
+
+FUN_00318900__FP9UpdateCam = 0x00318900;

@@ -199,4 +199,6 @@ int Camera_Pos2Polar(PolarSm *out, Vec4 *position, Vec4 *origin);
 
 void Camera_CopyHeroPosition(MobyInstance *target, Vec4 *position);
 
+void FUN_00318ad0(UpdateCam *camera);
+
 #endif
