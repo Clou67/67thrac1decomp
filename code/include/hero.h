@@ -97,8 +97,8 @@ struct HeroState {
     char unkA94[0x14];
     float animFrame;
     float animFrameWindow;
-    int animLoopFrame;
-    char unkAB4[4];
+    int nextAnimation;
+    int nextAnimationFrame;
     int queuedFrameRequest;
     char unkABC[0x5D4];
     MobyInstance *currentWeaponMoby;
@@ -438,5 +438,7 @@ float Hero_GetRotationHistory(int framesAgo);
 void Hero_AlignToVec(Vec4 *direction, Vec4 *out);
 
 void Hero_CollideSplineWall(void);
+
+void Hero_SetNextAnimFrame(int animation, int frame);
 
 #endif

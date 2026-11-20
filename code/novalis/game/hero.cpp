@@ -596,11 +596,20 @@ void Hero_SnapAnim(int animation, int frame)
     UpdateMobyFrameData(moby);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetNextAnimFrame);
+void Hero_SetNextAnimFrame(int animation, int frame)
+{
+    if (animation >= 0) {
+        MobyInstance *moby = Hero.moby;
+        if (frame < moby->pClass->animations[moby->animationId]->frameCount) {
+            Hero.nextAnimation = animation;
+            Hero.nextAnimationFrame = frame;
+        }
+    }
+}
 
 void Hero_ClearNextAnim(void)
 {
-    Hero.animLoopFrame = -1;
+    Hero.nextAnimation = -1;
     Hero.queuedFrameRequest = 0;
 }
 

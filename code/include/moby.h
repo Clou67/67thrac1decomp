@@ -40,7 +40,10 @@ struct MobySeq {
     MobySeqFrame *frames[1];
 };
 
-struct MobyClass;
+struct MobyClass {
+    char unk_00[0x48];
+    MobySeq *animations[1];
+};
 struct Manipulator;
 
 // Bits of MobyInstance::modeBits.
