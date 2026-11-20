@@ -1,4 +1,5 @@
 #include "common.h"
+#include "fastfunc.h"
 #include "hero.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ResetHero);
@@ -415,7 +416,13 @@ void Hero_ClearNextAnim(void)
     Hero.queuedFrameRequest = 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetNextAnimBlend);
+void Hero_SetNextAnimBlend(int frames)
+{
+    if (frames == -1)
+        frames = FastScaleRoundInt(5);
+
+    Hero.queuedFrameRequest = frames;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateAnim);
 

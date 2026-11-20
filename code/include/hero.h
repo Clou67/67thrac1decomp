@@ -381,4 +381,6 @@ void Hero_SnapAnim(int animation, int frame);
 
 int Hero_GetSpecialStateKind(void);
 
+void Hero_SetNextAnimBlend(int frames);
+
 #endif
