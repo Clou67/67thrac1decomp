@@ -1,4 +1,6 @@
 #include "common.h"
+#include "fastfunc.h"
+#include "moby.h"
 #include "pause.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", LoadHudSeqs);
@@ -107,7 +109,10 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_Update);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_Draw);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_SpinMobyUpdate);
+void ItemView_SpinMobyUpdate(MobyInstance *moby)
+{
+    moby->rotation.z = FastAddRots(moby->rotation.z, 0.01f);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", WeaponView_Update);
 
