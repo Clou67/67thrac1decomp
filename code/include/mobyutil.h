@@ -24,6 +24,7 @@ struct COLL_DAM_IN {
     int pad;
 };
 struct Vec4;
+struct Mtx4;
 
 void MB_SetZBoundsFromPos(MobyInstance *moby, float z);
 
@@ -58,5 +59,7 @@ void SetCollDamIn_2(COLL_DAM_IN &damage, MobyInstance *damager, int damageFlags,
 void ReorderRGB_Swap(int *red, int *green, int *blue, int mask);
 
 int MB_GetPVarsField10(MobyInstance *moby);
+
+void MB_TransformToQuat(Vec4 *quaternion, Mtx4 *transform);
 
 #endif

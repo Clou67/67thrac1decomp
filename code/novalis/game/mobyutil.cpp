@@ -340,7 +340,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_UpdateKick)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_MtxToQuat);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_TransformToQuat);
+void FastMtx3x4Copy(Mtx4 *destination, Mtx4 *source);
+void FastMtx4Copy(Mtx4 *destination, Mtx4 *source);
+void MB_MtxToQuat(Vec4 *quaternion, Mtx4 *matrix);
+
+void MB_TransformToQuat(Vec4 *quaternion, Mtx4 *transform)
+{
+    Mtx4 matrix;
+
+    FastMtx3x4Copy(&matrix, transform);
+    MB_MtxToQuat(quaternion, &matrix);
+    FastMtx4Copy(transform, &matrix);
+}
 
 void MB_CopyHeroLights(MobyInstance *moby)
 {
