@@ -68,7 +68,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Pos2Polar
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_InitBlenderPolarHero);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_CopyLastQuatToPolar);
+extern Vec4 camPosOffset;
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+enum { CAMERA_BLEND_WITH_POSITION_OFFSET = 2 };
+
+void Camera_CopyLastQuatToPolar(void)
+{
+    CamBlender *blender = &GameCamera.blender;
+
+    if (!blender->type) {
+        Vec4 *position = &blender->blendData.polarData.pos;
+        CopyVec4Inline(position, &blender->blendData.posData.pos);
+        if (blender->reqType == CAMERA_BLEND_WITH_POSITION_OFFSET)
+            FastVec3Add(position, &camPosOffset, position);
+        CopyVec4Inline(&blender->blendData.polarData.q, &blender->blendData.posData.q);
+    }
+}
 
 void Camera_CopyLastPolarToQuat(void)
 {
