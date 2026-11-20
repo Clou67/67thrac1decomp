@@ -5,4 +5,4 @@ Progress on the Novalis level overlay (handwritten assembly files are not counte
 | | Files | Functions | Code |
 |---|---|---|---|
 | Engine files | 22 / 55 | 380 / 1382 | 70 KB / 613 KB |
-| Update files | 4 / 133 | 26 / 471 | 1 KB / 384 KB |
+| Update files | 4 / 133 | 31 / 471 | 1 KB / 384 KB |
