@@ -523,7 +523,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_AddGravity);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetPolarOffset);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetHeroRelativePos);
+void FastVecZero(Vec4 *vector);
+void FastTransformVec4(Vec4 *out, Vec4 *in, Mtx4 *matrix);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void Hero_GetHeroRelativePos(Vec4 *out, float x, float y, float z)
+{
+    FastVecZero(out);
+    out->x = x;
+    out->y = y;
+    out->z = z;
+
+    FastTransformVec4(out, out, &Hero.mtx);
+    FastVec3Add(out, out, &Hero.position);
+}
 
 void Hero_AddGravity(float amount, float *out, float *in);
 

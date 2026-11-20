@@ -356,3 +356,5 @@ FastSubVec3__FP4Vec4N20 = 0x002211B8;
 FastQuaternionMult__FP4Vec4N20 = 0x00221D78;
 
 FastQuatToEuler__FP4Vec4fi = 0x00221E38;
+
+FastTransformVec4__FP4Vec4T0P4Mtx4 = 0x00221608;
