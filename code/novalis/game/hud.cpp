@@ -117,7 +117,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_MetalDetectorH
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_DrawTextBox);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_RoundFixed);
+void HudEntry_RoundFixed(HudEntry *entry)
+{
+    entry->timer = FastScaleRoundInt(120) + 30;
+    entry->width = 32;
+    entry->height = 32;
+    HudEntry_CalcNumberSize(entry);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Draw_AmmoCounter);
 

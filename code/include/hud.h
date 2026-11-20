@@ -44,4 +44,6 @@ void HudEntry_UpdateCounterWrap(HudEntry *entry);
 
 void HudEntry_InitCounter(HudEntry *entry);
 
+void HudEntry_RoundFixed(HudEntry *entry);
+
 #endif
