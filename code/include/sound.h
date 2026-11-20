@@ -35,4 +35,6 @@ int sound_SetVol(int handle, int volume);
 
 int sound_SetPitch(int handle, int pitch);
 
+void sound_SetReverb(int owner, int type, int depth, int delay, int feedback);
+
 #endif

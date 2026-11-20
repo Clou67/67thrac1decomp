@@ -59,7 +59,27 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetupAmbien
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_UpdateAmbient);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_SetReverb);
+enum { REVERB_TYPE = 1, REVERB_DELAY_FEEDBACK = 2, REVERB_DEPTH = 4 };
+
+void sound_SetReverb(int owner, int type, int depth, int delay, int feedback)
+{
+    audioState.reverb_owner = owner;
+    if (audioState.reverb_type != type) {
+        audioState.reverb_type = type;
+        audioState.reverb_commands |= REVERB_TYPE;
+    }
+
+    if (audioState.reverb_depth != depth) {
+        audioState.reverb_depth = depth;
+        audioState.reverb_commands |= REVERB_DEPTH;
+    }
+
+    if (audioState.reverb_delay != delay || audioState.reverb_feedback != feedback) {
+        audioState.reverb_feedback = feedback;
+        audioState.reverb_delay = delay;
+        audioState.reverb_commands |= REVERB_DELAY_FEEDBACK;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/sound", sound_StopAllSounds);
 
