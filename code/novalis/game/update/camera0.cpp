@@ -3,7 +3,9 @@
 #include "mathfunc_inline.h"
 #include "vtbl.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera0", FUN_0030f338);
+void FUN_0030f338(UpdateCam *camera)
+{
+}
 
 extern Vec4 HeroPosition;
 

@@ -210,4 +210,6 @@ void camera_HandleCollWithHero(UpdateCam *camera);
 
 void Camera_HandleScreenFade(void);
 
+void FUN_0030f338(UpdateCam *camera);
+
 #endif
