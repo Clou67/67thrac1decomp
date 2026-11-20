@@ -147,8 +147,6 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CountActive
 
 extern short *MobyGroupEntries[];
 extern MobyInstance *MobyInstances;
-enum { MOBY_GROUP_INDEX_MASK = 0x7FFF };
-
 void MB_SetGroupField(int group, int value)
 {
     if (MobyGroupEntries[group]) {
@@ -160,7 +158,19 @@ void MB_SetGroupField(int group, int value)
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetStateByGroup);
+void MB_SetStateByGroup(int group, int value)
+{
+    if (MobyGroupEntries[group]) {
+        short *entry = MobyGroupEntries[group];
+        do {
+            int mobyIndex = *entry & MOBY_GROUP_INDEX_MASK;
+            if ((signed char)MobyInstances[mobyIndex].state >= 0)
+                MobyInstances[mobyIndex].state = value;
+        } while (*entry++ >= 0);
+    }
+}
+
+TEXT_PADDING(0, 0, 0, 0, 0, 0);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetFirstMobyInGroup);
 
