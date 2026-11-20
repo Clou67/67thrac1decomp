@@ -1,4 +1,5 @@
 #include "common.h"
+#include "hero.h"
 #include "fastfunc.h"
 #include "part.h"
 
@@ -254,7 +255,17 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_059)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_059);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", UpdatePart_060);
+enum { PART_RELATIVE_TO_HERO = 1 };
+
+void UpdatePart_060(PartInstance *part)
+{
+    PartSpinMotion *motion = &part->spinMotion;
+    if (motion->relativeToHero == PART_RELATIVE_TO_HERO)
+        FastVec3Add(&part->pos, &Hero.position, &motion->velocity);
+
+    if (FastDecTimer(part->timer))
+        DeletePart(part);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/partupd", SpawnPart_060);
 
