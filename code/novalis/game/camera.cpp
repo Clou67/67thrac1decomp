@@ -1,4 +1,5 @@
 #include "common.h"
+#include "fastfunc.h"
 #include "mathfunc_inline.h"
 #include "vtbl.h"
 #include "camera.h"
@@ -12,7 +13,14 @@ void Camera_ClearPolar(float *polar)
     polar[4] = 0.0f;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Cam_CopyRotWrapped);
+void Cam_CopyRotWrapped(float *out, float *polar, float yawOffset)
+{
+    out[0] = FastAddRots(polar[0], yawOffset);
+    out[1] = polar[1];
+    out[2] = polar[2];
+    out[3] = polar[3];
+    out[4] = polar[4];
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", BackupCurrentCam);
 

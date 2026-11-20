@@ -189,4 +189,6 @@ void Camera_Exit(UpdateCam *camera);
 
 void Camera_CopyLastPolarToQuat(void);
 
+void Cam_CopyRotWrapped(float *out, float *polar, float yawOffset);
+
 #endif
