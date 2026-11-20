@@ -51,6 +51,12 @@ struct SaveLoadWidget {
     int unk_4C;
 };
 
+struct ItemViewWidget {
+    char unk_00[0x44];
+    MobyInstance *moby;
+    MobyInstance *otherMoby;
+};
+
 extern int pauseActionListMode;
 
 // State of the pause menu's map page; only the level being shown is known so far.
@@ -85,5 +91,7 @@ int MessageBox_OnExit(MessageBoxWidget *widget);
 int SaveLoad_OnEnter(SaveLoadWidget *widget);
 
 int SaveLoad_OnExit(SaveLoadWidget *widget);
+
+int ItemView_OnExit(ItemViewWidget *widget);
 
 #endif

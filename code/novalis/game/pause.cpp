@@ -105,7 +105,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00291930);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", func_00291938);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_OnExit);
+MobyInstance *Menu_DeleteMoby(MobyInstance *moby);
+
+int ItemView_OnExit(ItemViewWidget *widget)
+{
+    widget->moby = Menu_DeleteMoby(widget->moby);
+    widget->otherMoby = Menu_DeleteMoby(widget->moby);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/pause", ItemView_Update);
 
