@@ -938,7 +938,7 @@ MB_InitDefaultParams = 0x0026D930; // type:func size:0x78
 MB_MoveAndCollide = 0x0026D9A8; // type:func size:0x4CC
 MB_MoveAndCollide2 = 0x0026DE80; // type:func size:0x174
 MB_CountActiveMobysByGroup = 0x0026E008; // type:func size:0x84
-MB_SetGroupField = 0x0026E090; // type:func size:0x50
+MB_SetGroupField__Fii = 0x0026E090; // type:func size:0x50
 MB_SetStateByGroup = 0x0026E0E0; // type:func size:0x58
 MB_GetFirstMobyInGroup = 0x0026E150; // type:func size:0xE8
 MB_GetNextMobyInGroup = 0x0026E238; // type:func size:0x164
@@ -2232,3 +2232,5 @@ GoldBoltFlags = 0x0013D408; // size:0x20
 GoldWeaponFlags = 0x0014BEC0; // size:0x50
 
 SkillPointFlags = 0x0013E520; // size:0x25
+
+MobyGroupEntries = 0x001ABCC0; // size:0x400

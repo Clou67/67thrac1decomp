@@ -82,4 +82,6 @@ int MB_CountSkillPoints(void);
 
 int MB_GetUnspentGoldBolts(void);
 
+void MB_SetGroupField(int group, int value);
+
 #endif

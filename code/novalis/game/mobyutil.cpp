@@ -119,7 +119,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_0026DFF8)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CountActiveMobysByGroup);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetGroupField);
+extern short *MobyGroupEntries[];
+extern MobyInstance *MobyInstances;
+enum { MOBY_GROUP_INDEX_MASK = 0x7FFF };
+
+void MB_SetGroupField(int group, int value)
+{
+    if (MobyGroupEntries[group]) {
+        short *entry = MobyGroupEntries[group];
+        do {
+            int mobyIndex = *entry & MOBY_GROUP_INDEX_MASK;
+            MobyInstances[mobyIndex].setByGroup = value;
+        } while (*entry++ >= 0);
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SetStateByGroup);
 
