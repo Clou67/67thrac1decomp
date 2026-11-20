@@ -25,6 +25,14 @@ struct COLL_DAM_IN {
     int shotUID;
     int pad;
 };
+struct MobyVolume {
+    Vec4 axisX;
+    Vec4 axisY;
+    Vec4 axisZ;
+    Vec4 origin;
+    Mtx4 inverseTransform;
+};
+
 struct Vec4;
 struct Mtx4;
 
@@ -168,5 +176,7 @@ int MB_HeroStandingOnMoby(MobyInstance *moby);
 int MB_MayaFrameTrigger(MobyInstance *moby, float frame);
 
 void MB_SetZBoundsFromGround(MobyInstance *moby);
+
+int MB_IsPntInSphere(Vec4 *point, int index);
 
 #endif
