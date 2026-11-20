@@ -149,7 +149,6 @@ ExitCamera_4__FP9UpdateCam = 0x00316C08;
 ActivateCamera_5__FP9UpdateCam = 0x003171B8;
 UpdateCamera_5__FP9UpdateCam = 0x00317670;
 ActivateCamera_6__FP9UpdateCam = 0x00317F58;
-UpdateCamera_6__FP9UpdateCam = 0x00318008;
 ActivateCamera_7__FP9UpdateCam = 0x00318030;
 UpdateCamera_7__FP9UpdateCam = 0x00318B18;
 InitCamera_17__FP9UpdateCam = 0x00319688;
@@ -363,3 +362,5 @@ FontPrintWrapped__FiiUlPciiiUlPUc = 0x0021D770;
 Hero_ApplyRootMotionDelta__FP4Vec4fff = 0x0022A7D0;
 
 Hero_GetSnapJumpDir__Fv = 0x0023CEB0;
+
+Camera6_UpdateOrbit__FP9UpdateCam = 0x003178D8;

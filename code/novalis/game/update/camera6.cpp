@@ -22,7 +22,12 @@ int InitCamera_6(UpdateCam *camera)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera6", ActivateCamera_6);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera6", UpdateCamera_6);
+void Camera6_UpdateOrbit(UpdateCam *camera);
+
+void UpdateCamera_6(UpdateCam *camera)
+{
+    Camera6_UpdateOrbit(camera);
+}
 
 void ExitCamera_6(UpdateCam *camera)
 {
