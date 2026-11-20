@@ -7,7 +7,19 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_0030
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_003028c8);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby849", FUN_00302a50);
+int M849_CallClassCallback0C(MobyInstance *moby)
+{
+    MobyClassCallback callback = moby->pClass->callbacks->callback0C;
+
+    int result;
+    if (!callback)
+        result = 1;
+
+    else
+        result = callback(moby);
+
+    return result;
+}
 
 int M849_CallClassCallback04(MobyInstance *moby)
 {

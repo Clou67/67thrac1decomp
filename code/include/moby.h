@@ -204,4 +204,6 @@ void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joi
 
 int M849_CallClassCallback04(MobyInstance *moby);
 
+int M849_CallClassCallback0C(MobyInstance *moby);
+
 #endif
