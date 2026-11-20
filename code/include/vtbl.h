@@ -241,4 +241,6 @@ void M678_DrawWaterSheets(MobyInstance *moby);
 
 void M761_DrawWaterSheets(MobyInstance *moby);
 
+void M280_BeginSucking(MobyInstance *moby);
+
 #endif

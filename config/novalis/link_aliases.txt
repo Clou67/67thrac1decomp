@@ -361,3 +361,5 @@ Hero_GetSnapJumpDir__Fv = 0x0023CEB0;
 Camera6_UpdateOrbit__FP9UpdateCam = 0x003178D8;
 
 WaterTile_DrawAll__FP9WaterTilei = 0x002B91C8;
+
+MB_BeginSucking__FP12MobyInstance = 0x00304690;
