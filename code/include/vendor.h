@@ -30,4 +30,6 @@ void Vendor_CopyScrollString(char *text);
 
 void Vendor_DrawDudeMoby(void);
 
+int Vendor_FormatBolts(char *text, int bolts);
+
 #endif

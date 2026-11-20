@@ -56,7 +56,15 @@ void Vendor_DrawDudeMoby(void)
         DrawMobyListProc(VendorRender.dudeMoby, 1);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_FormatBolts);
+extern const char VendorBoltsThousandsFormat[];
+extern const char VendorBoltsFormat[];
+
+int Vendor_FormatBolts(char *text, int bolts)
+{
+    if (bolts < 1000)
+        return sprintf(text, VendorBoltsFormat, bolts);
+    return sprintf(text, VendorBoltsThousandsFormat, bolts / 1000, bolts % 1000);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", DrawVendorHintFrame);
 
