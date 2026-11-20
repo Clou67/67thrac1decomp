@@ -239,4 +239,6 @@ void M751_DrawWaterTiles(MobyInstance *moby);
 
 void M678_DrawWaterSheets(MobyInstance *moby);
 
+void M761_DrawWaterSheets(MobyInstance *moby);
+
 #endif

@@ -1842,7 +1842,7 @@ UpdateMoby_760 = 0x002FDBC0; // type:func size:0x4BC
 FUN_002fe080 = 0x002FE080; // type:func size:0x804
 FUN_002fe888 = 0x002FE888; // type:func size:0x164
 FUN_002fe9f0 = 0x002FE9F0; // type:func size:0x138
-FUN_002feb28 = 0x002FEB28; // type:func size:0x2C
+M761_DrawWaterSheets__FP12MobyInstance = 0x002FEB28; // type:func size:0x2C
 UpdateMoby_761 = 0x002FEB58; // type:func size:0x20C
 UpdateMoby_768 = 0x002FED68; // type:func size:0x2BC
 FUN_002ff028 = 0x002FF028; // type:func size:0xEC
@@ -2244,3 +2244,5 @@ PreDrawArgs = 0x0016E000; // size:0x100
 M751_WaterTiles = 0x001E34C0; // size:0x0
 
 M678_WaterSheets = 0x001E3380; // size:0xC8
+
+M761_WaterSheets = 0x001FBC80; // size:0x190
