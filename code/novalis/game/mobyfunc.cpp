@@ -47,7 +47,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", AnimCache_Regi
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CleanAnimationCache);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetBoneTransformation);
+void MobyComputeSelectedJoints(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
+void FastMtx3x4Copy(Mtx4 *out, Mtx4 *source);
+void FastMtxTransform(Mtx4 *out, Mtx4 *left, Mtx4 *right);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void MB_GetBoneTransformation(MobyInstance *moby, int index, Mtx4 *out)
+{
+    Mtx4 world;
+    float scale = moby->scale * (1.0f / 1024.0f);
+
+    MobyComputeSelectedJoints(moby, 1, &index, out);
+    FastVec3Scale(&out->v3, &out->v3, scale);
+    FastMtx3x4Copy(&world, &moby->transform);
+    FastMtxTransform(out, &world, out);
+    FastVec3Add(&out->v3, &out->v3, &moby->pos);
+}
 
 void MobyComputeSelectedJoints(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
 void FastVecMtx3Mult(Vec4 *out, Vec4 *vector, Mtx4 *matrix);

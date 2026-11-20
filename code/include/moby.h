@@ -126,4 +126,6 @@ void RestoreMobyClassDists(void);
 
 void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out);
 
+void MB_GetBoneTransformation(MobyInstance *moby, int index, Mtx4 *out);
+
 #endif
