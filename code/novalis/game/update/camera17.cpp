@@ -15,4 +15,6 @@ void UpdateCamera_17(UpdateCam *camera)
 {
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera17", ExitCamera_17);
+void ExitCamera_17(UpdateCam *camera)
+{
+}
