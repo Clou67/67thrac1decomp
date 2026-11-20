@@ -463,3 +463,5 @@ ParseNpcChunk__Fv = 0x00259288;
 SphereVolumes = 0x001600F4;
 
 CuboidVolumes = 0x001600EC;
+
+CylinderVolumes = 0x001600FC;
