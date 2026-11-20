@@ -199,7 +199,13 @@ int FontLenLarge(char *text, int length)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrint);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintMediumLeft);
+void FontPrint(int x, int y, unsigned long rgba, char *text, int length, unsigned long tex0, unsigned char *metrics);
+
+void FontPrintMediumLeft(int x, int y, unsigned long rgba, char *text, int length)
+{
+    unsigned long tex0 = FontSet(FONT_MEDIUM);
+    FontPrint(x, y, rgba, text, length, tex0, FontNormalMetrics);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintSmallLeft);
 
