@@ -94,4 +94,6 @@ void MB_BallisticPosAtTicks(Vec4 *out, Vec4 *start, Vec4 *velocity, float gravit
 
 void MB_RemoveVecComponent(Vec4 *out, Vec4 *vector, Vec4 *axis, float weight);
 
+void MB_BobMotion(MobyInstance *moby, float *phase, float *offset, float height, float phaseStep);
+
 #endif

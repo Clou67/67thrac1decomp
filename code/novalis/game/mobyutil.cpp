@@ -596,7 +596,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_002777C0)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_TurnHeadJoint);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_BobMotion);
+void MB_BobMotion(MobyInstance *moby, float *phase, float *offset, float height, float phaseStep)
+{
+    *phase = FastAddRots(*phase, phaseStep);
+    moby->pos.z -= *offset;
+    *offset = FastAngleCosF(*phase) * height;
+    moby->pos.z += *offset;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SwingMotion);
 
