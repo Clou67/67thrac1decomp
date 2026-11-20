@@ -26,7 +26,7 @@ void SetFontWindow(FontWindow *window, int win_top, int win_bot, int win_left, i
 // The window printers take the font's TEX0 value and its width table.
 void FontPrintWindow(FontWindow *window, unsigned long rgba, char *text, int length, unsigned long tex0, void *metrics);
 void FontPrintWindowMedium(FontWindow *window, unsigned long rgba, char *text, int length);
-int FontPrintCenter(int xpos, int ypos, unsigned long rgba, char *s, int len);
+int FontPrintCenter(int x, int y, unsigned long rgba, char *text, int length);
 void FontPrintWindowSmall(FontWindow *window, unsigned long rgba, char *text, int length);
 
 void FontPrintSmallLeft(int x, int y, unsigned long rgba, char *text, int length);

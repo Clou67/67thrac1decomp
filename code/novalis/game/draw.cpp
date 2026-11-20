@@ -235,7 +235,14 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintSmallRigh
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintLargeRight);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintCenter);
+int FontPrintCenter(int x, int y, unsigned long rgba, char *text, int length)
+{
+    x -= (FontLen(text, length) >> 1);
+    unsigned long tex0 = FontSet(FONT_MEDIUM);
+
+    FontPrint(x, y, rgba, text, length, tex0, FontNormalMetrics);
+    return x;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintCenterSmall);
 
