@@ -28,4 +28,6 @@ void Vendor_ResetHUDPass(void);
 
 void Vendor_CopyScrollString(char *text);
 
+void Vendor_DrawDudeMoby(void);
+
 #endif

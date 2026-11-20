@@ -1,4 +1,5 @@
 #include "common.h"
+#include "moby.h"
 #include "libc.h"
 #include "framebuf.h"
 #include "draw.h"
@@ -44,7 +45,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_DrawScrol
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_UpdateScrollText);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_DrawDudeMoby);
+void DrawMobyListProc(MobyInstance *moby, int count);
+extern int VendorDudeVisible;
+enum { VENDOR_PREVIEW_WIDTH = 512, VENDOR_PREVIEW_HEIGHT = 128 };
+
+void Vendor_DrawDudeMoby(void)
+{
+    DrawFilledRectGS(0, 0, VENDOR_PREVIEW_WIDTH, VENDOR_PREVIEW_HEIGHT, VENDOR_PREVIEW_WIDTH, VENDOR_PREVIEW_HEIGHT, 0);
+    if (VendorDudeVisible == 1)
+        DrawMobyListProc(VendorRender.dudeMoby, 1);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_FormatBolts);
 

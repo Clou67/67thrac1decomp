@@ -421,3 +421,5 @@ sound_GetFade__FP8SoundDeffff = 0x002A02E0;
 VendorScrollFormat = 0x0020A510;
 
 VendorRender = 0x001CA940;
+
+VendorDudeVisible = 0x00161188;
