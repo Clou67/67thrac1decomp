@@ -417,3 +417,7 @@ Map_DecompressMapImage_Rle__FPUcT0i = 0x0025DFD8;
 Map_DecompressMapImage_Raw__FPUcT0 = 0x0025E208;
 
 sound_GetFade__FP8SoundDeffff = 0x002A02E0;
+
+VendorScrollFormat = 0x0020A510;
+
+VendorRender = 0x001CA940;

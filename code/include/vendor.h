@@ -11,6 +11,21 @@
 // Temporary: marks a core small-data variable until the core has its own build.
 extern unsigned char PurchasableVendorItems[VENDOR_ITEM_COUNT] __attribute__((section(".sdata")));
 
+struct MobyInstance;
+
+struct VendorRenderState {
+    char unk_00[0x24];
+    MobyInstance *dudeMoby;
+    char unk_28[4];
+    char *scrollText;
+    char unk_30[0x14];
+    int scrollPosition;
+};
+
+extern VendorRenderState VendorRender;
+
 void Vendor_ResetHUDPass(void);
+
+void Vendor_CopyScrollString(char *text);
 
 #endif

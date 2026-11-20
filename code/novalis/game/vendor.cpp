@@ -1,4 +1,5 @@
 #include "common.h"
+#include "libc.h"
 #include "framebuf.h"
 #include "draw.h"
 #include "vendor.h"
@@ -21,7 +22,13 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_StartWeap
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_SetScrollText);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_CopyScrollString);
+extern const char VendorScrollFormat[];
+
+void Vendor_CopyScrollString(char *text)
+{
+    sprintf(VendorRender.scrollText, VendorScrollFormat, text);
+    VendorRender.scrollPosition = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/vendor", Vendor_UpdateDude);
 
