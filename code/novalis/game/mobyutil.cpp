@@ -948,7 +948,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ToggleManip
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00278790);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DistributeBoltsNearHero);
+enum { BOLTS_SPAWN = 2 };
+
+extern Vec4 HeroPosition;
+float FastVec3DistLen(Vec4 *first, Vec4 *second);
+void MB_DistributeBolts(MobyInstance *moby, int minimum, int maximum, unsigned int flags, int splineIndex);
+
+void MB_DistributeBoltsNearHero(MobyInstance *moby)
+{
+    int flags = 0;
+    if (FastVec3DistLen(&moby->pos, &HeroPosition) < 7.0f)
+        flags = BOLTS_SPAWN;
+
+    MB_DistributeBolts(moby, 4, 7, flags, -1);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SpawnSparksPair);
 

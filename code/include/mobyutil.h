@@ -157,4 +157,6 @@ void MB_CosineInterpolateAngVec(float fraction, Vec4 *out, Vec4 *from, Vec4 *to)
 
 int MB_isCrate(MobyInstance *moby);
 
+void MB_DistributeBoltsNearHero(MobyInstance *moby);
+
 #endif
