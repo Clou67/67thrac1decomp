@@ -100,4 +100,6 @@ void MB_SphericalToVector(Vec4 *out, float radius, float azimuth, float elevatio
 
 void MB_randSphere(Vec4 *out, float minimum, float maximum);
 
+void MB_randOffset(Vec4 *vector, float range);
+
 #endif

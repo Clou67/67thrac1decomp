@@ -506,7 +506,12 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_FindMobyByV
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00274798);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randOffset);
+void MB_randOffset(Vec4 *vector, float range)
+{
+    vector->x += MB_randRangeFloat(-range, range);
+    vector->y += MB_randRangeFloat(-range, range);
+    vector->z += MB_randRangeFloat(-range, range);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_IsPntInCuboid);
 
