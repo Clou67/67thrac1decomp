@@ -219,7 +219,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", SetHeroType);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_RevertToRatchet);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_NormalizeThrust);
+void FastVec3RSqrtScale(Vec4 *out, Vec4 *direction, float scale);
+
+void Hero_NormalizeThrust(Vec4 *direction, float horizontal, float vertical, int scaleComponents)
+{
+    if (scaleComponents) {
+        direction->x *= horizontal;
+        direction->y *= horizontal;
+        direction->z *= vertical;
+    }
+
+    else {
+        FastVec3RSqrtScale(direction, direction, horizontal);
+        direction->z = vertical;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HandleDamage);
 

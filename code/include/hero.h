@@ -387,4 +387,6 @@ int Hero_IsInSpecialMovementState(void);
 
 void Hero_TransitionToDefault(void);
 
+void Hero_NormalizeThrust(Vec4 *direction, float horizontal, float vertical, int scaleComponents);
+
 #endif
