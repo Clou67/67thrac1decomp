@@ -4,7 +4,8 @@
 struct MusicTransition {
     char unk0[8];
     short read_state;
-    char unk0A[0x12];
+    unsigned char cancel_read;
+    char unk0B[0x11];
     int unk1C;
     char unk20[2];
     signed char requested_track;
@@ -50,5 +51,7 @@ int music_LoadFileSync(void *destination, int sector, int length);
 void music_UnpauseDelay(int frames);
 
 void music_LoadBankCB(int reason);
+
+void music_StopLoad(void);
 
 #endif

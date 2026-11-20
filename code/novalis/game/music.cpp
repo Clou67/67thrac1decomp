@@ -79,7 +79,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_UpdateStrea
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_Update);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_StopLoad);
+int snd_StreamSafeCdBreak(void);
+
+void music_StopLoad(void)
+{
+    if (musicTransition.read_state != 0) {
+        snd_StreamSafeCdBreak();
+        musicTransition.cancel_read = 1;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/music", music_LoadBankFromEE);
 

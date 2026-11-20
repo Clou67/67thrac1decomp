@@ -307,3 +307,5 @@ DeleteMoby__FP12MobyInstance = 0x002636C0;
 DrawMapFrame__Fv = 0x0025B1C0;
 
 UpdateMobyFrameData__FP12MobyInstance = 0x00263718;
+
+snd_StreamSafeCdBreak__Fv = 0x0012EEA8;
