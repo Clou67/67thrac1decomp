@@ -29,4 +29,6 @@ void FontPrintWindowMedium(FontWindow *window, unsigned long rgba, char *text, i
 int FontPrintCenter(int xpos, int ypos, unsigned long rgba, char *s, int len);
 void FontPrintWindowSmall(FontWindow *window, unsigned long rgba, char *text, int length);
 
+void FontPrintSmallLeft(int x, int y, unsigned long rgba, char *text, int length);
+
 #endif
