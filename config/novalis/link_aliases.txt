@@ -126,7 +126,6 @@ FUN_003040c0__FP12MobyInstance = 0x003040C0;
 FUN_003040c8__FP12MobyInstanceiif = 0x003040C8;
 FUN_003040d0__FP12MobyInstance = 0x003040D0;
 FUN_003040f8__FP12MobyInstance = 0x003040F8;
-DeleteMoby_Thunk__FP12MobyInstance = 0x003040D8;
 FUN_002e0a28__FP12MobyInstance = 0x002E0A28;
 FUN_002e0a78__FP12MobyInstance = 0x002E0A78;
 FUN_002e0ac8__FP12MobyInstanceiif = 0x002E0AC8;
@@ -307,3 +306,5 @@ Hero_UpdateFiringAnimLayer__Fv = 0x0022F068;
 Hero_UpdateOverlayAnimLayer__Fv = 0x0022E3A8;
 
 MB_CollLineDown__FP4Vec4fi = 0x0026E618;
+
+DeleteMoby__FP12MobyInstance = 0x002636C0;
