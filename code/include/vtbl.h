@@ -175,7 +175,7 @@ void UpdateMoby_1848(MobyInstance *moby);
 
 int FUN_003040b8(MobyInstance *moby);
 int FUN_003040c0(MobyInstance *moby);
-int FUN_003040c8(MobyInstance *moby, int arg1, int arg2, float amount);
+int FUN_003040c8(MobyInstance *moby, int damageKind, int flags, float amount);
 int FUN_003040d0(MobyInstance *moby);
 int FUN_003040f8(MobyInstance *moby);
 void DeleteMoby_Thunk(MobyInstance *moby);
