@@ -123,7 +123,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_resetToFo
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", InitCameras);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Polar2Pos);
+void Camera_Polar2Pos(Vec4 *out, PolarSm *polar, Vec4 *origin)
+{
+    out->x = polar->radius * FastAngleSinF(polar->elevation) * FastAngleSinF(polar->azimuth);
+    out->y = polar->radius * FastAngleSinF(polar->elevation) * FastAngleCosF(polar->azimuth);
+    out->z = polar->radius * FastAngleCosF(polar->elevation);
+    out->w = 0.0f;
+
+    FastVec3Add(out, out, origin);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/camera", Camera_Pos2Polar);
 

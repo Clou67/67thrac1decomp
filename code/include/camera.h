@@ -193,4 +193,6 @@ void Cam_CopyRotWrapped(float *out, float *polar, float yawOffset);
 
 void Camera_CopyLastQuatToPolar(void);
 
+void Camera_Polar2Pos(Vec4 *out, PolarSm *polar, Vec4 *origin);
+
 #endif
