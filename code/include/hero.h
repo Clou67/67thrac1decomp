@@ -377,4 +377,6 @@ void Hero_UpdateAnimLayers(void);
 
 int Hero_isMobyWrench(MobyInstance *moby);
 
+void Hero_SnapAnim(int animation, int frame);
+
 #endif

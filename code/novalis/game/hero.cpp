@@ -392,7 +392,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SyncBoardAnim
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_TransAnim);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SnapAnim);
+void UpdateMobyFrameData(MobyInstance *moby);
+
+void Hero_SnapAnim(int animation, int frame)
+{
+    MobyInstance *moby = Hero.moby;
+
+    moby->animationFrame = frame + 1;
+    moby->updateId = animation;
+    moby->animationId = animation;
+    moby->previousAnimationFrame = frame;
+    moby->animationBlend = 0.0f;
+
+    UpdateMobyFrameData(moby);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SetNextAnimFrame);
 
