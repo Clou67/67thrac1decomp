@@ -1,4 +1,5 @@
 #include "common.h"
+#include "debug.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", ResetDebugEnables);
 
@@ -24,7 +25,9 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", func_002174D8);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", DrawDebugMenu);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_002187f8);
+void STUB_002187f8(void)
+{
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/debug", STUB_00218800);
 
