@@ -1075,7 +1075,7 @@ MB_ShowPersistentMessage = 0x00278F58; // type:func size:0xA4
 MB_RequestHelpMessage = 0x00279000; // type:func size:0x70
 MB_ClearHelpMessage = 0x00279070; // type:func size:0x60
 MB_GetUnspentGoldBolts = 0x002790D0; // type:func size:0x48
-MB_CountGoldWeapons = 0x00279118; // type:func size:0x70
+MB_CountGoldWeapons__Fv = 0x00279118; // type:func size:0x70
 MB_CountSkillPoints = 0x00279188; // type:func size:0x48
 MB_CountGoldBolts__Fv = 0x002791D0; // type:func size:0x48
 SetupMobyFunctions = 0x00279218; // type:func size:0xB4
@@ -2228,3 +2228,5 @@ WaterWaveTable = 0x001CAE60; // size:0x170
 WaterSheets = 0x001E2FC0; // size:0x320
 
 GoldBoltFlags = 0x0013D408; // size:0x20
+
+GoldWeaponFlags = 0x0014BEC0; // size:0x50

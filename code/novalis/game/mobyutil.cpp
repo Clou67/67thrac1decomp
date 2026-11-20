@@ -599,7 +599,27 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ClearHelpMe
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_GetUnspentGoldBolts);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CountGoldWeapons);
+enum { GOLD_WEAPON_LEVEL_COUNT = 20, GOLD_WEAPON_SLOTS = 4 };
+extern unsigned char GoldWeaponFlags[GOLD_WEAPON_LEVEL_COUNT][GOLD_WEAPON_SLOTS];
+
+int MB_CountGoldWeapons(void)
+{
+    int count = 0;
+
+    for (int level = 0; level < GOLD_WEAPON_LEVEL_COUNT; ++level) {
+        unsigned char *flag = GoldWeaponFlags[level];
+        for (int slot = GOLD_WEAPON_SLOTS - 1; slot >= 0; --slot) {
+            if (*flag++)
+                ++count;
+        }
+    }
+
+    if (count < 0)
+        count = 0;
+    if (count > 40)
+        count = 40;
+    return count;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CountSkillPoints);
 

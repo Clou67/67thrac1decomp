@@ -76,4 +76,6 @@ int MB_ScaledVecWrapper(Vec4 *vector, float radius);
 
 int MB_CountGoldBolts(void);
 
+int MB_CountGoldWeapons(void);
+
 #endif
