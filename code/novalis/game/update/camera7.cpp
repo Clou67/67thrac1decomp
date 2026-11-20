@@ -1,4 +1,6 @@
 #include "common.h"
+#include "hero.h"
+#include "camera.h"
 #include "vtbl.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera7", ActivateCamera_7);
@@ -20,4 +22,12 @@ int InitCamera_7(UpdateCam *camera)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera7", UpdateCamera_7);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/camera7", ExitCamera_7);
+enum { CAMERA_DEACTIVATE_ON_EXIT = 3 };
+
+void ExitCamera_7(UpdateCam *camera)
+{
+    if (Hero.requestedCamType != camera->type && Hero.state != PLAYER_STATE_NEUTRAL_JUMP) {
+        camera->activation.activate = 0;
+        camera->activation.deactivate = CAMERA_DEACTIVATE_ON_EXIT;
+    }
+}
