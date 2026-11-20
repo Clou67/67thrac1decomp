@@ -486,7 +486,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetWeaponAmmo
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_StartHit);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetSpecialStateKind);
+int Hero_GetSpecialStateKind(void)
+{
+    switch (Hero.state) {
+    case PLAYER_STATE_ANIM_TARGET_WALK:
+    case PLAYER_STATE_UNK_66:
+        return 1;
+    case PLAYER_STATE_TELEPORTER_USE:
+        return 2;
+    default:
+        return 0;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_MoveWithPlatform);
 

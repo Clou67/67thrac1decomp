@@ -379,4 +379,6 @@ int Hero_isMobyWrench(MobyInstance *moby);
 
 void Hero_SnapAnim(int animation, int frame);
 
+int Hero_GetSpecialStateKind(void);
+
 #endif
