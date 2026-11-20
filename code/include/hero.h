@@ -397,4 +397,6 @@ float Hero_GetPadMagnitude(void);
 
 void Hero_ThrustModeAccel(float acceleration, float deceleration);
 
+void Hero_SyncBoardAnimSpeed(void);
+
 #endif

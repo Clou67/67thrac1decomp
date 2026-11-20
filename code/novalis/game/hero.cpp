@@ -444,7 +444,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetBoardAnim)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_TransBoardAnim);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SyncBoardAnimSpeed);
+int Hero_GetBoardAnim(int animation, int *boardAnimation);
+
+void Hero_SyncBoardAnimSpeed(void)
+{
+    int boardAnimation;
+
+    if (Hero.animLinkMoby && Hero.animLinkTable && Hero_GetBoardAnim(Hero.moby->animationId, &boardAnimation))
+        Hero.animLinkMoby->unk58 = Hero.animSpeed;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_SyncBoardAnimFrame);
 
