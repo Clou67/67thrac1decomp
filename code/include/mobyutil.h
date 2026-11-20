@@ -84,4 +84,6 @@ int MB_GetUnspentGoldBolts(void);
 
 void MB_SetGroupField(int group, int value);
 
+float MB_CosineInterpolate(float start, float end, float weight);
+
 #endif

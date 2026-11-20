@@ -83,7 +83,16 @@ float MB_catmullRom(float first, float second, float third, float fourth, float 
     return cubic * fractionCubed + quadratic * fractionSquared + linear * fraction + second;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_CosineInterpolate);
+float MB_CosineInterpolate(float start, float end, float weight)
+{
+    if (weight == 0.0f)
+        return start;
+    if (weight == 1.0f)
+        return end;
+
+    float blend = (1.0f - FastAngleSinF(weight * 3.14159265358979323846f)) * 0.5f;
+    return start + (end - start) * blend;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_lerpRotCosine);
 
