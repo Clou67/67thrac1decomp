@@ -51,7 +51,6 @@ UpdateMoby_459__FP12MobyInstance = 0x002E6BF0;
 UpdateMoby_479__FP12MobyInstance = 0x002E92B8;
 UpdateMoby_500__FP12MobyInstance = 0x002EA178;
 UpdateMoby_530__FP12MobyInstance = 0x002ECDE0;
-UpdateMoby_531__FP12MobyInstance = 0x002ECE90;
 UpdateMoby_562__FP12MobyInstance = 0x002ED5D8;
 UpdateMoby_567__FP12MobyInstance = 0x002EDA00;
 UpdateMoby_572__FP12MobyInstance = 0x002EDCA0;
