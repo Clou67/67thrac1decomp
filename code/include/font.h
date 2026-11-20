@@ -39,4 +39,6 @@ void FontPrintSmallRight(int x, int y, unsigned long rgba, char *text, int lengt
 
 int FontPrintCenterSmall(int x, int y, unsigned long rgba, char *text, int length);
 
+void FontPrintLargeRight(int x, int y, unsigned long rgba, char *text, int length);
+
 #endif

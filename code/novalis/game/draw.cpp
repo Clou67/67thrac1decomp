@@ -239,7 +239,13 @@ void FontPrintSmallRight(int x, int y, unsigned long rgba, char *text, int lengt
     FontPrint(x, y, rgba, text, length, tex0, FontSmallMetrics);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/draw", FontPrintLargeRight);
+void FontPrintLargeRight(int x, int y, unsigned long rgba, char *text, int length)
+{
+    x -= (FontLenLarge(text, length));
+    unsigned long tex0 = FontSet(FONT_LARGE);
+
+    FontPrint(x, y, rgba, text, length, tex0, FontLargeMetrics);
+}
 
 int FontPrintCenter(int x, int y, unsigned long rgba, char *text, int length)
 {
