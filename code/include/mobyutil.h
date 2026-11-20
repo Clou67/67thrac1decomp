@@ -129,4 +129,6 @@ int MB_PushMobyOutOfWalls(MobyInstance *moby, Vec4 *move, float height, float st
 
 void MB_RotateMoby(MobyInstance *moby, float xAngle, float yAngle, float zAngle);
 
+float MB_computeLobVelocity(Vec4 *from, Vec4 *to, float speed, float gravity, float *timeOut);
+
 #endif

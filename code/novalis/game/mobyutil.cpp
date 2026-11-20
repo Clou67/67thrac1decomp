@@ -321,7 +321,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_DamageMobyL
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ReadDamagePush);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_computeLobVelocity);
+void FastSubVec3(Vec4 *out, Vec4 *first, Vec4 *second);
+
+float MB_computeLobVelocity(Vec4 *from, Vec4 *to, float speed, float gravity, float *timeOut)
+{
+    Vec4 offset;
+    FastSubVec3(&offset, to, from);
+    float time = FastVec3Length(&offset.x) / speed;
+    if (timeOut)
+        *timeOut = time;
+    if (time == 0.0f)
+        return 0.0f;
+
+    return -(from->z - to->z + gravity * (time * time) * 0.5f) / time;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randPrimPoints);
 
