@@ -214,4 +214,6 @@ void FUN_0030f338(UpdateCam *camera);
 
 void FUN_00311008(UpdateCam *camera);
 
+void FUN_0030f600(UpdateCam *camera, void *work);
+
 #endif
