@@ -16,7 +16,10 @@ int FUN_003040c8(MobyInstance *moby, int damageKind, int flags, float amount)
     return 0;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/update/moby1042", FUN_003040d0);
+int FUN_003040d0(MobyInstance *moby)
+{
+    return 0;
+}
 
 void DeleteMoby(MobyInstance *moby);
 
