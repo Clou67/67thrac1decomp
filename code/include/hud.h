@@ -11,9 +11,26 @@ struct HudIconTableEntry {
 
 extern HudIconTableEntry *HudIconTable;
 
+struct HudEntry;
+typedef void (*HudFunction)(HudEntry *entry);
+
 struct HudEntry {
     int iconId;
-    char unk04[0x3C];
+    unsigned int flags;
+    int maximum;
+    void *value;
+    HudFunction init;
+    HudFunction update;
+    HudFunction draw;
+    int unk1C;
+    unsigned int registeredIcon;
+    unsigned int registeredFlags;
+    int registeredMaximum;
+    void *registeredValue;
+    HudFunction registeredInit;
+    HudFunction registeredUpdate;
+    HudFunction registeredDraw;
+    int unk3C;
     short iconTableIndex;
     unsigned char iconBaseIndex;
     unsigned char unk43;
@@ -23,7 +40,9 @@ struct HudEntry {
     char unk4C[0xC];
     int width;
     int height;
-    char unk60[0x1C];
+    char unk60[8];
+    int locked;
+    char unk6C[0x10];
     int timer;
     short *counter;
 };
@@ -37,8 +56,6 @@ int HudTex_Bind(int frame);
 void Hud_DrawRotatedSprite16(float cx, float cy, float width, float height, float theta, int texW, int texH, unsigned long tex0);
 void Hud_SetEntryValueById(int id, int value);
 void HudStub(void);
-
-typedef void (*HudFunction)(HudEntry *entry);
 
 // Adds a HUD entry with its init, update and draw functions; returns its handle.
 int RegisterHUDCallback(int type, int texture, HudFunction init, HudFunction update, HudFunction draw, void *value, int maximum);
@@ -71,5 +88,7 @@ void HudHeap_Reset(void);
 void *HudHeap_Alloc(int size);
 
 void HudEntry_SetIcon(HudEntry *entry, unsigned int id);
+
+void HudEntry_Restore(HudEntry *entry);
 
 #endif

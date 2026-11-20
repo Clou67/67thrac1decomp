@@ -50,7 +50,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_SwapMobyBank);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", RegisterHUDCallback);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_Restore);
+void HudEntry_Restore(HudEntry *entry)
+{
+    HudEntry_SetIcon(entry, entry->registeredIcon);
+
+    entry->flags = entry->registeredFlags;
+    entry->update = entry->registeredUpdate;
+    entry->draw = entry->registeredDraw;
+    entry->value = entry->registeredValue;
+    entry->maximum = entry->registeredMaximum;
+    entry->init = entry->registeredInit;
+    if (entry->init)
+        entry->init(entry);
+
+    entry->locked = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", Hud_UnregisterById);
 
