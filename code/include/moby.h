@@ -50,6 +50,16 @@ struct MobyGifUsage;
 struct SoundDef;
 
 // The animation pointer table follows the 0x48-byte RaC1 class header.
+struct MobyInstance;
+typedef int (*MobyClassCallback)(MobyInstance *moby);
+
+struct MobyClassCallbacks {
+    int unk_00;
+    MobyClassCallback callback04;
+    MobyClassCallback callback08;
+    MobyClassCallback callback0C;
+};
+
 struct MobyClass {
     MobyPacket *packets;                // 0x00
     unsigned char packetCount0;        // 0x04
@@ -71,7 +81,10 @@ struct MobyClass {
     MobyGifUsage *gifUsage;              // 0x20
     float scale;                        // 0x24
     SoundDef *soundDefs;                // 0x28
-    unsigned int mipDistance;           // 0x2C
+    union {                             // 0x2C
+        unsigned int mipDistance;
+        MobyClassCallbacks *callbacks;
+    };
     BSphere bSphere;                    // 0x30
     unsigned int glowRgba;              // 0x40
     unsigned short modeBits;            // 0x44
@@ -188,5 +201,7 @@ void MB_GetBoneTransformation(MobyInstance *moby, int index, Mtx4 *out);
 int MB_FindNearestAnimTrigger(MobySeq *sequence, float time);
 
 void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
+
+int M849_CallClassCallback04(MobyInstance *moby);
 
 #endif
