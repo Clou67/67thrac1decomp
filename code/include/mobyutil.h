@@ -141,4 +141,6 @@ float DeltAng(float &angle, float target, float speed, int direction);
 
 float AccelDelt(float &value, float target, float &speed, float gain, float damping, float limit);
 
+float MB_RoundToDecimals(float value, int digits);
+
 #endif

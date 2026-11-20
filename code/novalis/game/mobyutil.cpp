@@ -722,7 +722,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_compressVec
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_decompressVector);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_RoundToDecimals);
+float MB_RoundToDecimals(float value, int digits)
+{
+    int scale = 1;
+    if (digits > 0) {
+        do {
+            scale *= 10;
+        } while (--digits);
+    }
+
+    float factor = scale;
+    value += 1.0f / (factor + factor);
+    value *= factor;
+    value = FastFloatToInt(value);
+    return value / factor;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_MayaFrameTrigger);
 
