@@ -1802,7 +1802,7 @@ UpdateMoby_665 = 0x002F4710; // type:func size:0x24C
 UpdateMoby_666 = 0x002F4960; // type:func size:0x6D8
 FUN_002f5040 = 0x002F5040; // type:func size:0x128
 FUN_002f5168 = 0x002F5168; // type:func size:0xF8C
-FUN_002f60f8 = 0x002F60F8; // type:func size:0x2C
+M676_DrawWaterSheets__FP12MobyInstance = 0x002F60F8; // type:func size:0x2C
 UpdateMoby_676 = 0x002F6128; // type:func size:0x24
 FUN_002f6150 = 0x002F6150; // type:func size:0x2C
 UpdateMoby_678 = 0x002F6180; // type:func size:0x1A8
@@ -2224,3 +2224,5 @@ inactiveVideoDmaMessage = 0x0020A790;
 StashedMobyClassDists = 0x00197400; // size:0x380
 
 WaterWaveTable = 0x001CAE60; // size:0x170
+
+WaterSheets = 0x001E2FC0; // size:0x320

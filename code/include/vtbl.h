@@ -231,4 +231,6 @@ void UpdateSound_3(AmbientSound *sound);
 void UpdateSound_5(AmbientSound *sound);
 void UpdateSound_6(AmbientSound *sound);
 
+void M676_DrawWaterSheets(MobyInstance *moby);
+
 #endif

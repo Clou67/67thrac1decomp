@@ -323,3 +323,5 @@ FastMtx3x4Copy__FP4Mtx4T0 = 0x00221BC8;
 FastMtx4Copy__FP4Mtx4T0 = 0x00221BE8;
 
 MB_MtxToQuat__FP4Vec4P4Mtx4 = 0x00271DB0;
+
+WaterSheet_DrawAll__FiP10WaterSheet = 0x002B96E0;
