@@ -42,4 +42,6 @@ void Hud_GetTexIndex(HudEntry *entry);
 
 void HudEntry_UpdateCounterWrap(HudEntry *entry);
 
+void HudEntry_InitCounter(HudEntry *entry);
+
 #endif

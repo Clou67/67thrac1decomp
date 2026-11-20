@@ -1,4 +1,5 @@
 #include "common.h"
+#include "fastfunc.h"
 #include "hud.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", hud_InitBanks);
@@ -37,7 +38,16 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_GetSlideOf
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_CalcNumberSize);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_InitCounter);
+void HudEntry_CalcNumberSize(HudEntry *entry);
+
+void HudEntry_InitCounter(HudEntry *entry)
+{
+    int timer = FastScaleRoundInt(180) + 30;
+    entry->offsetX = 0;
+    entry->offsetY = 0;
+    entry->timer = timer;
+    HudEntry_CalcNumberSize(entry);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hud", HudEntry_InitCounter32);
 
