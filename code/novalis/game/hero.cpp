@@ -118,7 +118,11 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateTiltWob
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_UpdateLedge);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_ResetIfTypeThree);
+void Hero_ResetIfTypeThree(void)
+{
+    if (Hero.type == HERO_TYPE_HOLOGUISE)
+        Hero_RevertToRatchet();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_HandleGroundType);
 
@@ -362,8 +366,6 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_GetSnapJumpDi
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", TransitionMovement);
 
 void TransitionMovement(int state, int force);
-enum { HERO_TYPE_RATCHET = 0, HERO_TYPE_HOLOGUISE = 3 };
-
 void Hero_TransitionToDefault(void)
 {
     switch (Hero.type) {

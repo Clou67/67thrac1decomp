@@ -3,6 +3,8 @@
 
 #include "moby.h"
 
+enum { HERO_TYPE_RATCHET = 0, HERO_TYPE_HOLOGUISE = 3 };
+
 #define HERO_NO_HUD_HANDLE -1
 #define HERO_SHIP_FLAG_RESET 0x1
 #define HERO_RACE_LAP_COUNT 3
@@ -388,5 +390,7 @@ int Hero_IsInSpecialMovementState(void);
 void Hero_TransitionToDefault(void);
 
 void Hero_NormalizeThrust(Vec4 *direction, float horizontal, float vertical, int scaleComponents);
+
+void Hero_ResetIfTypeThree(void);
 
 #endif
