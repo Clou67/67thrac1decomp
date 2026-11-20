@@ -383,4 +383,6 @@ int Hero_GetSpecialStateKind(void);
 
 void Hero_SetNextAnimBlend(int frames);
 
+int Hero_IsInSpecialMovementState(void);
+
 #endif

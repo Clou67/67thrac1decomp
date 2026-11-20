@@ -144,7 +144,19 @@ int Hero_IsWearingBoots(int slot)
     return (unsigned int)(Hero_GetGadgetMoby(slot) - ITEM_MAGNEBOOTS) < 2;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_IsInSpecialMovementState);
+enum { HERO_STATE_TYPE_SPECIAL = 17 };
+
+int Hero_IsInSpecialMovementState(void)
+{
+    if ((unsigned int)(Hero.stateType - HERO_STATE_TYPE_SPECIAL) < 2 ||
+        Hero.state == PLAYER_STATE_DEATH_DROWNING ||
+        Hero.state == PLAYER_STATE_DEATH_WATER_LASER ||
+        Hero.state == PLAYER_STATE_UNDERWATER_DAMAGE ||
+        Hero.state == PLAYER_STATE_UNK_75)
+        return 1;
+
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/hero", Hero_DefaultByteIfFF);
 
