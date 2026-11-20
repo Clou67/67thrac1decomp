@@ -33,4 +33,6 @@ float MB_randRangeFloat(float low, float high);
 
 float MB_randRangeSigned(float low, float high);
 
+float MB_randRot(void);
+
 #endif

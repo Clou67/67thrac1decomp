@@ -48,7 +48,12 @@ float MB_randRangeSigned(float low, float high)
     return value;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randRot);
+float MB_randRot(void)
+{
+    int sample = (RandomNext() >> 16) & 0xFFF;
+
+    return (float)(sample - 2048) * 3.14159265358979323846f * (1.0f / 2048.0f);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_randVector);
 
