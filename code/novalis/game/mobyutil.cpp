@@ -517,7 +517,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", func_00277B48)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_SphericalToVector);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_AddVectorSphere);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void MB_AddVectorSphere(Vec4 *out, Vec4 *origin, float radius, float azimuth, float elevation)
+{
+    Vec4 offset;
+
+    MB_SphericalToVector(&offset, radius, azimuth, elevation);
+    FastVec3Add(out, &offset, origin);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyutil", MB_ToastMessageByIndex);
 

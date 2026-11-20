@@ -332,3 +332,5 @@ FastAbsF__Ff = 0x00221128;
 FastDecTimer__FRs = 0x00220EA8;
 
 DeletePart__FP12PartInstance = 0x0027C5E8;
+
+FastVec3Add__FP4Vec4N20 = 0x00221188;
