@@ -13,4 +13,6 @@ int Map_PointSideOfLine(int endX, int endY, int startX, int startY, int pointX, 
 
 int Map_RegionVisible_cc08(int endX, int endY);
 
+void map_stub(void);
+
 #endif

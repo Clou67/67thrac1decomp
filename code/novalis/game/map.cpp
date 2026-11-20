@@ -166,7 +166,9 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_DrawIcon);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_SaveLevelObjectState);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", map_stub);
+void map_stub(void)
+{
+}
 
 int Map_PointSideOfLine(int endX, int endY, int startX, int startY, int pointX, int pointY)
 {
