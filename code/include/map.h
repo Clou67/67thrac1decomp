@@ -25,4 +25,6 @@ int Map_FindFreeCacheSlot(int fromTop);
 
 int Map_GetFreeCacheSlotCompact(void);
 
+void Map_WorldToMapCoords(float x, float y, float *outU, float *outV, int level);
+
 #endif

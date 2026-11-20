@@ -207,7 +207,39 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_GetIconLabel);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_RegisterLevelObject);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", Map_WorldToMapCoords);
+enum { MAP_ROTATED_LEVEL_OFFSET = 100, MAP_ROTATED_LEVEL = 6, MAP_TRANSFORM_LAST_LEVEL = 18 };
+static const float MAP_COORD_SCALE = 1.0f / 512.0f;
+struct MapTransform {
+    float offsetU;
+    float scaleU;
+    float offsetV;
+    float scaleV;
+};
+extern MapTransform MapWorldToMap[];
+
+void Map_WorldToMapCoords(float x, float y, float *outU, float *outV, int level)
+{
+    int rotated = 0;
+    if (level >= MAP_ROTATED_LEVEL_OFFSET) {
+        level -= MAP_ROTATED_LEVEL_OFFSET;
+        rotated = 1;
+    }
+    if (level == -1)
+        level = Level;
+    if (level < 0)
+        level = 0;
+    if (level > MAP_TRANSFORM_LAST_LEVEL)
+        level = 0;
+
+    if (level == MAP_ROTATED_LEVEL && rotated) {
+        *outU = (MapWorldToMap[MAP_ROTATED_LEVEL].scaleV * y + 1053.0f) * MAP_COORD_SCALE;
+        *outV = (740.0f - MapWorldToMap[MAP_ROTATED_LEVEL].scaleU * x) * MAP_COORD_SCALE;
+    }
+    else {
+        *outU = (MapWorldToMap[level].offsetU + MapWorldToMap[level].scaleU * x) * MAP_COORD_SCALE;
+        *outV = (MapWorldToMap[level].offsetV + MapWorldToMap[level].scaleV * y) * MAP_COORD_SCALE;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/map", func_0025E8F8);
 
