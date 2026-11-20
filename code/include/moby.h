@@ -124,4 +124,6 @@ void StashMobyClassDists(void);
 
 void RestoreMobyClassDists(void);
 
+void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out);
+
 #endif

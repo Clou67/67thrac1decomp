@@ -49,7 +49,20 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CleanAnimation
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetBoneTransformation);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetBonePos);
+void MobyComputeSelectedJoints(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
+void FastVecMtx3Mult(Vec4 *out, Vec4 *vector, Mtx4 *matrix);
+void FastVec3Add(Vec4 *out, Vec4 *first, Vec4 *second);
+
+void MB_GetBonePos(MobyInstance *moby, int index, Vec4 *out)
+{
+    Mtx4 joint;
+    float scale = moby->scale * (1.0f / 1024.0f);
+
+    MobyComputeSelectedJoints(moby, 1, &index, &joint);
+    FastVec3Scale(out, &joint.v3, scale);
+    FastVecMtx3Mult(out, out, &moby->transform);
+    FastVec3Add(out, out, &moby->pos);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", GetMobyJointsWorldPos);
 
