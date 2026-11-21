@@ -72,7 +72,14 @@ int AnimCache_Register(MobyInstance *moby)
     return -1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CleanAnimationCache);
+void CleanAnimationCache(void)
+{
+    for (int slot = 0; slot < ANIM_CACHE_COUNT; ++slot) {
+        MobyInstance *moby = AnimationCacheRegistry[slot];
+        if (moby != 0 && ((moby->state & 0x80) || moby->updateId != 0xFF))
+            AnimationCacheRegistry[slot] = 0;
+    }
+}
 
 void MobyComputeSelectedJoints(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
 void FastMtx3x4Copy(Mtx4 *out, Mtx4 *source);
