@@ -214,6 +214,7 @@ int ChangeThreadPriority(int thread, int priority);
 sceDmaChan *sceDmaGetChan(int channel);
 void sceDmaSend(sceDmaChan *channel, void *tag);
 
+int sceGsExecLoadImage(sceGsLoadImage *image, u_long128 *source);
 int sceGsSetDefLoadImage(sceGsLoadImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsSetDefStoreImage(sceGsStoreImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsExecStoreImage(sceGsStoreImage *image, void *destination);
