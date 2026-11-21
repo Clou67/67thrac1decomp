@@ -8,6 +8,11 @@
 #include "sound.h"
 #include "mathfunc_inline.h"
 
+extern int worldUpdateTime;
+extern MobyInstance *MobyInstancePermEnd;
+extern MobyInstance *MobyInstanceEnd;
+extern int numSpawnableMobys;
+
 void UpdateNumSpawnableMobys(void)
 {
     MobyInstance *moby;
@@ -26,11 +31,7 @@ void UpdateNumSpawnableMobys(void)
     }
 }
 
-extern int worldUpdateTime;
-extern MobyInstance *MobyInstancePermEnd;
-extern MobyInstance *MobyInstanceEnd;
 extern unsigned char *mobyVars;
-extern int numSpawnableMobys;
 extern const char createMobyFailureMessage[] __attribute__((section(".data")));
 
 void InitMobyInstance(MobyInstance *moby, int oClass);

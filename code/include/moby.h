@@ -173,8 +173,8 @@ struct MobyInstance {
         };
     };
     Vec4 rotation;
-    char previousAnimationFrame;
-    char animationFrame;
+    unsigned char previousAnimationFrame;
+    unsigned char animationFrame;
     unsigned char updateId;
     unsigned char animationId;
     float animationBlend;
