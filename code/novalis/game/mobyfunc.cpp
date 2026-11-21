@@ -171,7 +171,22 @@ void MB_SetCollPrimFromWorld(MobyInstance* pMoby, int idx, Vec4* pos, float rad,
     prim->offset.w = rad * invScale;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_AddShortPairOffset);
+void MB_AddShortPairOffset(MobyClass* pClass, int x, int y) {
+    int packetCount = pClass->packetCount0 + pClass->packetCount1;
+    unsigned char* packet = (unsigned char*)pClass->packets;
+
+    for (int i = 0; i < packetCount; i++, packet += 16) {
+        unsigned short* data = *(unsigned short**)packet;
+        int count = ((unsigned char*)data)[2];
+        data += 2;
+
+        for (int pair = 0; pair < count; pair++) {
+            data[0] += x;
+            data[1] += y;
+            data += 2;
+        }
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_AllocAnimLayer);
 
