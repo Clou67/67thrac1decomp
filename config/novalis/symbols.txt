@@ -874,7 +874,7 @@ DmaMobyTextures = 0x002647A8; // type:func size:0x108
 PatchMobyGifs = 0x002648B0; // type:func size:0xD8
 MB_UpdateLightAngle = 0x00264988; // type:func size:0x90
 DrawMobyShadows = 0x00264A18; // type:func size:0x144
-ProcessMobyAnimData = 0x00264B60; // type:func size:0x44
+ProcessMobyAnimData__Fv = 0x00264B60; // type:func size:0x44
 InitMobyClassDists__Fv = 0x00264BA8; // type:func size:0x28
 StashMobyClassDists__Fv = 0x00264BD0; // type:func size:0x2C
 RestoreMobyClassDists__Fv = 0x00264C00; // type:func size:0x2C
@@ -2250,3 +2250,5 @@ M761_WaterSheets = 0x001FBC80; // size:0x190
 mobyVars = 0x0015FFE8; // size:0x4
 createMobyFailureMessage = 0x00209ED0;
 debugFontBuffer = 0x0018F140;
+
+cs_table = 0x00166500;

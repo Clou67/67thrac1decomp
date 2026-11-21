@@ -279,7 +279,15 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_UpdateLight
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobyShadows);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", ProcessMobyAnimData);
+extern char cs_table[];
+void MobyAnimProc(unsigned char *scratchPad, unsigned char *skinBuffer);
+
+void ProcessMobyAnimData(void)
+{
+    FlushCache(0);
+    FastMemCopy16((void *)0x70003800, cs_table, 0x800);
+    MobyAnimProc(EngScratchPad, SkinVertexCache);
+}
 
 enum { DEFAULT_MOBY_CLASS_DISTANCE = 0x40000000, MOBY_CLASS_DISTS_SIZE = 0x380 };
 
