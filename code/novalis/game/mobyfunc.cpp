@@ -310,7 +310,17 @@ void RestoreMobyClassDists(void)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobysSetup);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobyListProc);
+extern int MobyBuff;
+int MobyProc(MobyInstance *moby, int buffer, int count, long full);
+
+void DrawMobyListProc(MobyInstance* moby, int count) {
+    VU1_addGSregister(0x47, 0x5360B);
+    FlushCache(0);
+    RestoreMobyClassDists();
+    MobyBuff = MobyProc(moby, MobyBuff, count, 0);
+    StashMobyClassDists();
+    MobyBuff -= 0x10;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMoby);
 
