@@ -3,6 +3,7 @@
 #include "fastfunc.h"
 #include "moby.h"
 #include "hero.h"
+#include "draw.h"
 #include "sce.h"
 #include "sound.h"
 #include "mathfunc_inline.h"
@@ -358,7 +359,27 @@ void DrawMobyListProc(MobyInstance* moby, int count) {
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMoby);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobys);
+extern MobyInstance *MobyInstances;
+extern int vu1_bufLimit;
+extern const char mobyChainOverflowMessage[] __attribute__((section(".data")));
+
+void DrawMobysSetup(void);
+void DrawMoby(void);
+
+void DrawMobys(void)
+{
+    DrawMobysSetup();
+
+    if (drawConfig.enables[10]) {
+        InitMobyClassDists();
+        MobyBuff = MobyProc(MobyInstances, MobyBuff, -1, 1);
+
+        if ((int)vu1_bufPtr.bytes > vu1_bufLimit)
+            printf_stub(mobyChainOverflowMessage);
+    }
+
+    DrawMoby();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_SetLightsFromEnvSample);
 

@@ -480,3 +480,6 @@ MobyAnimProc__FPUcT0 = 0x0026A6C0;
 MobyProc__FP12MobyInstanceiil = 0x0026A7A0;
 
 MB_GetLightDirection__FP12MobyInstanceP4Vec4 = 0x00265130;
+
+DrawMobysSetup__Fv = 0x00264C30;
+DrawMoby__Fv = 0x00264D68;
