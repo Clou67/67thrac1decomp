@@ -222,7 +222,23 @@ AnimLayer* MB_AllocAnimLayer(MobyInstance* pMoby, int joint) {
     return layer;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_FreeAnimLayer);
+void MB_FreeAnimLayer(MobyInstance *moby, AnimLayer **layerPtr)
+{
+    AnimLayer *layer;
+    if (*layerPtr == 0)
+        return;
+    if (moby->pAnimationLayers == *layerPtr)
+        moby->pAnimationLayers = (*layerPtr)->next;
+    else {
+        layer = moby->pAnimationLayers;
+        while(layer->next != 0 && layer->next != *layerPtr)
+            layer = layer->next;
+        if(layer->next == *layerPtr)
+            layer->next = (*layerPtr)->next;
+    }
+    FastMemSet(*layerPtr, 0, sizeof(AnimLayer));
+    *layerPtr = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_UpdateAnimLayer);
 

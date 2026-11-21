@@ -150,6 +150,8 @@ enum MobyModeBit {
 };
 
 // A moby (game object) instance, 0x100 bytes.
+struct AnimLayer;
+
 struct MobyInstance {
     BSphere bSphere;
     Vec4 pos;
@@ -180,7 +182,7 @@ struct MobyInstance {
     float animationBlend;
     float unk58;
     float frameSpeed;
-    void *pAnimationLayers;
+    AnimLayer *pAnimationLayers;
     Manipulator *pManipulators;
     void *pPreviousAnimationData;
     void *pCurrentAnimationData;
