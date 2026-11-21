@@ -169,8 +169,8 @@ struct MobyInstance {
     char unk70[4];
     void *pUpdate;
     void *pVar;
-    char soundDesired;
-    char soundChannel;
+    unsigned char soundDesired;
+    unsigned char soundChannel;
     char trigsCnt;
     char shadow;
     int colorManipulator;
@@ -230,4 +230,31 @@ int AnimCache_Register(MobyInstance *moby);
 
 void GetMobyJointsWorldPos(MobyInstance *moby, int count, int *joints, Vec4 *out);
 
+struct AnimLayer {
+    short joint;               /* 0x00 */
+    unsigned short jointCount;          /* 0x02 */
+    unsigned char inUse;                /* 0x04 */
+    unsigned char stepped;              /* 0x05  */
+    unsigned char prevFromBuffer;       /* 0x06 */
+    unsigned char curFromBuffer;        /* 0x07   */
+    float weight;            /* 0x08   */
+    unsigned char *jointMap;            /* 0x0c */
+    void *jointBuf;          /* 0x10  */
+    struct MobyClass *pClass;     /* 0x14  */
+    struct MobyClass *animClass;  /* 0x18 */
+    struct AnimLayer *next;  /* 0x1c */
+    unsigned char prevFrame;            /* 0x20 */
+    unsigned char curFrame;             /* 0x21 */
+    unsigned char prevSeq;              /* 0x22 */
+    unsigned char curSeq;               /* 0x23 */
+    float blend;             /* 0x24   */
+    float speed;             /* 0x28 */
+    float frameScale;        /* 0x2c */
+    unsigned char _pad30[8];
+    void *prevFrameData;     /* 0x38 */
+    void *curFrameData;      /* 0x3c */
+};
+
+
+void MB_UpdateAnimLayer(MobyInstance *moby, AnimLayer *layer);
 #endif

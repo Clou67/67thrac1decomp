@@ -2,6 +2,8 @@
 #include "vuchain.h"
 #include "fastfunc.h"
 #include "moby.h"
+#include "sce.h"
+#include "sound.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
 
@@ -62,7 +64,27 @@ void DeleteMoby(MobyInstance *moby)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyFrameData);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_PlayMobyDesiredSound);
+void MB_PlayMobyDesiredSound(MobyInstance* pMoby) {
+    int channel;
+    SoundAudioState* state;
+
+    if (pMoby->soundChannel != 0xFF) {
+        channel = pMoby->soundChannel;
+        state = (SoundAudioState*)((SoundVoice*)&audioState + channel);
+
+        if (state->voices[0].pMoby != pMoby)
+            pMoby->soundChannel = 0xFF;
+            
+        else if (state->voices[0].soundId != pMoby->soundDesired) {
+            sound_KillChannel(channel);
+            pMoby->soundChannel = 0xFF;
+        }
+        
+    } 
+    else if (pMoby->soundDesired != 0xFF)
+        pMoby->soundChannel = sound_PlayMobySound(pMoby->soundDesired, 4, pMoby);
+    
+}
 
 enum { ANIM_TICKS_PER_FRAME = 16 };
 
@@ -121,7 +143,30 @@ void AttachManipulator(MobyInstance *moby, int animJoint, Manipulator *manipulat
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DetachManipulator);
+void DetachManipulator(MobyInstance *moby, Manipulator *manipulator)
+{
+    if (manipulator == 0)
+        return;
+
+    if (moby->pManipulators == manipulator) {
+        moby->pManipulators = manipulator->pChain;
+    } else {
+        Manipulator *previous = moby->pManipulators;
+
+        for (;;) {
+            if (previous->pChain == 0)
+                break;
+            if (previous->pChain == manipulator)
+                break;
+            previous = previous->pChain;
+        }
+
+        if (previous->pChain == manipulator)
+            previous->pChain = manipulator->pChain;
+    }
+
+    FastMemSet(manipulator, 0, sizeof(Manipulator));
+}
 
 int AnimCache_Register(MobyInstance *moby)
 {

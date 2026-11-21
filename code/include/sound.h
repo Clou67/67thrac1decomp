@@ -27,11 +27,15 @@ struct SoundData {
     SoundDef *pSoundDef;
 };
 
+struct MobyInstance;
+
 struct SoundVoice {
-    unsigned char unk_00[0x10];
+    unsigned char unk_00[0x0E];
+    short soundId;
     int volume;
     int pitch_bend;
-    unsigned char unk_18[0x58];
+    MobyInstance *pMoby;
+    unsigned char unk_1C[0x54];
 };
 
 struct SoundAudioState {
@@ -59,4 +63,6 @@ void sound_SetReverb(int owner, int type, int depth, int delay, int feedback);
 
 int sound_GetFadeChannel(SoundData *channel, Vec4 *position);
 
+void sound_KillChannel(int handle);
+int sound_PlayMobySound(int sound, int flags, MobyInstance *moby);
 #endif
