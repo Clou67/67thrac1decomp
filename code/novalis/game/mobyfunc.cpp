@@ -188,7 +188,38 @@ void MB_AddShortPairOffset(MobyClass* pClass, int x, int y) {
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_AllocAnimLayer);
+extern unsigned char AnimLayerJointBuf[6][0x1500];
+extern AnimLayer AnimLayerPool[6];
+
+enum { NUM_ANIM_LAYERS = 6 };
+
+AnimLayer* MB_AllocAnimLayer(MobyInstance* pMoby, int joint) {
+    AnimLayer* layer;
+    int i = 0;
+
+    for (i = 0; i < NUM_ANIM_LAYERS; i++) {
+        if (!AnimLayerPool[i].inUse)
+            break;
+    }
+
+    layer = &AnimLayerPool[i];
+
+    layer->inUse = 1;
+    layer->joint = joint;
+    joint = (short)joint;
+    layer->jointBuf = AnimLayerJointBuf[i];
+    layer->pClass = pMoby->pClass;
+
+    unsigned char* jointData = ((unsigned char **)pMoby->pClass->animationJoints)[joint + 1];
+
+    layer->jointCount = jointData[2];
+    layer->jointMap = jointData + (jointData[0] + 4);
+
+    layer->next = (AnimLayer *)pMoby->pAnimationLayers;
+    pMoby->pAnimationLayers = layer;
+
+    return layer;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_FreeAnimLayer);
 
