@@ -441,7 +441,36 @@ void RestoreMobyClassDists(void)
     FastMemCopy16(MobyClassDists, StashedMobyClassDists, MOBY_CLASS_DISTS_SIZE);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobysSetup);
+extern int mobyVu1State;
+extern int MobyVu1Marker;
+extern int textureCursor;
+extern int textureCursorEnd;
+extern int vu1_bufLimit;
+extern int MobyShadowMarker;
+extern int MobyBuff;
+extern const char mobyTextureMarker[] __attribute__((section(".data")));
+
+void DrawMobysSetup(void)
+{
+    int packet;
+
+    VU1_addDataRef(MobyVU1Data, MobyVu1HeaderData.qwc);
+    mobyVu1State = 6;
+    VU0_loadMicroProgram(MobyVU0Program);
+    VU1_addGSregister(0x47, 0x5360B);
+
+    packet = (int)vu1_bufPtr.bytes;
+    MobyVu1Marker = packet;
+    textureCursor = textureCursorEnd;
+    packet += 0x10;
+    vu1_bufPtr.bytes = (unsigned char *)packet;
+
+    printf_stub3(mobyTextureMarker, 1);
+
+    MobyShadowMarker = 0;
+    vu1_bufLimit = (int)SkinVertexCache - 0x10000;
+    MobyBuff = (int)EngScratchPad;
+}
 
 extern int MobyBuff;
 int MobyProc(MobyInstance *moby, int buffer, int count, long full);

@@ -878,7 +878,7 @@ ProcessMobyAnimData__Fv = 0x00264B60; // type:func size:0x44
 InitMobyClassDists__Fv = 0x00264BA8; // type:func size:0x28
 StashMobyClassDists__Fv = 0x00264BD0; // type:func size:0x2C
 RestoreMobyClassDists__Fv = 0x00264C00; // type:func size:0x2C
-DrawMobysSetup = 0x00264C30; // type:func size:0xB8
+DrawMobysSetup__Fv = 0x00264C30; // type:func size:0xB8
 DrawMobyListProc__FP12MobyInstancei = 0x00264CE8; // type:func size:0x80
 DrawMobysCleanup__Fv = 0x00264D68; // type:func size:0xAC
 DrawMobys__Fv = 0x00264E18; // type:func size:0x80
@@ -2266,3 +2266,7 @@ mobyDrawMarker = 0x0015FFA0;
 mobySkinMarker = 0x0015FFB0;
 MobyTexMarker = 0x0015FFF8;
 MobyShadowMarker = 0x00160000;
+
+mobyVu1State = 0x0015F5E0;
+MobyVu1Marker = 0x0015FFCC;
+mobyTextureMarker = 0x0015FF90;

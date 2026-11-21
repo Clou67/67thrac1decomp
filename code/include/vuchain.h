@@ -172,4 +172,13 @@ int DMAC_VIF1_Handler(int channel);
 int DMAC_BEIS_Handler(int channel);
 void Vif1ChainCmd(int command);
 
+struct MobyVu1Header {
+    unsigned short qwc;
+    unsigned char unk_02[14];
+};
+
+extern MobyVu1Header MobyVu1HeaderData;
+extern unsigned char MobyVU1Data[];
+extern long MobyVU0Program[];
+
 #endif

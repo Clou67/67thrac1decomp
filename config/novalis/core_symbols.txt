@@ -678,3 +678,7 @@ sceMpegAddCallback = 0x0012BB10;
 
 sceMpegIsEnd = 0x0012BA48;
 sceMpegGetPicture = 0x0012B9F0;
+
+MobyVu1HeaderData = 0x0010FA90;
+MobyVU1Data = 0x0010FAA0;
+MobyVU0Program = 0x00100080;
