@@ -873,7 +873,7 @@ MB_GetJointsWorldMtx__FP12MobyInstanceiPiP4Mtx4 = 0x002646D0; // type:func size:
 DmaMobyTextures__Fv = 0x002647A8; // type:func size:0x108
 PatchMobyGifs = 0x002648B0; // type:func size:0xD8
 MB_UpdateLightAngle__Fv = 0x00264988; // type:func size:0x90
-DrawMobyShadows = 0x00264A18; // type:func size:0x144
+ProcessMobyShadows__Fv = 0x00264A18; // type:func size:0x144
 ProcessMobyAnimData__Fv = 0x00264B60; // type:func size:0x44
 InitMobyClassDists__Fv = 0x00264BA8; // type:func size:0x28
 StashMobyClassDists__Fv = 0x00264BD0; // type:func size:0x2C
@@ -2265,8 +2265,12 @@ AnimLayerPool = 0x0018EFC0;
 mobyDrawMarker = 0x0015FFA0;
 mobySkinMarker = 0x0015FFB0;
 MobyTexMarker = 0x0015FFF8;
-MobyShadowMarker = 0x00160000;
+MobyVu1ShadowMarker = 0x00160000;
 
 mobyVu1State = 0x0015F5E0;
 MobyVu1Marker = 0x0015FFCC;
 mobyTextureMarker = 0x0015FF90;
+
+MobyShadowCnt = 0x0015FFFC;
+ShadowScratchPad = 0x001ACC00;
+mobyShadowProfileMarker = 0x0015FF80;

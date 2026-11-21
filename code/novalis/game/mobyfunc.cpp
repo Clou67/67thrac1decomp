@@ -460,7 +460,53 @@ void MB_UpdateLightAngle(void)
     LightDirection.z = -0.99f;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobyShadows);
+extern int MobyShadowCnt;
+extern int ShadowScratchPad[];
+extern Vu1ChainCursor MobyVu1ShadowMarker;
+extern const char mobyShadowProfileMarker[] __attribute__((section(".data")));
+
+void DrawShadow(int *list);
+void ShadowDrawStencil(void);
+
+void ProcessMobyShadows(void)
+{
+    DmaTag *start;
+    DmaTag *tag;
+
+    if (MobyShadowCnt == 0) {
+        MobyVu1ShadowMarker.tag->tag = DMA_TAG_CNT;
+        MobyVu1ShadowMarker.tag->addr = 0;
+        MobyVu1ShadowMarker.tag->vif0 = 0;
+        MobyVu1ShadowMarker.tag->vif1 = 0;
+        return;
+    }
+
+    tag = vu1_bufPtr.tag;
+    start = tag;
+    tag++;
+    vu1_bufPtr.tag = tag;
+
+    MobyVu1ShadowMarker.tag->tag = DMA_TAG_NEXT;
+    MobyVu1ShadowMarker.tag->addr = (unsigned int)vu1_bufPtr.tag;
+    MobyVu1ShadowMarker.tag->vif0 = 0;
+    MobyVu1ShadowMarker.tag->vif1 = 0;
+
+    ShadowDrawStencil();
+    DrawShadow(ShadowScratchPad);
+
+    vu1_bufPtr.tag->tag = DMA_TAG_NEXT;
+    vu1_bufPtr.tag->addr = (unsigned int)(MobyVu1ShadowMarker.tag + 1);
+    vu1_bufPtr.tag->vif0 = 0;
+    vu1_bufPtr.tag->vif1 = 0;
+    vu1_bufPtr.tag++;
+
+    start->tag = DMA_TAG_NEXT;
+    start->addr = (unsigned int)vu1_bufPtr.tag;
+    start->vif0 = 0;
+    start->vif1 = 0;
+
+    printf_stub2(mobyShadowProfileMarker, 8);
+}
 
 extern char cs_table[];
 void MobyAnimProc(unsigned char *scratchPad, unsigned char *skinBuffer);
@@ -496,7 +542,7 @@ extern Vu1ChainCursor MobyVu1Marker;
 extern int GSloc;
 extern int GSbase;
 extern int vu1_bufLimit;
-extern int MobyShadowMarker;
+extern Vu1ChainCursor MobyVu1ShadowMarker;
 extern int MobyBuff;
 extern const char mobyTextureMarker[] __attribute__((section(".data")));
 
@@ -517,7 +563,7 @@ void DrawMobysSetup(void)
 
     printf_stub3(mobyTextureMarker, 1);
 
-    MobyShadowMarker = 0;
+    MobyVu1ShadowMarker.tag = 0;
     vu1_bufLimit = (int)SkinVertexCache - 0x10000;
     MobyBuff = (int)EngScratchPad;
 }
@@ -536,11 +582,11 @@ void DrawMobyListProc(MobyInstance* moby, int count) {
 
 extern const char mobyDrawMarker[] __attribute__((section(".data")));
 extern const char mobySkinMarker[] __attribute__((section(".data")));
-extern int MobyShadowMarker;
+extern Vu1ChainCursor MobyVu1ShadowMarker;
 extern int MobyTexMarker;
 
 void DmaMobyTextures(void);
-void DrawMobyShadows(void);
+void ProcessMobyShadows(void);
 void SetMobyTexColors(void);
 
 void DrawMobysCleanup(void)
@@ -557,8 +603,8 @@ void DrawMobysCleanup(void)
 
     printf_stub2(mobySkinMarker, 3);
 
-    if (drawConfig.mobys != 0 && MobyShadowMarker != 0)
-        DrawMobyShadows();
+    if (drawConfig.mobys != 0 && MobyVu1ShadowMarker.tag != 0)
+        ProcessMobyShadows();
 }
 
 extern MobyInstance *MobyInstances;

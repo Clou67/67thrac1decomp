@@ -481,6 +481,7 @@ MobyProc__FP12MobyInstanceiil = 0x0026A7A0;
 
 MB_GetLightDirection__FP12MobyInstanceP4Vec4 = 0x00265130;
 
-DrawMobyShadows__Fv = 0x00264A18;
 SetMobyTexColors__Fv = 0x0026A650;
 BuildMobyTextureDma__FUi = 0x0026A3A0;
+DrawShadow__FPi = 0x0029B750;
+ShadowDrawStencil__Fv = 0x0029B948;
