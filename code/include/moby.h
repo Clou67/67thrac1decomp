@@ -47,8 +47,13 @@ struct MobyCollPrims {
 };
 
 struct MobySeqFrame {
-    char unk_00[4];
+    float length;
     short time;
+    short qwords;
+    short jointBytes;
+    short scaleKeys;
+    short transOffset;
+    short transKeys;
 };
 
 // The frame pointer table follows the 0x1C-byte RaC1 sequence header.

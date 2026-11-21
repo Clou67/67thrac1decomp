@@ -143,7 +143,27 @@ int MB_FindNearestAnimTrigger(MobySeq *sequence, float time)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", func_00263918);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_BlendAnimFrame);
+float MB_BlendAnimFrame(MobyInstance *moby)
+{
+    MobySeqFrame *frame;
+
+    if (moby->updateId != 0xFF)
+        frame = (MobySeqFrame *)moby->pPreviousAnimationData;
+    else
+        frame = (MobySeqFrame *)moby->pCurrentAnimationData;
+
+    if (moby->animationBlend == 0.0f)
+        return FastIntToFloat(frame->time) * 0.0625f;
+
+    if (moby->updateId != moby->animationId ||
+        moby->previousAnimationFrame > moby->animationFrame) {
+        return FastIntToFloat(frame->time) * 0.0625f + moby->animationBlend;
+    } else {
+        MobySeqFrame *previous = (MobySeqFrame *)moby->pCurrentAnimationData;
+        float blendedTime = FastIntToFloat(frame->time) * (1.0f - moby->animationBlend);
+        return (blendedTime + FastIntToFloat(previous->time) * moby->animationBlend) * 0.0625f;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", func_00263A18);
 
