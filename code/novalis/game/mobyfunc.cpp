@@ -455,20 +455,45 @@ void DrawMobyListProc(MobyInstance* moby, int count) {
     MobyBuff -= 0x10;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMoby);
+extern const char mobyDrawMarker[] __attribute__((section(".data")));
+extern const char mobySkinMarker[] __attribute__((section(".data")));
+extern int MobyShadowMarker;
+extern int MobyTexMarker;
+
+void DmaMobyTextures(void);
+void DrawMobyShadows(void);
+void SetMobyTexColors(void);
+
+void DrawMobysCleanup(void)
+{
+    printf_stub3(mobyDrawMarker, 3);
+    DmaMobyTextures();
+    printf_stub2(mobyDrawMarker, 5);
+
+    if (drawConfig.mobys != 0) {
+        ProcessMobyAnimData();
+        if (MobyTexMarker != 0)
+            SetMobyTexColors();
+    }
+
+    printf_stub2(mobySkinMarker, 3);
+
+    if (drawConfig.mobys != 0 && MobyShadowMarker != 0)
+        DrawMobyShadows();
+}
 
 extern MobyInstance *MobyInstances;
 extern int vu1_bufLimit;
 extern const char mobyChainOverflowMessage[] __attribute__((section(".data")));
 
 void DrawMobysSetup(void);
-void DrawMoby(void);
+void DrawMobysCleanup(void);
 
 void DrawMobys(void)
 {
     DrawMobysSetup();
 
-    if (drawConfig.enables[10]) {
+    if (drawConfig.mobys) {
         InitMobyClassDists();
         MobyBuff = MobyProc(MobyInstances, MobyBuff, -1, 1);
 
@@ -476,7 +501,7 @@ void DrawMobys(void)
             printf_stub(mobyChainOverflowMessage);
     }
 
-    DrawMoby();
+    DrawMobysCleanup();
 }
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_SetLightsFromEnvSample);

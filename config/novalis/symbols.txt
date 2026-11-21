@@ -880,7 +880,7 @@ StashMobyClassDists__Fv = 0x00264BD0; // type:func size:0x2C
 RestoreMobyClassDists__Fv = 0x00264C00; // type:func size:0x2C
 DrawMobysSetup = 0x00264C30; // type:func size:0xB8
 DrawMobyListProc__FP12MobyInstancei = 0x00264CE8; // type:func size:0x80
-DrawMoby = 0x00264D68; // type:func size:0xAC
+DrawMobysCleanup__Fv = 0x00264D68; // type:func size:0xAC
 DrawMobys__Fv = 0x00264E18; // type:func size:0x80
 MB_SetLightsFromEnvSample = 0x00264E98; // type:func size:0x1E4
 SetLevelFlag__Fi = 0x00265080; // type:func size:0x2C
@@ -2261,3 +2261,8 @@ mobyChainOverflowMessage = 0x00209F10;
 
 AnimLayerJointBuf = 0x001871C0;
 AnimLayerPool = 0x0018EFC0;
+
+mobyDrawMarker = 0x0015FFA0;
+mobySkinMarker = 0x0015FFB0;
+MobyTexMarker = 0x0015FFF8;
+MobyShadowMarker = 0x00160000;
