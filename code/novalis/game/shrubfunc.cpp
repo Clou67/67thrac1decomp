@@ -29,7 +29,7 @@ void DmaShrubTextures(void)
 
     if (drawConfig.shrub) {
         if (drawConfig.shrub_texture_paging) {
-            int gsEnd = BuildShrubTextureDma(textureCursor);
+            int gsEnd = BuildShrubTextureDma(GSloc);
 
             VU1_texFlush();
 
@@ -90,7 +90,7 @@ void PatchShrubGifs(void)
 void DrawShrub(void)
 {
     ShrubVu1Marker.tag = vu1_bufPtr.tag++;
-    textureCursor = textureCursorEnd;
+    GSloc = GSbase;
 
     printf_stub3("shrub texs", 1);
 

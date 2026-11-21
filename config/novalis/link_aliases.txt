@@ -323,7 +323,6 @@ FastVec3Normalize__FP4Vec4T0f = 0x00221410;
 
 FastBsphereCheck__FP4Vec4f = 0x002221F0;
 
-DrawMobyListProc__FP12MobyInstancei = 0x00264CE8;
 
 Menu_DeleteMoby__FP12MobyInstance = 0x00298F38;
 
@@ -473,3 +472,16 @@ MB_ComputeSelectedJointPos__FP12MobyInstanceiPiP4Vec4 = 0x00268C28;
 UpdateMobyGrids__FP12MobyInstanceUi = 0x00265900;
 InitMobyInstance__FP12MobyInstancei = 0x00263488;
 FastLog2__Fi = 0x00220F08;
+sound_KillChannel__Fi = 0x002A1348;
+MB_UpdateAnimLayer__FP12MobyInstanceP9AnimLayer = 0x00263F70;
+MB_StartAnimLayer__FP12MobyInstanceP9AnimLayerccii = 0x002641C0;
+
+MobyAnimProc__FPUcT0 = 0x0026A6C0;
+MobyProc__FP12MobyInstanceiil = 0x0026A7A0;
+
+MB_GetLightDirection__FP12MobyInstanceP4Vec4 = 0x00265130;
+
+SetMobyTexColors__Fv = 0x0026A650;
+BuildMobyTextureDma__FUi = 0x0026A3A0;
+DrawShadow__FPi = 0x0029B750;
+ShadowDrawStencil__Fv = 0x0029B948;

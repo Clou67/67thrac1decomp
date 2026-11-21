@@ -38,6 +38,8 @@ struct DrawConfig {
             int tie;
             int shrub_texture_paging;
             int shrub;
+            int moby_texture_paging;
+            int mobys;
         };
     };
 };

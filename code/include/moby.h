@@ -23,14 +23,37 @@ struct BSphere {
     float rad;
 };
 
+struct CollPrim {
+    unsigned char collType;
+    unsigned char _pad01;
+    short sets;
+    union {
+        float length;
+        int joint;
+        struct {
+            short jointA;
+            short jointB;
+        } ends;
+    };
+    unsigned char _pad08[4];
+    float radius;
+    Vec4 offset;
+};
+
+
 struct MobyCollPrims {
     char unk00[8];
     int count;
 };
 
 struct MobySeqFrame {
-    char unk_00[4];
+    float length;
     short time;
+    short qwords;
+    short jointBytes;
+    short scaleKeys;
+    short transOffset;
+    short transKeys;
 };
 
 // The frame pointer table follows the 0x1C-byte RaC1 sequence header.
@@ -132,6 +155,8 @@ enum MobyModeBit {
 };
 
 // A moby (game object) instance, 0x100 bytes.
+struct AnimLayer;
+
 struct MobyInstance {
     BSphere bSphere;
     Vec4 pos;
@@ -155,22 +180,22 @@ struct MobyInstance {
         };
     };
     Vec4 rotation;
-    char previousAnimationFrame;
-    char animationFrame;
+    unsigned char previousAnimationFrame;
+    unsigned char animationFrame;
     unsigned char updateId;
     unsigned char animationId;
     float animationBlend;
     float unk58;
     float frameSpeed;
-    void *pAnimationLayers;
+    AnimLayer *pAnimationLayers;
     Manipulator *pManipulators;
     void *pPreviousAnimationData;
     void *pCurrentAnimationData;
     char unk70[4];
     void *pUpdate;
     void *pVar;
-    char soundDesired;
-    char soundChannel;
+    unsigned char soundDesired;
+    unsigned char soundChannel;
     char trigsCnt;
     char shadow;
     int colorManipulator;
@@ -229,5 +254,36 @@ int M849_CallClassCallback0C(MobyInstance *moby);
 int AnimCache_Register(MobyInstance *moby);
 
 void GetMobyJointsWorldPos(MobyInstance *moby, int count, int *joints, Vec4 *out);
+
+struct AnimLayer {
+    short joint;               /* 0x00 */
+    unsigned short jointCount;          /* 0x02 */
+    unsigned char inUse;                /* 0x04 */
+    unsigned char stepped;              /* 0x05  */
+    unsigned char prevFromBuffer;       /* 0x06 */
+    unsigned char curFromBuffer;        /* 0x07   */
+    float weight;            /* 0x08   */
+    unsigned char *jointMap;            /* 0x0c */
+    void *jointBuf;          /* 0x10  */
+    struct MobyClass *pClass;     /* 0x14  */
+    struct MobyClass *animClass;  /* 0x18 */
+    struct AnimLayer *next;  /* 0x1c */
+    unsigned char prevFrame;            /* 0x20 */
+    unsigned char curFrame;             /* 0x21 */
+    unsigned char prevSeq;              /* 0x22 */
+    unsigned char curSeq;               /* 0x23 */
+    float blend;             /* 0x24   */
+    float speed;             /* 0x28 */
+    float frameScale;        /* 0x2c */
+    unsigned char _pad30[8];
+    void *prevFrameData;     /* 0x38 */
+    void *curFrameData;      /* 0x3c */
+};
+
+
+void MB_UpdateAnimLayer(MobyInstance *moby, AnimLayer *layer);
+extern Vec4 LightDirection;
+void MB_GetLightDirection(MobyInstance *moby, Vec4 *out);
+void MB_UpdateLightAngle(void);
 
 #endif

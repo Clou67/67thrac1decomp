@@ -21,8 +21,8 @@ void InitLevel(void)
     VU1_setBufSizeByLevel();
     InitMemSlots();
 
-    textureCursor = GSmemBase;
-    textureCursorEnd = GSmemBase;
+    GSloc = GSmemBase;
+    GSbase = GSmemBase;
 
     FastMemSet(CollJointCacheKeys, COLL_JOINT_CACHE_EMPTY, sizeof(CollJointCacheKeys));
     FastMemSet(MobyClassLookup, -1, sizeof(MobyClassLookup));

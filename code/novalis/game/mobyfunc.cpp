@@ -2,14 +2,36 @@
 #include "vuchain.h"
 #include "fastfunc.h"
 #include "moby.h"
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
+#include "hero.h"
+#include "draw.h"
+#include "sce.h"
+#include "sound.h"
+#include "mathfunc_inline.h"
 
 extern int worldUpdateTime;
 extern MobyInstance *MobyInstancePermEnd;
 extern MobyInstance *MobyInstanceEnd;
-extern unsigned char *mobyVars;
 extern int numSpawnableMobys;
+
+void UpdateNumSpawnableMobys(void)
+{
+    MobyInstance *moby;
+    bool pastEnd = false;
+
+    numSpawnableMobys = 0;
+
+    for (moby = MobyInstancePermEnd; moby < MobyInstanceEnd; moby++) {
+        if (moby->state >= 0xfe && moby->lights <= (unsigned long long)(unsigned int)worldUpdateTime || pastEnd) {
+            numSpawnableMobys++;
+
+            if (moby->state == 0xff) {
+                pastEnd = true;
+            }
+        }
+    }
+}
+
+extern unsigned char *mobyVars;
 extern const char createMobyFailureMessage[] __attribute__((section(".data")));
 
 void InitMobyInstance(MobyInstance *moby, int oClass);
@@ -60,9 +82,48 @@ void DeleteMoby(MobyInstance *moby)
     UpdateMobyGrids(moby, 0x80807F7F);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyFrameData);
+extern unsigned char debugFontBuffer[] __attribute__((section(".data")));
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_PlayMobyDesiredSound);
+void UpdateMobyFrameData(MobyInstance *moby)
+{
+    MobyClass *mobyClass;
+
+    if (moby->updateId != 0xFF) {
+        mobyClass = moby->pClass;
+        moby->pPreviousAnimationData = mobyClass->animations[moby->updateId]->frames[moby->previousAnimationFrame];
+        moby->trigsCnt = mobyClass->animations[moby->updateId]->triggerCount;
+        moby->soundDesired = mobyClass->animations[moby->updateId]->sound;
+    } else {
+        moby->soundDesired = moby->updateId;
+        moby->trigsCnt = 0;
+        moby->pPreviousAnimationData = (void *)&((unsigned char *)debugFontBuffer)[moby->previousAnimationFrame << 11];
+    }
+
+    moby->pCurrentAnimationData =
+        moby->pClass->animations[moby->animationId]->frames[moby->animationFrame];
+}
+
+void MB_PlayMobyDesiredSound(MobyInstance* pMoby) {
+    int channel;
+    SoundAudioState* state;
+
+    if (pMoby->soundChannel != 0xFF) {
+        channel = pMoby->soundChannel;
+        state = (SoundAudioState*)((SoundVoice*)&audioState + channel);
+
+        if (state->voices[0].pMoby != pMoby)
+            pMoby->soundChannel = 0xFF;
+            
+        else if (state->voices[0].soundId != pMoby->soundDesired) {
+            sound_KillChannel(channel);
+            pMoby->soundChannel = 0xFF;
+        }
+        
+    } 
+    else if (pMoby->soundDesired != 0xFF)
+        pMoby->soundChannel = sound_PlayMobySound(pMoby->soundDesired, 4, pMoby);
+    
+}
 
 enum { ANIM_TICKS_PER_FRAME = 16 };
 
@@ -82,23 +143,140 @@ int MB_FindNearestAnimTrigger(MobySeq *sequence, float time)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", func_00263918);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_BlendAnimFrame);
+float MB_BlendAnimFrame(MobyInstance *moby)
+{
+    MobySeqFrame *frame;
+
+    if (moby->updateId != 0xFF)
+        frame = (MobySeqFrame *)moby->pPreviousAnimationData;
+    else
+        frame = (MobySeqFrame *)moby->pCurrentAnimationData;
+
+    if (moby->animationBlend == 0.0f)
+        return FastIntToFloat(frame->time) * 0.0625f;
+
+    if (moby->updateId != moby->animationId ||
+        moby->previousAnimationFrame > moby->animationFrame) {
+        return FastIntToFloat(frame->time) * 0.0625f + moby->animationBlend;
+    } else {
+        MobySeqFrame *previous = (MobySeqFrame *)moby->pCurrentAnimationData;
+        float blendedTime = FastIntToFloat(frame->time) * (1.0f - moby->animationBlend);
+        return (blendedTime + FastIntToFloat(previous->time) * moby->animationBlend) * 0.0625f;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", func_00263A18);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetCollPrimWorld);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_SetCollPrimFromWorld);
+void FastMtx3Transpose(Mtx4 *, Mtx4 *);
+void FastSubVec3(Vec4 *, Vec4 *, Vec4 *);
+void FastTransformVec4(Vec4 *, Vec4 *, Mtx4 *);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_AddShortPairOffset);
+void MB_SetCollPrimFromWorld(MobyInstance* pMoby, int idx, Vec4* pos, float rad, float len) {
+    Mtx4 mtx;
+    Vec4 localPos;
+    float invScale;
+    CollPrim* prim;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_AllocAnimLayer);
+    prim = (CollPrim*)((unsigned char*)pMoby->collision + ((idx << 5) + 0x10));
+    invScale = 1024.0f / pMoby->scale;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_FreeAnimLayer);
+    FastMtx3Transpose(&mtx, &pMoby->transform);
+    FastSubVec3(&localPos, pos, &pMoby->pos);
+    FastTransformVec4(&localPos, &localPos, &mtx);
+    FastVec3Scale(&localPos, &localPos, invScale);
+
+    CopyVec4Inline(&prim->offset, &localPos);
+    prim->length = len * invScale;
+    prim->offset.w = rad * invScale;
+}
+
+void MB_AddShortPairOffset(MobyClass* pClass, int x, int y) {
+    int packetCount = pClass->packetCount0 + pClass->packetCount1;
+    unsigned char* packet = (unsigned char*)pClass->packets;
+
+    for (int i = 0; i < packetCount; i++, packet += 16) {
+        unsigned short* data = *(unsigned short**)packet;
+        int count = ((unsigned char*)data)[2];
+        data += 2;
+
+        for (int pair = 0; pair < count; pair++) {
+            data[0] += x;
+            data[1] += y;
+            data += 2;
+        }
+    }
+}
+
+extern unsigned char AnimLayerJointBuf[6][0x1500];
+extern AnimLayer AnimLayerPool[6];
+
+enum { NUM_ANIM_LAYERS = 6 };
+
+AnimLayer* MB_AllocAnimLayer(MobyInstance* pMoby, int joint) {
+    AnimLayer* layer;
+    int i = 0;
+
+    for (i = 0; i < NUM_ANIM_LAYERS; i++) {
+        if (!AnimLayerPool[i].inUse)
+            break;
+    }
+
+    layer = &AnimLayerPool[i];
+
+    layer->inUse = 1;
+    layer->joint = joint;
+    joint = (short)joint;
+    layer->jointBuf = AnimLayerJointBuf[i];
+    layer->pClass = pMoby->pClass;
+
+    unsigned char* jointData = ((unsigned char **)pMoby->pClass->animationJoints)[joint + 1];
+
+    layer->jointCount = jointData[2];
+    layer->jointMap = jointData + (jointData[0] + 4);
+
+    layer->next = (AnimLayer *)pMoby->pAnimationLayers;
+    pMoby->pAnimationLayers = layer;
+
+    return layer;
+}
+
+void MB_FreeAnimLayer(MobyInstance *moby, AnimLayer **layerPtr)
+{
+    AnimLayer *layer;
+    if (*layerPtr == 0)
+        return;
+    if (moby->pAnimationLayers == *layerPtr)
+        moby->pAnimationLayers = (*layerPtr)->next;
+    else {
+        layer = moby->pAnimationLayers;
+        while(layer->next != 0 && layer->next != *layerPtr)
+            layer = layer->next;
+        if(layer->next == *layerPtr)
+            layer->next = (*layerPtr)->next;
+    }
+    FastMemSet(*layerPtr, 0, sizeof(AnimLayer));
+    *layerPtr = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_UpdateAnimLayer);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_StartAnimLayer);
+void MB_StartAnimLayer(MobyInstance* pMoby, AnimLayer* layer, signed char seq, signed char frame, int frames, int update) 
+{
+    layer->prevSeq = pMoby->animationId;
+    layer->prevFrame = pMoby->animationFrame;
+    layer->curSeq = seq;
+    layer->curFrame = frame;
+    layer->blend = 0;
+    layer->speed = 1.0f;
+    layer->frameScale = 1.0f / frames;
+
+    if (update != 0) 
+        MB_UpdateAnimLayer(pMoby, layer);
+    
+}
+
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_InitAnimLayerBuffer);
 
@@ -121,7 +299,30 @@ void AttachManipulator(MobyInstance *moby, int animJoint, Manipulator *manipulat
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DetachManipulator);
+void DetachManipulator(MobyInstance *moby, Manipulator *manipulator)
+{
+    if (manipulator == 0)
+        return;
+
+    if (moby->pManipulators == manipulator) {
+        moby->pManipulators = manipulator->pChain;
+    } else {
+        Manipulator *previous = moby->pManipulators;
+
+        for (;;) {
+            if (previous->pChain == 0)
+                break;
+            if (previous->pChain == manipulator)
+                break;
+            previous = previous->pChain;
+        }
+
+        if (previous->pChain == manipulator)
+            previous->pChain = manipulator->pChain;
+    }
+
+    FastMemSet(manipulator, 0, sizeof(Manipulator));
+}
 
 int AnimCache_Register(MobyInstance *moby)
 {
@@ -212,15 +413,110 @@ void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joi
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DmaMobyTextures);
+extern Vu1ChainCursor MobyVu1Marker;
+extern int GSloc;
+int BuildMobyTextureDma(unsigned int gsBase);
+
+void DmaMobyTextures(void)
+{
+    DmaTag *start = vu1_bufPtr.tag++;
+
+    MobyVu1Marker.tag->tag = DMA_TAG_NEXT;
+    MobyVu1Marker.tag->addr = (unsigned int)vu1_bufPtr.tag;
+    MobyVu1Marker.tag->vif0 = 0;
+    MobyVu1Marker.tag->vif1 = 0;
+
+    if (drawConfig.mobys != 0) {
+        if (drawConfig.moby_texture_paging != 0) {
+            BuildMobyTextureDma(GSloc);
+            VU1_texFlush();
+        }
+    }
+
+    vu1_bufPtr.tag->tag = DMA_TAG_NEXT;
+    vu1_bufPtr.tag->addr = (unsigned int)(MobyVu1Marker.tag + 1);
+    vu1_bufPtr.tag->vif0 = 0;
+    vu1_bufPtr.tag->vif1 = 0;
+    vu1_bufPtr.tag++;
+
+    start->tag = DMA_TAG_NEXT;
+    start->addr = (unsigned int)vu1_bufPtr.tag;
+    start->vif0 = 0;
+    start->vif1 = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", PatchMobyGifs);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_UpdateLightAngle);
+void MB_UpdateLightAngle(void)
+{
+    Vec4 direction;
+    float angle;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobyShadows);
+    MB_GetLightDirection(Hero.moby, &direction);
+    angle = FastArcTan(direction.x, direction.y);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", ProcessMobyAnimData);
+    LightDirection.x = FastAngleSinF(angle) * 0.14f;
+    LightDirection.y = FastAngleCosF(angle) * 0.14f;
+    LightDirection.z = -0.99f;
+}
+
+extern int MobyShadowCnt;
+extern int ShadowScratchPad[];
+extern Vu1ChainCursor MobyVu1ShadowMarker;
+extern const char mobyShadowProfileMarker[] __attribute__((section(".data")));
+
+void DrawShadow(int *list);
+void ShadowDrawStencil(void);
+
+void ProcessMobyShadows(void)
+{
+    DmaTag *start;
+    DmaTag *tag;
+
+    if (MobyShadowCnt == 0) {
+        MobyVu1ShadowMarker.tag->tag = DMA_TAG_CNT;
+        MobyVu1ShadowMarker.tag->addr = 0;
+        MobyVu1ShadowMarker.tag->vif0 = 0;
+        MobyVu1ShadowMarker.tag->vif1 = 0;
+        return;
+    }
+
+    tag = vu1_bufPtr.tag;
+    start = tag;
+    tag++;
+    vu1_bufPtr.tag = tag;
+
+    MobyVu1ShadowMarker.tag->tag = DMA_TAG_NEXT;
+    MobyVu1ShadowMarker.tag->addr = (unsigned int)vu1_bufPtr.tag;
+    MobyVu1ShadowMarker.tag->vif0 = 0;
+    MobyVu1ShadowMarker.tag->vif1 = 0;
+
+    ShadowDrawStencil();
+    DrawShadow(ShadowScratchPad);
+
+    vu1_bufPtr.tag->tag = DMA_TAG_NEXT;
+    vu1_bufPtr.tag->addr = (unsigned int)(MobyVu1ShadowMarker.tag + 1);
+    vu1_bufPtr.tag->vif0 = 0;
+    vu1_bufPtr.tag->vif1 = 0;
+    vu1_bufPtr.tag++;
+
+    start->tag = DMA_TAG_NEXT;
+    start->addr = (unsigned int)vu1_bufPtr.tag;
+    start->vif0 = 0;
+    start->vif1 = 0;
+
+    printf_stub2(mobyShadowProfileMarker, 8);
+}
+
+extern char cs_table[];
+void MobyAnimProc(unsigned char *scratchPad, unsigned char *skinBuffer);
+
+void ProcessMobyAnimData(void)
+{
+    FlushCache(0);
+    FastMemCopy16((void *)0x70003800, cs_table, 0x800);
+    MobyAnimProc(EngScratchPad, SkinVertexCache);
+}
 
 enum { DEFAULT_MOBY_CLASS_DISTANCE = 0x40000000, MOBY_CLASS_DISTS_SIZE = 0x380 };
 
@@ -241,13 +537,97 @@ void RestoreMobyClassDists(void)
     FastMemCopy16(MobyClassDists, StashedMobyClassDists, MOBY_CLASS_DISTS_SIZE);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobysSetup);
+extern int mobyVu1State;
+extern Vu1ChainCursor MobyVu1Marker;
+extern int GSloc;
+extern int GSbase;
+extern int vu1_bufLimit;
+extern Vu1ChainCursor MobyVu1ShadowMarker;
+extern int MobyBuff;
+extern const char mobyTextureMarker[] __attribute__((section(".data")));
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobyListProc);
+void DrawMobysSetup(void)
+{
+    int packet;
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMoby);
+    VU1_addDataRef(MobyVU1Data, MobyVu1HeaderData.qwc);
+    mobyVu1State = 6;
+    VU0_loadMicroProgram(MobyVU0Program);
+    VU1_addGSregister(0x47, 0x5360B);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobys);
+    packet = (int)vu1_bufPtr.bytes;
+    MobyVu1Marker.bytes = (unsigned char *)packet;
+    GSloc = GSbase;
+    packet += 0x10;
+    vu1_bufPtr.bytes = (unsigned char *)packet;
+
+    printf_stub3(mobyTextureMarker, 1);
+
+    MobyVu1ShadowMarker.tag = 0;
+    vu1_bufLimit = (int)SkinVertexCache - 0x10000;
+    MobyBuff = (int)EngScratchPad;
+}
+
+extern int MobyBuff;
+int MobyProc(MobyInstance *moby, int buffer, int count, long full);
+
+void DrawMobyListProc(MobyInstance* moby, int count) {
+    VU1_addGSregister(0x47, 0x5360B);
+    FlushCache(0);
+    RestoreMobyClassDists();
+    MobyBuff = MobyProc(moby, MobyBuff, count, 0);
+    StashMobyClassDists();
+    MobyBuff -= 0x10;
+}
+
+extern const char mobyDrawMarker[] __attribute__((section(".data")));
+extern const char mobySkinMarker[] __attribute__((section(".data")));
+extern Vu1ChainCursor MobyVu1ShadowMarker;
+extern int MobyTexMarker;
+
+void DmaMobyTextures(void);
+void ProcessMobyShadows(void);
+void SetMobyTexColors(void);
+
+void DrawMobysCleanup(void)
+{
+    printf_stub3(mobyDrawMarker, 3);
+    DmaMobyTextures();
+    printf_stub2(mobyDrawMarker, 5);
+
+    if (drawConfig.mobys != 0) {
+        ProcessMobyAnimData();
+        if (MobyTexMarker != 0)
+            SetMobyTexColors();
+    }
+
+    printf_stub2(mobySkinMarker, 3);
+
+    if (drawConfig.mobys != 0 && MobyVu1ShadowMarker.tag != 0)
+        ProcessMobyShadows();
+}
+
+extern MobyInstance *MobyInstances;
+extern int vu1_bufLimit;
+extern const char mobyChainOverflowMessage[] __attribute__((section(".data")));
+
+void DrawMobysSetup(void);
+void DrawMobysCleanup(void);
+
+void DrawMobys(void)
+{
+    DrawMobysSetup();
+
+    if (drawConfig.mobys) {
+        InitMobyClassDists();
+        MobyBuff = MobyProc(MobyInstances, MobyBuff, -1, 1);
+
+        if ((int)vu1_bufPtr.bytes > vu1_bufLimit)
+            printf_stub(mobyChainOverflowMessage);
+    }
+
+    DrawMobysCleanup();
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_SetLightsFromEnvSample);
 

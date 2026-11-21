@@ -38,7 +38,7 @@ for index, (start, kind, name) in enumerate(segments):
         left_bytes += int(re.search(r'nonmatching \w+, (0x[0-9A-Fa-f]+)', header).group(1), 16)
 
     left = [function for function in left if not function.startswith('func_')]
-    done = re.findall(r'^[A-Za-z][^;\n]*\)\n\{', source, re.M)
+    done = re.findall(r'^[A-Za-z][^;\n]*\)[ \t]*\n?[ \t]*\{', source, re.M)
 
     group = groups['Update files' if name.startswith('game/update/') else 'Engine files']
     group[0] += not left
