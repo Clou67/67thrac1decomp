@@ -5,12 +5,46 @@
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CreateMoby);
+extern int worldUpdateTime;
+extern MobyInstance *MobyInstancePermEnd;
+extern MobyInstance *MobyInstanceEnd;
+extern unsigned char *mobyVars;
+extern int numSpawnableMobys;
+extern const char createMobyFailureMessage[] __attribute__((section(".data")));
+
+void InitMobyInstance(MobyInstance *moby, int oClass);
+
+MobyInstance *CreateMoby(int oClass)
+{
+    for (MobyInstance *moby = MobyInstancePermEnd; moby < MobyInstanceEnd; ++moby) {
+        unsigned char state = moby->state;
+        if (state < 0xFE)
+            continue;
+
+        if (moby->lights > (unsigned int)worldUpdateTime)
+            continue;
+
+        if (state == 0xFF)
+            moby[1].state = state;
+
+        InitMobyInstance(moby, oClass);
+
+        void *vars = mobyVars + (moby - MobyInstancePermEnd) * 0x80;
+        moby->pVar = vars;
+        FastMemSet(vars, 0, 0x80);
+
+        if (numSpawnableMobys != 0)
+            --numSpawnableMobys;
+
+        return moby;
+    }
+
+    printf_stub(createMobyFailureMessage, worldUpdateTime, oClass);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", InitMobyInstance);
 
-extern MobyInstance *MobyInstancePermEnd;
-extern int worldUpdateTime;
 
 void UpdateMobyGrids(MobyInstance *moby, unsigned int bounds);
 
