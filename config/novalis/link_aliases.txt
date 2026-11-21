@@ -472,3 +472,4 @@ CameraControls = 0x00169590;
 MB_ComputeSelectedJointPos__FP12MobyInstanceiPiP4Vec4 = 0x00268C28;
 UpdateMobyGrids__FP12MobyInstanceUi = 0x00265900;
 InitMobyInstance__FP12MobyInstancei = 0x00263488;
+LoadPifAsPSMT8H__FPUcT0ii = 0x0020CA30;
