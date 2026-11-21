@@ -23,6 +23,24 @@ struct BSphere {
     float rad;
 };
 
+struct CollPrim {
+    unsigned char collType;
+    unsigned char _pad01;
+    short sets;
+    union {
+        float length;
+        int joint;
+        struct {
+            short jointA;
+            short jointB;
+        } ends;
+    };
+    unsigned char _pad08[4];
+    float radius;
+    Vec4 offset;
+};
+
+
 struct MobyCollPrims {
     char unk00[8];
     int count;

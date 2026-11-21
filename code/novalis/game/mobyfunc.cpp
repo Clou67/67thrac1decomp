@@ -4,6 +4,7 @@
 #include "moby.h"
 #include "sce.h"
 #include "sound.h"
+#include "mathfunc_inline.h"
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
 
@@ -110,7 +111,28 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", func_00263A18)
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetCollPrimWorld);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_SetCollPrimFromWorld);
+void FastMtx3Transpose(Mtx4 *, Mtx4 *);
+void FastSubVec3(Vec4 *, Vec4 *, Vec4 *);
+void FastTransformVec4(Vec4 *, Vec4 *, Mtx4 *);
+
+void MB_SetCollPrimFromWorld(MobyInstance* pMoby, int idx, Vec4* pos, float rad, float len) {
+    Mtx4 mtx;
+    Vec4 localPos;
+    float invScale;
+    CollPrim* prim;
+
+    prim = (CollPrim*)((unsigned char*)pMoby->collision + ((idx << 5) + 0x10));
+    invScale = 1024.0f / pMoby->scale;
+
+    FastMtx3Transpose(&mtx, &pMoby->transform);
+    FastSubVec3(&localPos, pos, &pMoby->pos);
+    FastTransformVec4(&localPos, &localPos, &mtx);
+    FastVec3Scale(&localPos, &localPos, invScale);
+
+    CopyVec4Inline(&prim->offset, &localPos);
+    prim->length = len * invScale;
+    prim->offset.w = rad * invScale;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_AddShortPairOffset);
 
