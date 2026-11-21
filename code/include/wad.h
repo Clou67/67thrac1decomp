@@ -9,7 +9,8 @@ struct WadEntry {
 
 // The boot WAD's table of contents (DL g_wad.misc); only the entries known so far.
 struct BootAssets {
-    int unk_0[4];
+    int unk_0[2];
+    WadEntry debugFont;
     WadEntry savegame;
 };
 

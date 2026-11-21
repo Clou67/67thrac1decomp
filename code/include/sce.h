@@ -31,11 +31,7 @@ struct sceDmaChan {
     unsigned int chcr;
 };
 
-// GS image transfer packets built by libgraph (96 and 112 bytes).
-struct sceGsLoadImage {
-    unsigned long data[12];
-};
-
+// GS image readback packet built by libgraph (112 bytes).
 struct sceGsStoreImage {
     unsigned long data[14];
 };
@@ -164,6 +160,59 @@ struct sceGifTag {
     unsigned long REGS15 : 4;
 } __attribute__((aligned(16)));
 
+struct sceGsBitbltbuf {
+    unsigned long SBP : 14;
+    unsigned long pad14 : 2;
+    unsigned long SBW : 6;
+    unsigned long pad22 : 2;
+    unsigned long SPSM : 6;
+    unsigned long pad30 : 2;
+    unsigned long DBP : 14;
+    unsigned long pad46 : 2;
+    unsigned long DBW : 6;
+    unsigned long pad54 : 2;
+    unsigned long DPSM : 6;
+    unsigned long pad62 : 2;
+};
+
+struct sceGsTrxpos {
+    unsigned long SSAX : 11;
+    unsigned long pad11 : 5;
+    unsigned long SSAY : 11;
+    unsigned long pad27 : 5;
+    unsigned long DSAX : 11;
+    unsigned long pad43 : 5;
+    unsigned long DSAY : 11;
+    unsigned long DIR : 2;
+    unsigned long pad61 : 3;
+};
+
+struct sceGsTrxreg {
+    unsigned long RRW : 12;
+    unsigned long pad12 : 20;
+    unsigned long RRH : 12;
+    unsigned long pad44 : 20;
+};
+
+struct sceGsTrxdir {
+    unsigned long XDR : 2;
+    unsigned long pad02 : 62;
+};
+
+// GS image upload packet built by libgraph (96 bytes).
+struct sceGsLoadImage {
+    sceGifTag giftag0;
+    sceGsBitbltbuf bitbltbuf;
+    long bitbltbufaddr;
+    sceGsTrxpos trxpos;
+    long trxposaddr;
+    sceGsTrxreg trxreg;
+    long trxregaddr;
+    sceGsTrxdir trxdir;
+    long trxdiraddr;
+    sceGifTag giftag1;
+} __attribute__((aligned(16)));
+
 // Sony libgraph.h register value builder.
 #define SCE_GS_SET_ZBUF(zbp, psm, zmsk) ((unsigned long)(zbp) | ((unsigned long)(psm) << 24) | ((unsigned long)(zmsk) << 32))
 
@@ -214,6 +263,7 @@ int ChangeThreadPriority(int thread, int priority);
 sceDmaChan *sceDmaGetChan(int channel);
 void sceDmaSend(sceDmaChan *channel, void *tag);
 
+int sceGsExecLoadImage(sceGsLoadImage *image, u_long128 *source);
 int sceGsSetDefLoadImage(sceGsLoadImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsSetDefStoreImage(sceGsStoreImage *image, short bp, short bw, short psm, short x, short y, short w, short h);
 int sceGsExecStoreImage(sceGsStoreImage *image, void *destination);

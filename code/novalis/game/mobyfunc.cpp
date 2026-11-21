@@ -5,11 +5,60 @@
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CreateMoby);
+extern int worldUpdateTime;
+extern MobyInstance *MobyInstancePermEnd;
+extern MobyInstance *MobyInstanceEnd;
+extern unsigned char *mobyVars;
+extern int numSpawnableMobys;
+extern const char createMobyFailureMessage[] __attribute__((section(".data")));
+
+void InitMobyInstance(MobyInstance *moby, int oClass);
+
+MobyInstance *CreateMoby(int oClass)
+{
+    for (MobyInstance *moby = MobyInstancePermEnd; moby < MobyInstanceEnd; ++moby) {
+        unsigned char state = moby->state;
+        if (state < 0xFE)
+            continue;
+
+        if (moby->lights > (unsigned int)worldUpdateTime)
+            continue;
+
+        if (state == 0xFF)
+            moby[1].state = state;
+
+        InitMobyInstance(moby, oClass);
+
+        void *vars = mobyVars + (moby - MobyInstancePermEnd) * 0x80;
+        moby->pVar = vars;
+        FastMemSet(vars, 0, 0x80);
+
+        if (numSpawnableMobys != 0)
+            --numSpawnableMobys;
+
+        return moby;
+    }
+
+    printf_stub(createMobyFailureMessage, worldUpdateTime, oClass);
+    return 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", InitMobyInstance);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DeleteMoby);
+
+void UpdateMobyGrids(MobyInstance *moby, unsigned int bounds);
+
+void DeleteMoby(MobyInstance *moby)
+{
+    if (moby < MobyInstancePermEnd)
+        moby->state = 0xFD;
+
+    else
+        moby->state = 0xFE;
+
+    moby->lights = (unsigned long long)(worldUpdateTime + 2);
+    UpdateMobyGrids(moby, 0x80807F7F);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyFrameData);
 
@@ -53,7 +102,24 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_StartAnimLa
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_InitAnimLayerBuffer);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", AttachManipulator);
+void AttachManipulator(MobyInstance *moby, int animJoint, Manipulator *manipulator)
+{
+    if (manipulator->state == 0) {
+        manipulator->animJoint = animJoint;
+        manipulator->state = 1;
+
+        manipulator->rot.w = 1.0f;
+        manipulator->scale.x = 1.0f;
+        manipulator->scale.y = 1.0f;
+        manipulator->scale.z = 1.0f;
+
+        unsigned char *joint = *(unsigned char **)((unsigned char *)moby->pClass->animationJoints + manipulator->animJoint * 4 + 4);
+        manipulator->jointId = joint[*joint + 4] * 0x40 + 0x70000000;
+
+        manipulator->pChain = moby->pManipulators;
+        moby->pManipulators = manipulator;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DetachManipulator);
 
@@ -72,7 +138,14 @@ int AnimCache_Register(MobyInstance *moby)
     return -1;
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CleanAnimationCache);
+void CleanAnimationCache(void)
+{
+    for (int slot = 0; slot < ANIM_CACHE_COUNT; ++slot) {
+        MobyInstance *moby = AnimationCacheRegistry[slot];
+        if (moby != 0 && ((moby->state & 0x80) || moby->updateId != 0xFF))
+            AnimationCacheRegistry[slot] = 0;
+    }
+}
 
 void MobyComputeSelectedJoints(MobyInstance *moby, int count, int *indices, Mtx4 *joints);
 void FastMtx3x4Copy(Mtx4 *out, Mtx4 *source);
@@ -186,23 +259,3 @@ void SetLevelFlag(int flag)
     if (flag != 0xFF)
         occlCharTable[Level][flag] = 0xFF;
 }
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", SetColorOfMoby);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", SetColorOfMoby_Part);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", GetColorOfMoby);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetLightDirection);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetLightColor);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_BSphereGap);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyAnimFrame);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", FindMobysCloseToUpdate);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MobyGrid_Free);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MobyGrid_Alloc);
