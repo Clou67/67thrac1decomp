@@ -120,7 +120,21 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_FreeAnimLay
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_UpdateAnimLayer);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_StartAnimLayer);
+void MB_StartAnimLayer(MobyInstance* pMoby, AnimLayer* layer, signed char seq, signed char frame, int frames, int update) 
+{
+    layer->prevSeq = pMoby->animationId;
+    layer->prevFrame = pMoby->animationFrame;
+    layer->curSeq = seq;
+    layer->curFrame = frame;
+    layer->blend = 0;
+    layer->speed = 1.0f;
+    layer->frameScale = 1.0f / frames;
+
+    if (update != 0) 
+        MB_UpdateAnimLayer(pMoby, layer);
+    
+}
+
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_InitAnimLayerBuffer);
 
