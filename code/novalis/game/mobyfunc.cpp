@@ -9,7 +9,22 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", CreateMoby);
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", InitMobyInstance);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DeleteMoby);
+extern MobyInstance *MobyInstancePermEnd;
+extern int worldUpdateTime;
+
+void UpdateMobyGrids(MobyInstance *moby, unsigned int bounds);
+
+void DeleteMoby(MobyInstance *moby)
+{
+    if (moby < MobyInstancePermEnd)
+        moby->state = 0xFD;
+
+    else
+        moby->state = 0xFE;
+
+    moby->lights = (unsigned long long)(worldUpdateTime + 2);
+    UpdateMobyGrids(moby, 0x80807F7F);
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyFrameData);
 

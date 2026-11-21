@@ -284,7 +284,6 @@ Hero_UpdateFiringAnimLayer__Fv = 0x0022F068;
 Hero_UpdateOverlayAnimLayer__Fv = 0x0022E3A8;
 
 
-DeleteMoby__FP12MobyInstance = 0x002636C0;
 
 DrawMapFrame__Fv = 0x0025B1C0;
 
@@ -471,3 +470,4 @@ BackupCamera = 0x001693D0;
 CameraControls = 0x00169590;
 
 MB_ComputeSelectedJointPos__FP12MobyInstanceiPiP4Vec4 = 0x00268C28;
+UpdateMobyGrids__FP12MobyInstanceUi = 0x00265900;
