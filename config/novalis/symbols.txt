@@ -872,7 +872,7 @@ GetMobyJointsWorldPos__FP12MobyInstanceiPiP4Vec4 = 0x00264630; // type:func size
 MB_GetJointsWorldMtx__FP12MobyInstanceiPiP4Mtx4 = 0x002646D0; // type:func size:0xD4
 DmaMobyTextures = 0x002647A8; // type:func size:0x108
 PatchMobyGifs = 0x002648B0; // type:func size:0xD8
-MB_UpdateLightAngle = 0x00264988; // type:func size:0x90
+MB_UpdateLightAngle__Fv = 0x00264988; // type:func size:0x90
 DrawMobyShadows = 0x00264A18; // type:func size:0x144
 ProcessMobyAnimData__Fv = 0x00264B60; // type:func size:0x44
 InitMobyClassDists__Fv = 0x00264BA8; // type:func size:0x28
@@ -2254,3 +2254,5 @@ debugFontBuffer = 0x0018F140;
 cs_table = 0x00166500;
 
 MobyBuff = 0x0015FFD4;
+
+LightDirection = 0x001AF000; // size:0x10

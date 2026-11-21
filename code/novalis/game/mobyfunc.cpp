@@ -2,6 +2,7 @@
 #include "vuchain.h"
 #include "fastfunc.h"
 #include "moby.h"
+#include "hero.h"
 #include "sce.h"
 #include "sound.h"
 #include "mathfunc_inline.h"
@@ -297,7 +298,18 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DmaMobyTexture
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", PatchMobyGifs);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_UpdateLightAngle);
+void MB_UpdateLightAngle(void)
+{
+    Vec4 direction;
+    float angle;
+
+    MB_GetLightDirection(Hero.moby, &direction);
+    angle = FastArcTan(direction.x, direction.y);
+
+    LightDirection.x = FastAngleSinF(angle) * 0.14f;
+    LightDirection.y = FastAngleCosF(angle) * 0.14f;
+    LightDirection.z = -0.99f;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DrawMobyShadows);
 
