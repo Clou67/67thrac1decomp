@@ -393,7 +393,37 @@ void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joi
     }
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DmaMobyTextures);
+extern Vu1ChainCursor MobyVu1Marker;
+extern int textureCursor;
+int BuildMobyTextureDma(unsigned int gsBase);
+
+void DmaMobyTextures(void)
+{
+    DmaTag *start = vu1_bufPtr.tag++;
+
+    MobyVu1Marker.tag->tag = DMA_TAG_NEXT;
+    MobyVu1Marker.tag->addr = (unsigned int)vu1_bufPtr.tag;
+    MobyVu1Marker.tag->vif0 = 0;
+    MobyVu1Marker.tag->vif1 = 0;
+
+    if (drawConfig.mobys != 0) {
+        if (drawConfig.moby_texture_paging != 0) {
+            BuildMobyTextureDma(textureCursor);
+            VU1_texFlush();
+        }
+    }
+
+    vu1_bufPtr.tag->tag = DMA_TAG_NEXT;
+    vu1_bufPtr.tag->addr = (unsigned int)(MobyVu1Marker.tag + 1);
+    vu1_bufPtr.tag->vif0 = 0;
+    vu1_bufPtr.tag->vif1 = 0;
+    vu1_bufPtr.tag++;
+
+    start->tag = DMA_TAG_NEXT;
+    start->addr = (unsigned int)vu1_bufPtr.tag;
+    start->vif0 = 0;
+    start->vif1 = 0;
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", PatchMobyGifs);
 
@@ -442,7 +472,7 @@ void RestoreMobyClassDists(void)
 }
 
 extern int mobyVu1State;
-extern int MobyVu1Marker;
+extern Vu1ChainCursor MobyVu1Marker;
 extern int textureCursor;
 extern int textureCursorEnd;
 extern int vu1_bufLimit;
@@ -460,7 +490,7 @@ void DrawMobysSetup(void)
     VU1_addGSregister(0x47, 0x5360B);
 
     packet = (int)vu1_bufPtr.bytes;
-    MobyVu1Marker = packet;
+    MobyVu1Marker.bytes = (unsigned char *)packet;
     textureCursor = textureCursorEnd;
     packet += 0x10;
     vu1_bufPtr.bytes = (unsigned char *)packet;
