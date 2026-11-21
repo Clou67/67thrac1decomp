@@ -81,7 +81,26 @@ void DeleteMoby(MobyInstance *moby)
     UpdateMobyGrids(moby, 0x80807F7F);
 }
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyFrameData);
+extern unsigned char debugFontBuffer[] __attribute__((section(".data")));
+
+void UpdateMobyFrameData(MobyInstance *moby)
+{
+    MobyClass *mobyClass;
+
+    if (moby->updateId != 0xFF) {
+        mobyClass = moby->pClass;
+        moby->pPreviousAnimationData = mobyClass->animations[moby->updateId]->frames[moby->previousAnimationFrame];
+        moby->trigsCnt = mobyClass->animations[moby->updateId]->triggerCount;
+        moby->soundDesired = mobyClass->animations[moby->updateId]->sound;
+    } else {
+        moby->soundDesired = moby->updateId;
+        moby->trigsCnt = 0;
+        moby->pPreviousAnimationData = (void *)&((unsigned char *)debugFontBuffer)[moby->previousAnimationFrame << 11];
+    }
+
+    moby->pCurrentAnimationData =
+        moby->pClass->animations[moby->animationId]->frames[moby->animationFrame];
+}
 
 void MB_PlayMobyDesiredSound(MobyInstance* pMoby) {
     int channel;
