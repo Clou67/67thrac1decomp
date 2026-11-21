@@ -68,7 +68,24 @@ INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_StartAnimLa
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_InitAnimLayerBuffer);
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", AttachManipulator);
+void AttachManipulator(MobyInstance *moby, int animJoint, Manipulator *manipulator)
+{
+    if (manipulator->state == 0) {
+        manipulator->animJoint = animJoint;
+        manipulator->state = 1;
+
+        manipulator->rot.w = 1.0f;
+        manipulator->scale.x = 1.0f;
+        manipulator->scale.y = 1.0f;
+        manipulator->scale.z = 1.0f;
+
+        unsigned char *joint = *(unsigned char **)((unsigned char *)moby->pClass->animationJoints + manipulator->animJoint * 4 + 4);
+        manipulator->jointId = joint[*joint + 4] * 0x40 + 0x70000000;
+
+        manipulator->pChain = moby->pManipulators;
+        moby->pManipulators = manipulator;
+    }
+}
 
 INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", DetachManipulator);
 

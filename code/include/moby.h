@@ -60,6 +60,11 @@ struct MobyClassCallbacks {
     MobyClassCallback callback0C;
 };
 
+struct MobyAnimationJoints {
+    unsigned int unk_0;
+    unsigned char *joints[1];
+};
+
 struct MobyClass {
     MobyPacket *packets;                // 0x00
     unsigned char packetCount0;        // 0x04
@@ -77,7 +82,7 @@ struct MobyClass {
     MobyCollPrims *collision;           // 0x10
     void *skeleton;                     // 0x14
     Vec4 *commonTranslations;           // 0x18
-    void *animationJoints;              // 0x1C
+    MobyAnimationJoints *animationJoints;              // 0x1C
     MobyGifUsage *gifUsage;              // 0x20
     float scale;                        // 0x24
     SoundDef *soundDefs;                // 0x28
@@ -92,7 +97,18 @@ struct MobyClass {
     short type;                         // 0x46
     MobySeq *animations[1];              // 0x48, sequenceCount entries
 };
-struct Manipulator;
+struct Manipulator {
+    unsigned char animJoint;
+    unsigned char state;
+    char scaleOn;
+    char absolute;
+    int jointId;
+    Manipulator *pChain;
+    float interp;
+    Vec4 rot;
+    Vec4 scale;
+    Vec4 trans;
+};
 
 // Bits of MobyInstance::modeBits.
 enum MobyModeBit {
