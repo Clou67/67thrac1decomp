@@ -37,7 +37,7 @@ int FastLog2(int value);
 void LoadPifAsPSMT8H(PifHeader *pif, unsigned long long *gsRegisters, int textureAddress, int paletteAddress)
 {
     PifParser parsed;
-    sceGsLoadImage packet __attribute__((aligned(16)));
+    sceGsLoadImage packet;
 
     FastMemSet(&parsed, 0, sizeof(parsed));
     parsed.pClut = (unsigned char *)(pif + 1);
