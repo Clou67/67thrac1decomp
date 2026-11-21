@@ -8,7 +8,23 @@
 #include "sound.h"
 #include "mathfunc_inline.h"
 
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateNumSpawnableMobys);
+void UpdateNumSpawnableMobys(void)
+{
+    MobyInstance *moby;
+    bool pastEnd = false;
+
+    numSpawnableMobys = 0;
+
+    for (moby = MobyInstancePermEnd; moby < MobyInstanceEnd; moby++) {
+        if (moby->state >= 0xfe && moby->lights <= (unsigned long long)(unsigned int)worldUpdateTime || pastEnd) {
+            numSpawnableMobys++;
+
+            if (moby->state == 0xff) {
+                pastEnd = true;
+            }
+        }
+    }
+}
 
 extern int worldUpdateTime;
 extern MobyInstance *MobyInstancePermEnd;
