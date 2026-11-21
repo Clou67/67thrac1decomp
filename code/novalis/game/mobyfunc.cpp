@@ -186,23 +186,3 @@ void SetLevelFlag(int flag)
     if (flag != 0xFF)
         occlCharTable[Level][flag] = 0xFF;
 }
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", SetColorOfMoby);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", SetColorOfMoby_Part);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", GetColorOfMoby);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetLightDirection);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_GetLightColor);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MB_BSphereGap);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", UpdateMobyAnimFrame);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", FindMobysCloseToUpdate);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MobyGrid_Free);
-
-INCLUDE_ASM("code/_generated/novalis/nonmatchings/game/mobyfunc", MobyGrid_Alloc);

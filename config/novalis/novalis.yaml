@@ -182,7 +182,7 @@ segments:
     - [0x103d10, cpp, game/mesh]
     - [0x104860, cpp, game/mission]
     - [0x105400, cpp, game/mobyfunc]
-    - [0x107a00, asm, game/mobyproc]
+    - [0x1071b0, asm, game/mobyproc]
     - [0x10e0f8, cpp, game/mobyutil]
     - [0x11b3d0, cpp, game/mobyupd]
     - [0x11b7f8, cpp, game/music]
