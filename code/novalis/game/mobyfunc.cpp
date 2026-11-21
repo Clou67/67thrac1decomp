@@ -394,7 +394,7 @@ void MB_GetJointsWorldMtx(MobyInstance *moby, int count, int *indices, Mtx4 *joi
 }
 
 extern Vu1ChainCursor MobyVu1Marker;
-extern int textureCursor;
+extern int GSloc;
 int BuildMobyTextureDma(unsigned int gsBase);
 
 void DmaMobyTextures(void)
@@ -408,7 +408,7 @@ void DmaMobyTextures(void)
 
     if (drawConfig.mobys != 0) {
         if (drawConfig.moby_texture_paging != 0) {
-            BuildMobyTextureDma(textureCursor);
+            BuildMobyTextureDma(GSloc);
             VU1_texFlush();
         }
     }
@@ -473,8 +473,8 @@ void RestoreMobyClassDists(void)
 
 extern int mobyVu1State;
 extern Vu1ChainCursor MobyVu1Marker;
-extern int textureCursor;
-extern int textureCursorEnd;
+extern int GSloc;
+extern int GSbase;
 extern int vu1_bufLimit;
 extern int MobyShadowMarker;
 extern int MobyBuff;
@@ -491,7 +491,7 @@ void DrawMobysSetup(void)
 
     packet = (int)vu1_bufPtr.bytes;
     MobyVu1Marker.bytes = (unsigned char *)packet;
-    textureCursor = textureCursorEnd;
+    GSloc = GSbase;
     packet += 0x10;
     vu1_bufPtr.bytes = (unsigned char *)packet;
 

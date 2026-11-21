@@ -29,7 +29,7 @@ void DmaTieTextures(void)
 
     if (drawConfig.tie) {
         if (drawConfig.tie_texture_paging) {
-            int gsEnd = BuildTieTextureDma(textureCursor);
+            int gsEnd = BuildTieTextureDma(GSloc);
 
             VU1_texFlush();
 
@@ -100,7 +100,7 @@ void RefreshTieLights(void)
 void DrawTie(void)
 {
     TieVu1Marker.tag = vu1_bufPtr.tag++;
-    textureCursor = textureCursorEnd;
+    GSloc = GSbase;
 
     printf_stub3("tie texs", 1);
 
@@ -131,7 +131,7 @@ void DrawTiesEx(void)
         DmaTag *current = vu1_bufPtr.tag;
 
         TieVu1Marker.tag = current;
-        textureCursor = textureCursorEnd;
+        GSloc = GSbase;
         current++;
         vu1_bufPtr.tag = current;
     }
@@ -171,7 +171,7 @@ void DrawTiesEx(void)
         DmaTag *current = vu1_bufPtr.tag;
 
         TieVu1Marker.tag = current;
-        textureCursor = textureCursorEnd;
+        GSloc = GSbase;
         current++;
         vu1_bufPtr.tag = current;
 

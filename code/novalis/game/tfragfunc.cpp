@@ -76,7 +76,7 @@ void DmaTfragTextures(void)
             int gsEnd;
 
             ComputeTfragTextureUsage();
-            gsEnd = BuildTfragTextureDma(textureCursor);
+            gsEnd = BuildTfragTextureDma(GSloc);
 
             VU1_texFlush();
 
@@ -133,7 +133,7 @@ void DrawTfrag(void)
     Mtx4 matrix;
 
     TfragVu1Marker.tag = vu1_bufPtr.tag++;
-    textureCursor = textureCursorEnd;
+    GSloc = GSbase;
 
     printf_stub3("tfrag texs", 1);
 

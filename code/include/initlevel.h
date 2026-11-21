@@ -17,8 +17,8 @@ extern char ShrubClassLookup[0x400];
 extern char ShrubTexLookup[0x400];
 extern char ShrubMipDists[0x40];
 
-extern int textureCursor;
-extern int textureCursorEnd;
+extern int GSloc;
+extern int GSbase;
 
 struct GsTextureAllocation {
     int cursor;

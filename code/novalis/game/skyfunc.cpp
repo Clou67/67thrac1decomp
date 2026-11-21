@@ -90,7 +90,7 @@ void SetupSkyGifPaging(void)
     sky_gif_page_markerA.tag = vu1_bufPtr.tag++;
     printf_stub3("sky texs", 1);
 
-    textureCursor = textureCursorEnd;
+    GSloc = GSbase;
     GifLoadCnt = 0;
 
     for (int texture_index = 0; texture_index < Sky->tex_cnt; texture_index++)
